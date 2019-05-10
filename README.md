@@ -45,6 +45,9 @@ Delegate MAS - 3 types of
         Voorstel: een parcel spawnt 1 ant wnr het ontstaat. De AVGs houden een counter bij die omhoog gaat als ze een parcel
                   afleveren. Wanneer een ant aankomt bij een AVG met counter > 0, sterft de ant en gaat de counter vd AVG omlaag
                   (kan ook meer dan 1 ant per parcel -> research question: hoeveel best? )
+    extra: ants kunnen evt een Map bijhouden v locaties en hoevaak ze daar al geweest zijn, zo kunnen ze prioriteit geven
+           aan locaties waar ze nog niet/weinig geweest zijn, dit verhoogt mss de kwaliteit vd roadsigns
+           -> mogelijks research question
 
 2. Exploration ants
     Worden uitgezonden door een AVG. Gaan mogelijke paden af en bepalen hoe lang de AVG hier over zou doen.
