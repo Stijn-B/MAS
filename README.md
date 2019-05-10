@@ -23,3 +23,14 @@ and delegate MAS. The solution should at least account for both task allocation 
 
 
 - Make a thorough scientific study of the behavior of the MAS (following the U-model).
+
+
+# Real TODO
+
+- concrete problem definition: road network with possible randomly generated congestions that are scouted by delegate ants.
+	Requires congestion information between every two network nodes.
+	Optional: only use ants for parcel discovery
+- research questions and hypotheses:
+	- how do delegate ants best use pheromones?
+	- send delegates from parcel or from AGV or ...?
+
