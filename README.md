@@ -35,7 +35,7 @@ and delegate MAS. The solution should at least account for both task allocation 
 	- send delegates from parcel or from AGV or ...?
 
 
-Delegate MAS - 3 types of
+Delegate MAS - 3 types of ants
 (in deze beschrijving staat 'AVG' voor een Intention ant)
 
 1. Feasibility ants
