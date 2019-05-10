@@ -40,8 +40,11 @@ Delegate MAS - 3 types of
 1. Feasibility ants
     Reizen door het netwerk tussen de AVGs, parcels en leverplaatsen en laten op elk punt info achter: afstand tussen huidige punt en vorige punt
     Hierdoor zullen alle AVGs, parcels en leverplaatsen een lijst hebben van afstanden tot andere AVGs, parcels en leverplaatsen (road signs)
-    Mogelijkheidheden voor de generatie vd ants:
-        Een nieuw parcel spawnt x aantal ants die na y aantal hops 'sterven' of blijven tot het parcel geleverd is.
+    Omgaan met opgepikte parcels: De informatie vd ants vervalt na een (best niet te lange) tijd zodat een opgepikt parcel vanzelf uit de lijst verdwijnt.
+    Er moeten voldoende ants actief zijn in het systeem, het aantal moet dynamisch zijn in correlatie met het aantal parcels.
+        Voorstel: een parcel spawnt 1 ant wnr het ontstaat. De AVGs houden een counter bij die omhoog gaat als ze een parcel
+                  afleveren. Wanneer een ant aankomt bij een AVG met counter > 0, sterft de ant en gaat de counter vd AVG omlaag
+                  (kan ook meer dan 1 ant per parcel -> research question: hoeveel best? )
 
 2. Exploration ants
     Worden uitgezonden door een AVG. Gaan mogelijke paden af en bepalen hoe lang de AVG hier over zou doen.
@@ -49,9 +52,12 @@ Delegate MAS - 3 types of
         - efficientie (som vd leverafstanden / totale afstand die effectief afgelegd zal worden)
         - een andere AVG die maar een klein beetje minder snel zou zijn heeft mss al gecommit om een vd parcels te leveren
             (-> kan inefficientie veroorzaken bij deze andere AVG)
+        - een andere AVG heeft gecommit en zal er eerder zijn -> heuristiek = 0
+        - ...
     Limiet opleggen voor de paden: aantal parcels of lengte/duratie vh pad
 
 3. Intention ants (de real-wordt AVGs)
     Commit aan het beste pad dat de exploration ants vinden
     -> Beste pad volgen en op bepaalde momenten nieuwe exploration ants uitzenden
+    De parcels laten weten dat de AVG heeft gecommit zodat exploration ants van andere AVGs dit weten
 
