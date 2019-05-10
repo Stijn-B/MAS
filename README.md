@@ -36,6 +36,7 @@ and delegate MAS. The solution should at least account for both task allocation 
 
 
 Delegate MAS - 3 types of
+(in deze beschrijving staat 'AVG' voor een Intention ant)
 
 1. Feasibility ants
     Reizen door het netwerk tussen de AVGs, parcels en leverplaatsen en laten op elk punt info achter: afstand tussen huidige punt en vorige punt
