@@ -5,7 +5,7 @@ public class RoadSignParcel extends Parcel {
 
     public RoadSignParcel(ParcelDTO parcelDto) {
         super(parcelDto);
-        
+
         if (parcelDto.getPickupLocation() == null || parcelDto.getDeliveryLocation() == null)
             throw new NullPointerException("Pickup- and DeliveryLocation have to be specified in the ParcelDTO");
 
