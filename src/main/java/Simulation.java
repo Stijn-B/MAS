@@ -2,6 +2,8 @@ import com.github.rinde.rinsim.core.Simulator;
 import com.github.rinde.rinsim.core.model.pdp.*;
 import com.github.rinde.rinsim.core.model.road.RoadModel;
 import com.github.rinde.rinsim.core.model.road.RoadModelBuilders;
+import com.github.rinde.rinsim.core.model.time.TickListener;
+import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Graph;
 import com.github.rinde.rinsim.geom.MultiAttributeData;
 import com.github.rinde.rinsim.geom.io.DotGraphIO;
@@ -9,6 +11,7 @@ import com.github.rinde.rinsim.geom.io.Filters;
 import com.github.rinde.rinsim.ui.View;
 import com.github.rinde.rinsim.ui.renderers.GraphRoadModelRenderer;
 import com.github.rinde.rinsim.ui.renderers.RoadUserRenderer;
+import delegateMAS.IntentionAnt;
 import org.apache.commons.math3.random.RandomGenerator;
 
 import java.io.FileNotFoundException;
@@ -16,6 +19,8 @@ import java.io.IOException;
 
 
 public class Simulation {
+
+    private static final double PARCEL_SPAWN_CHANCE = 0.006;
 
     public static void main(String[] args) {
         run();
@@ -30,7 +35,7 @@ public class Simulation {
         View.Builder view = createGui();
 
         // create simulator and add models
-        Simulator simulator = Simulator.builder()
+        final Simulator simulator = Simulator.builder()
                 .addModel(RoadModelBuilders.staticGraph(loadGraph(MAP_FILE))) // add map of Leuven
                 .addModel(DefaultPDPModel.builder())
                 .addModel(view)
@@ -48,8 +53,23 @@ public class Simulation {
 
         // register Ufos
         for (int i = 0; i < 10; i++) {
-            simulator.register(new Ufo(roadModel.getRandomPosition(rng)));
+            simulator.register(new IntentionAnt(roadModel.getRandomPosition(rng)));
         }
+
+        // random package generation
+        simulator.addTickListener(new TickListener() {
+            @Override
+            public void tick(TimeLapse time) {
+                if (rng.nextDouble() < PARCEL_SPAWN_CHANCE) {
+                    simulator.register(new TimeWindowParcel(
+                            Parcel.builder(roadModel.getRandomPosition(rng),roadModel.getRandomPosition(rng))
+                                    .buildDTO()));
+                }
+            }
+
+            @Override
+            public void afterTick(TimeLapse timeLapse) {}
+        });
 
 
         simulator.start();
@@ -65,7 +85,9 @@ public class Simulation {
                         .withImageAssociation(
                                 Depot.class, "/images/saturnus.png")
                         .withImageAssociation(
-                                Ufo.class, "/images/ufo.png"));
+                                IntentionAnt.class, "/images/ufo.png")
+                        .withImageAssociation(
+                                TimeWindowParcel.class, "/images/parcel.png"));
 
 
         return view;

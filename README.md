@@ -33,6 +33,9 @@ and delegate MAS. The solution should at least account for both task allocation 
 - research questions and hypotheses:
 	- how do delegate ants best use pheromones?
 	- send delegates from parcel or from AGV or ...?
+	- optimize heuristic parameters
+	- how often should intention ants reconsider
+	- (how much feasibility ants per parcel should be active ?)
 
 
 Delegate MAS - 3 types of ants
@@ -46,6 +49,7 @@ Delegate MAS - 3 types of ants
         Voorstel: een parcel spawnt 1 ant wnr het ontstaat. De AVGs houden een counter bij die omhoog gaat als ze een parcel
                   afleveren. Wanneer een ant aankomt bij een AVG met counter > 0, sterft de ant en gaat de counter vd AVG omlaag
                   (kan ook meer dan 1 ant per parcel -> research question: hoeveel best? )
+    ? hoeveel hops maken deze ants per tick ?
     extra: ants kunnen evt een Map bijhouden v locaties en hoevaak ze daar al geweest zijn, zo kunnen ze prioriteit geven
            aan locaties waar ze nog niet/weinig geweest zijn, dit verhoogt mss de kwaliteit vd roadsigns
            -> mogelijks research question
