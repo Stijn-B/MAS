@@ -53,6 +53,7 @@ Delegate MAS - 3 types of ants
     extra: ants kunnen evt een Map bijhouden v locaties en hoevaak ze daar al geweest zijn, zo kunnen ze prioriteit geven
            aan locaties waar ze nog niet/weinig geweest zijn, dit verhoogt mss de kwaliteit vd roadsigns
            -> mogelijks research question
+    !!! opmerking !!! Als een ant van A naar B gaat, moet het de afstand tussen A en B niet opslaan in B want de afstand van A naar B is mss niet gelijk aan de afstand van B naar A (enkelrichtingstraten)
 
 2. Exploration ants
     Worden uitgezonden door een AVG. Gaan mogelijke paden af en bepalen hoe lang de AVG hier over zou doen.

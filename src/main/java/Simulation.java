@@ -48,6 +48,7 @@ public class Simulation {
         // get RoadModel
         final RoadModel roadModel = simulator.getModelProvider().getModel(RoadModel.class);
 
+
         // register depot (uitvalsbasis vd AVGs)
         simulator.register(new Depot(roadModel.getRandomPosition(rng)));
 
@@ -61,7 +62,7 @@ public class Simulation {
             @Override
             public void tick(TimeLapse time) {
                 if (rng.nextDouble() < PARCEL_SPAWN_CHANCE) {
-                    simulator.register(new TimeWindowParcel(
+                    simulator.register(new RoadSignParcel(
                             Parcel.builder(roadModel.getRandomPosition(rng),roadModel.getRandomPosition(rng))
                                     .buildDTO()));
                 }
@@ -87,7 +88,7 @@ public class Simulation {
                         .withImageAssociation(
                                 IntentionAnt.class, "/images/ufo.png")
                         .withImageAssociation(
-                                TimeWindowParcel.class, "/images/parcel.png"));
+                                RoadSignParcel.class, "/images/parcel.png"));
 
 
         return view;

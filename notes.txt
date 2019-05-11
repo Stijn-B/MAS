@@ -1,17 +1,13 @@
-rinsim.core.Simulator, a simple and direct way to interact with the simulator
 
-The simulator is in essence a collection of models. When configuring the simulator, using Simulator.builder(), the
-desired models can be added. For ease of use, the simulator contains a TimeModel and a RandomModel by default.
-It also has a register() method that allows to register simulation entities into the simulator.
-Simulator sim = Simulator.builder()
-                         .addModel(...)
-                         // add more models
-                         .build()
+GET CURRENT TIME IN MS (time since start of simulation)
+simulator.getCurrentTime();
 
-A Model has a generic type T that is called the associated type (or supported type) of a Model. A model that is part of
-a simulator, automatically receives all instances of its associated type that are added to the simulator.
-(https://rinsim.rinde.nl/design/core/#model)
 
-PDPGraphRoadModel, simplifies the API for moving vehicles in the PDPTW case as it allows to always just call
-moveTo(vehicle,parcel), depending on the state of the parcel this will let the vehicle move to either the pickup
-site or the delivery site.
+
+
+
+
+// TODO
+- RoadSignPoint
+    Alles
+-
