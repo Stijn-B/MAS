@@ -13,6 +13,7 @@ import com.github.rinde.rinsim.ui.renderers.GraphRoadModelRenderer;
 import com.github.rinde.rinsim.ui.renderers.RoadUserRenderer;
 import delegateMAS.IntentionAnt;
 import org.apache.commons.math3.random.RandomGenerator;
+import roadSign.RoadSignParcel;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,6 +39,7 @@ public class Simulation {
         final Simulator simulator = Simulator.builder()
                 .addModel(RoadModelBuilders.staticGraph(loadGraph(MAP_FILE))) // add map of Leuven
                 .addModel(DefaultPDPModel.builder())
+                //.addModel(roadSign.RoadSignModel.builder()) TODO
                 .addModel(view)
                 .build();
 
@@ -75,8 +77,12 @@ public class Simulation {
 
         simulator.start();
 
+        roadModel.getObjects();
+
         return simulator;
     }
+
+
 
     static View.Builder createGui() {
 

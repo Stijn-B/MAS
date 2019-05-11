@@ -16,5 +16,11 @@ public class RoadSignParcel extends Parcel {
     private final RoadSignPoint pickupRSPoint;
     private final RoadSignPoint deliveryRSPoint;
 
+    public RoadSignPoint getPickupLocationRoadSignPoint() {
+        return pickupRSPoint;
+    }
 
+    public RoadSignPoint getDeliveryLocationRoadSignPoint() {
+        return deliveryRSPoint;
+    }
 }
