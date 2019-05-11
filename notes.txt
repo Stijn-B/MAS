@@ -1,7 +1,3 @@
 
 GET CURRENT TIME IN MS (time since start of simulation)
 simulator.getCurrentTime();
-
-10 mei: ~2u30
-11 mei: ~4u
-

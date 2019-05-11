@@ -1,3 +1,5 @@
+package roadSign;
+
 import com.github.rinde.rinsim.geom.Point;
 
 import java.util.LinkedList;
@@ -21,8 +23,8 @@ public class RoadSignPoint extends Point {
     List<RoadSign> roadSigns = new LinkedList<>();
 
     /**
-     * Adds the given RoadSign to the list while keeping the list sorted by ascending distance
-     * @param newSign the RoadSign to add
+     * Adds the given roadSign.RoadSign to the list while keeping the list sorted by ascending distance
+     * @param newSign the roadSign.RoadSign to add
      */
     public void addRoadSign(RoadSign newSign) {
         ListIterator<RoadSign> iter = roadSigns.listIterator();
@@ -39,14 +41,14 @@ public class RoadSignPoint extends Point {
     }
 
     /**
-     * Ages all the RoadSigns that this RoadSignPoint holds
+     * Ages all the RoadSigns that this roadSign.RoadSignPoint holds
      * @param ms
      */
     public void age(long ms) {
         ListIterator<RoadSign> iter = roadSigns.listIterator();
 
         while(iter.hasNext()) {
-            // if the next RoadSign doesn't survive the aging, remove it
+            // if the next roadSign.RoadSign doesn't survive the aging, remove it
             if (!iter.next().age(ms)) {
                 iter.remove();
             }
@@ -54,17 +56,17 @@ public class RoadSignPoint extends Point {
     }
 
     /**
-     * Get the size of the RoadSign list
-     * @return the size of the RoadSign list
+     * Get the size of the roadSign.RoadSign list
+     * @return the size of the roadSign.RoadSign list
      */
     public int getRoadSignCount() {
         return roadSigns.size();
     }
 
     /**
-     * Returns the RoadSign at the specified position in the RoadSign list.
-     * @param index index of the RoadSign to return
-     * @return the RoadSign at the specified position in the RoadSign list
+     * Returns the roadSign.RoadSign at the specified position in the roadSign.RoadSign list.
+     * @param index index of the roadSign.RoadSign to return
+     * @return the roadSign.RoadSign at the specified position in the roadSign.RoadSign list
      * @throws IndexOutOfBoundsException - if the index is out of range (index < 0 || index >= getRoadSignCount())
      */
     public RoadSign getRoadSign(int index) {
@@ -75,10 +77,10 @@ public class RoadSignPoint extends Point {
     /*
     public static void main(String[] args) {
 
-        RoadSignPoint rsPoint = new RoadSignPoint(5.0, 5.0);
+        roadSign.RoadSignPoint rsPoint = new roadSign.RoadSignPoint(5.0, 5.0);
 
         for (int i = 0; i < 5; i++) {
-            rsPoint.addRoadSign(new RoadSign(new Point(i, i), 10*i, 200*i+50));
+            rsPoint.addRoadSign(new roadSign.RoadSign(new Point(i, i), 10*i, 200*i+50));
         }
 
         for (int i = 0; i < rsPoint.getRoadSignCount(); i++) {
@@ -88,7 +90,7 @@ public class RoadSignPoint extends Point {
 
 
         for (int i = 0; i < 5; i++) {
-            rsPoint.addRoadSign(new RoadSign(new Point(i, i), 50/(i+1), 200*i));
+            rsPoint.addRoadSign(new roadSign.RoadSign(new Point(i, i), 50/(i+1), 200*i));
         }
 
         for (int i = 0; i < rsPoint.getRoadSignCount(); i++) {

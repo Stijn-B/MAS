@@ -1,10 +1,9 @@
+package roadSign;
+
 import com.github.rinde.rinsim.core.model.DependencyProvider;
 import com.github.rinde.rinsim.core.model.Model;
 import com.github.rinde.rinsim.core.model.ModelBuilder;
-import com.github.rinde.rinsim.core.model.pdp.*;
 import com.github.rinde.rinsim.core.model.road.RoadModel;
-
-import javax.annotation.CheckReturnValue;
 
 
 public class RoadSignModel extends Model.AbstractModel<RoadSignParcel> {
@@ -22,7 +21,7 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignParcel> {
      */
     @Override
     public boolean register(RoadSignParcel element){
-        System.out.println("RoadSignParcel registered");
+        System.out.println("roadSign.RoadSignParcel registered");
         return true;
     }
 
@@ -34,7 +33,7 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignParcel> {
      */
     @Override
     public boolean unregister(RoadSignParcel element) {
-        System.out.println("RoadSignParcel unregistered");
+        System.out.println("roadSign.RoadSignParcel unregistered");
         return true;
     }
 
