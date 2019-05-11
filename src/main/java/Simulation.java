@@ -4,11 +4,12 @@ import com.github.rinde.rinsim.core.model.road.RoadModel;
 import com.github.rinde.rinsim.core.model.road.RoadModelBuilders;
 import com.github.rinde.rinsim.geom.Graph;
 import com.github.rinde.rinsim.geom.MultiAttributeData;
-import com.github.rinde.rinsim.geom.Point;
 import com.github.rinde.rinsim.geom.io.DotGraphIO;
 import com.github.rinde.rinsim.geom.io.Filters;
 import com.github.rinde.rinsim.ui.View;
 import com.github.rinde.rinsim.ui.renderers.GraphRoadModelRenderer;
+import com.github.rinde.rinsim.ui.renderers.RoadUserRenderer;
+import org.apache.commons.math3.random.RandomGenerator;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -29,22 +30,43 @@ public class Simulation {
         View.Builder view = createGui();
 
         // create simulator and add models
-        Simulator sim = Simulator.builder()
+        Simulator simulator = Simulator.builder()
                 .addModel(RoadModelBuilders.staticGraph(loadGraph(MAP_FILE))) // add map of Leuven
                 .addModel(DefaultPDPModel.builder())
                 .addModel(view)
                 .build();
 
-        sim.start();
 
-        return sim;
+        // get rng object
+        final RandomGenerator rng = simulator.getRandomGenerator();
+
+        // get RoadModel
+        final RoadModel roadModel = simulator.getModelProvider().getModel(RoadModel.class);
+
+        // register depot (uitvalsbasis vd AVGs)
+        simulator.register(new Depot(roadModel.getRandomPosition(rng)));
+
+        // register Ufos
+        for (int i = 0; i < 10; i++) {
+            simulator.register(new Ufo(roadModel.getRandomPosition(rng)));
+        }
+
+
+        simulator.start();
+
+        return simulator;
     }
 
     static View.Builder createGui() {
 
-        // TODO : 'RoadUserRenderer' toevoegen (zie TaxiExample vanaf lijn 179)
         View.Builder view = View.builder()
-                .with(GraphRoadModelRenderer.builder());
+                .with(GraphRoadModelRenderer.builder())
+                .with(RoadUserRenderer.builder()
+                        .withImageAssociation(
+                                Depot.class, "/images/saturnus.png")
+                        .withImageAssociation(
+                                Ufo.class, "/images/ufo.png"));
+
 
         return view;
     }
