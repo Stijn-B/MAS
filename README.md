@@ -55,10 +55,12 @@ Delegate MAS - 3 types of ants
     Heuristiek vd paden bepalen en de beste kiezen, mogelijke parameters:
         - efficientie (som vd leverafstanden / totale afstand die effectief afgelegd zal worden)
         - een andere AVG die maar een klein beetje minder snel zou zijn heeft mss al gecommit om een vd parcels te leveren
-            (-> kan inefficientie veroorzaken bij deze andere AVG)
+            want kan inefficientie veroorzaken bij deze andere AVG
         - een andere AVG heeft gecommit en zal er eerder zijn -> heuristiek = 0
+        - AVG moet mss herladen in de uitvalsbasis (?)
+            bezoek uitvalsbasis heeft positief effect op heuristiek, evenredig (of expontentieel) met hoeveel bijgeladen zou worden
         - ...
-    Limiet opleggen voor de paden: aantal parcels of lengte/duratie vh pad
+    Limiet opleggen voor de paden: aantal parcels of lengte/duratie vh pad anders mss oneindige exploratie
 
 3. Intention ants (de real-wordt AVGs)
     Commit aan het beste pad dat de exploration ants vinden
