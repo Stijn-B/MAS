@@ -14,3 +14,7 @@ roadSign.RoadSignParcel extends Parcel : bevat RoadSignPoint versie van het opha
 roadSign.RoadSignModel : krijgt 'register' call als een RoadSignParcel wordt toegevoegd, hierdoor is er een plaats waar
     |                    alle RoadSignParcels beschikbaar zijn (zodat de FeasibilityAnts deze kunnen overlopen)
     |-> niet gelukt om aan te maken, zie evt (https://rinsim.rinde.nl/design/core/#model)
+
+# 12 mei (~6u)
+FeasibilityAnt geïmplementeerd: werkt adhv TickListener en maakt RoadSigns tussen parcels (nog niet getest)
+Exploration- en IntentionAnt begonnen

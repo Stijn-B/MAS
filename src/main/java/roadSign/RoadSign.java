@@ -3,6 +3,8 @@ package roadSign;
 import com.github.rinde.rinsim.geom.Point;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
+
 public class RoadSign implements Comparable<RoadSign> {
 
     // default life time of a roadSign.RoadSign
@@ -14,7 +16,7 @@ public class RoadSign implements Comparable<RoadSign> {
      * @param distance the distance between the start- and endpoints
      * @param lifeTime how long the roadSign.RoadSign should stay alive in milliseconds
      */
-    RoadSign(Point destination, double distance, long lifeTime) {
+    public RoadSign(Point destination, double distance, long lifeTime) {
         this.dest = destination;
         this.distance = distance;
         this.life = lifeTime;
@@ -25,7 +27,7 @@ public class RoadSign implements Comparable<RoadSign> {
      * @param destination the destination point of the roadSign.RoadSign
      * @param distance the distance between the start- and endpoints
      */
-    RoadSign(Point destination, double distance) {
+    public RoadSign(Point destination, double distance) {
         this(destination, distance, DEFAULT_LIFETIME_MS);
     }
 
@@ -84,5 +86,20 @@ public class RoadSign implements Comparable<RoadSign> {
             return -1;
         }
 
+    }
+
+    /**
+     * 2 RoadSigns are equal if they indicate the same distance to the same destination (lifetime is not relevant
+     * @param other the other object
+     * @return whether the given Object is equal to this RoadSign
+     */
+    @Override
+    public boolean equals(@Nullable Object other) {
+        if (other == null || !(other instanceof RoadSign)) {
+            return false;
+        } else {
+            RoadSign p = (RoadSign) other;
+            return this.getDestination() == p.getDestination() && this.getDistance() == p.getDistance();
+        }
     }
 }

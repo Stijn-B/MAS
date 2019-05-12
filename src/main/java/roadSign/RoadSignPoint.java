@@ -2,19 +2,40 @@ package roadSign;
 
 import com.github.rinde.rinsim.geom.Point;
 
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
 public class RoadSignPoint extends Point {
 
+    private static int ID_COUNTER = 0;
 
-    public RoadSignPoint(double pX, double pY) {
+    public RoadSignPoint(RoadSignParcel parcel, double pX, double pY) {
         super(pX, pY);
+        this.parcel = parcel;
+
+        ID = ID_COUNTER;
+        if (ID_COUNTER < Integer.MAX_VALUE)
+            ID_COUNTER += 1;
+        else
+            ID_COUNTER = 0;
     }
 
-    public RoadSignPoint(Point point) {
-        super(point.x, point.y);
+    public RoadSignPoint(RoadSignParcel parcel, Point point) {
+        this(parcel, point.x, point.y);
+    }
+
+    private final int ID;
+
+    public int getID() {
+        return ID;
+    }
+
+    private final RoadSignParcel parcel;
+
+    public RoadSignParcel getParcel() {
+        return parcel;
     }
 
     /**
@@ -72,6 +93,15 @@ public class RoadSignPoint extends Point {
     public RoadSign getRoadSign(int index) {
         return roadSigns.get(index);
     }
+
+
+    @Override
+    public boolean equals(@Nullable Object other) {
+        return other != null && other instanceof RoadSignPoint && this.getID() == ((RoadSignPoint) other).getID();
+    }
+
+    public int hashCode() { return getID(); }
+
 
     // ROAD SIGN POINT TEST
     /*

@@ -50,7 +50,6 @@ public class Simulation {
         // get RoadModel
         final RoadModel roadModel = simulator.getModelProvider().getModel(RoadModel.class);
 
-
         // register depot (uitvalsbasis vd AVGs)
         simulator.register(new Depot(roadModel.getRandomPosition(rng)));
 
