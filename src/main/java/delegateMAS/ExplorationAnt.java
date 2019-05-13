@@ -2,7 +2,10 @@ package delegateMAS;
 
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
+import com.github.rinde.rinsim.geom.Point;
 import roadSign.RoadSignModel;
+
+import java.util.List;
 
 public class ExplorationAnt implements TickListener {
 
@@ -18,6 +21,8 @@ public class ExplorationAnt implements TickListener {
     }
 
     private final IntentionAnt intentionAnt;
+
+    /* EXPLORATION */
 
 
 

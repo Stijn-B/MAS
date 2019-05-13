@@ -1,3 +1,13 @@
 
 GET CURRENT TIME IN MS (time since start of simulation)
 simulator.getCurrentTime();
+
+Travelling Salesman Problem ?
+
+TODO:
+ - Dependency injection
+
+ - DeliveryPath class maken
+ - Zorgen dat overal RoadSigns zijn: parcel (pickup en delivery), IntentionAnt, Base
+ - ExplorationAnt: Explore methode die DeliveryPath returnt en werkt door 1 hop te maken, x nieuwe ants uitzend, op hun antwoorden wacht, die gebruikt om z'n eigen antwoord te returnen (set v DeliveryPaths)
+ - IntentionAnts: heuristiekmethode maken die heuristiek v e DeliveryPath berekend
