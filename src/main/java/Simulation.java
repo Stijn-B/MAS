@@ -27,7 +27,8 @@ public class Simulation {
         run();
     }
 
-    private static final String MAP_FILE = "leuven.dot"; // in intelliJ doe: rechtermuisknop > Copy relative path (Crtl + Alt + Shift + c)
+    // in intelliJ doe: rechtermuisknop > Copy relative path (Crtl + Alt + Shift + c)
+    private static final String MAP_FILE = "leuven.dot";
 
 
     public static Simulator run() {
@@ -37,11 +38,11 @@ public class Simulation {
 
         // create simulator and add models
         final Simulator simulator = Simulator.builder()
-                .addModel(RoadModelBuilders.staticGraph(loadGraph(MAP_FILE))) // add map of Leuven
-                .addModel(DefaultPDPModel.builder())
-                //.addModel(roadSign.RoadSignModel.builder()) TODO
-                .addModel(view)
-                .build();
+            .addModel(RoadModelBuilders.staticGraph(loadGraph(MAP_FILE))) // add map of Leuven
+            .addModel(DefaultPDPModel.builder())
+            //.addModel(roadSign.RoadSignModel.builder()) TODO
+            .addModel(view)
+            .build();
 
 
         // get rng object
@@ -64,8 +65,8 @@ public class Simulation {
             public void tick(TimeLapse time) {
                 if (rng.nextDouble() < PARCEL_SPAWN_CHANCE) {
                     simulator.register(new RoadSignParcel(
-                            Parcel.builder(roadModel.getRandomPosition(rng),roadModel.getRandomPosition(rng))
-                                    .buildDTO()));
+                        Parcel.builder(roadModel.getRandomPosition(rng),roadModel.getRandomPosition(rng))
+                            .buildDTO()));
                 }
             }
 
@@ -86,29 +87,26 @@ public class Simulation {
     static View.Builder createGui() {
 
         View.Builder view = View.builder()
-                .with(GraphRoadModelRenderer.builder())
-                .with(RoadUserRenderer.builder()
-                        .withImageAssociation(
-                                Depot.class, "/images/saturnus.png")
-                        .withImageAssociation(
-                                IntentionAnt.class, "/images/ufo.png")
-                        .withImageAssociation(
-                                RoadSignParcel.class, "/images/parcel.png"));
-
+            .with(GraphRoadModelRenderer.builder())
+            .with(RoadUserRenderer.builder()
+                .withImageAssociation(
+                    Depot.class, "/images/saturnus.png")
+                .withImageAssociation(
+                    IntentionAnt.class, "/images/ufo.png")
+                .withImageAssociation(
+                    RoadSignParcel.class, "/images/parcel.png"));
 
         return view;
     }
 
 
-
-
     static Graph<MultiAttributeData> loadGraph(String name) {
         try {
             final Graph<MultiAttributeData> g = DotGraphIO
-                    .getMultiAttributeGraphIO(
-                            Filters.selfCycleFilter())
-                    .read(
-                            Simulation.class.getResourceAsStream(name));
+                .getMultiAttributeGraphIO(
+                    Filters.selfCycleFilter())
+                .read(
+                    Simulation.class.getResourceAsStream(name));
             return g;
         } catch (final FileNotFoundException e) {
             throw new IllegalStateException(e);
@@ -131,3 +129,5 @@ public class Simulation {
 
 
 }
+
+// vim: set tabstop=4 shiftwidth=4 expandtab:
