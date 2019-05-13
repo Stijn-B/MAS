@@ -39,15 +39,15 @@ and delegate MAS. The solution should at least account for both task allocation 
 
 
 Delegate MAS - 3 types of ants
-(in deze beschrijving staat 'AVG' voor een Intention ant)
+(in deze beschrijving staat 'AGV' voor een Intention ant)
 
 1. Feasibility ants
-    Reizen door het netwerk tussen de AVGs, parcels en leverplaatsen en laten op elk punt info achter: afstand tussen huidige punt en vorige punt
-    Hierdoor zullen alle AVGs, parcels en leverplaatsen een lijst hebben van afstanden tot andere AVGs, parcels en leverplaatsen (road signs)
+    Reizen door het netwerk tussen de AGVs, parcels en leverplaatsen en laten op elk punt info achter: afstand tussen huidige punt en vorige punt
+    Hierdoor zullen alle AGVs, parcels en leverplaatsen een lijst hebben van afstanden tot andere AGVs, parcels en leverplaatsen (road signs)
     Omgaan met opgepikte parcels: De informatie vd ants vervalt na een (best niet te lange) tijd zodat een opgepikt parcel vanzelf uit de lijst verdwijnt.
     Er moeten voldoende ants actief zijn in het systeem, het aantal moet dynamisch zijn in correlatie met het aantal parcels.
-        Voorstel: een parcel spawnt 1 ant wnr het ontstaat. De AVGs houden een counter bij die omhoog gaat als ze een parcel
-                  afleveren. Wanneer een ant aankomt bij een AVG met counter > 0, sterft de ant en gaat de counter vd AVG omlaag
+        Voorstel: een parcel spawnt 1 ant wnr het ontstaat. De AGVs houden een counter bij die omhoog gaat als ze een parcel
+                  afleveren. Wanneer een ant aankomt bij een AGV met counter > 0, sterft de ant en gaat de counter vd AGV omlaag
                   (kan ook meer dan 1 ant per parcel -> research question: hoeveel best? )
     ? hoeveel hops maken deze ants per tick ?
     extra: ants kunnen evt een Map bijhouden v locaties en hoevaak ze daar al geweest zijn, zo kunnen ze prioriteit geven
@@ -56,18 +56,18 @@ Delegate MAS - 3 types of ants
     (Afstand van  A naar B is mss niet gelijk aan de afstand van B naar A door enkelrichtingstraten)
 
 2. Exploration ants
-    Worden uitgezonden door een AVG. Gaan mogelijke paden af en bepalen hoe lang de AVG hier over zou doen.
+    Worden uitgezonden door een AGV. Gaan mogelijke paden af en bepalen hoe lang de AGV hier over zou doen.
     Heuristiek vd paden bepalen en de beste kiezen, mogelijke parameters:
         - efficientie (som vd leverafstanden / totale afstand die effectief afgelegd zal worden)
-        - een andere AVG die maar een klein beetje minder snel zou zijn heeft mss al gecommit om een vd parcels te leveren
-            want kan inefficientie veroorzaken bij deze andere AVG
-        - een andere AVG heeft gecommit en zal er eerder zijn -> heuristiek = 0
-        - AVG moet mss herladen in de uitvalsbasis (?)
+        - een andere AGV die maar een klein beetje minder snel zou zijn heeft mss al gecommit om een vd parcels te leveren
+            want kan inefficientie veroorzaken bij deze andere AGV
+        - een andere AGV heeft gecommit en zal er eerder zijn -> heuristiek = 0
+        - AGV moet mss herladen in de uitvalsbasis (?)
             bezoek uitvalsbasis heeft positief effect op heuristiek, evenredig (of expontentieel) met hoeveel bijgeladen zou worden
         - ...
     Limiet opleggen voor de paden: aantal parcels of lengte/duratie vh pad anders mss oneindige exploratie
 
-3. Intention ants (de real-wordt AVGs)
+3. Intention ants (de real-wordt AGVs)
     Commit aan het beste pad dat de exploration ants vinden
     -> Beste pad volgen en op bepaalde momenten nieuwe exploration ants uitzenden
-    De parcels laten weten dat de AVG heeft gecommit zodat exploration ants van andere AVGs dit weten
+    De parcels laten weten dat de AGV heeft gecommit zodat exploration ants van andere AGVs dit weten
