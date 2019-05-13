@@ -9,45 +9,45 @@ import java.util.List;
 
 public class ExplorationAnt implements TickListener {
 
-    public final static int DEFAULT_STOP_COUNT_LIMIT = 4;
+	public final static int DEFAULT_STOP_COUNT_LIMIT = 4;
 
-    /**
-     * Creates an ExplorationAnt that explores routes
-     * @param intentionAnt The IntentionAnt that sent out this ExplorationAnt
-     * @param stopCountLimit The amount of stops a planned out route should be
-     */
-    public ExplorationAnt(IntentionAnt intentionAnt, int stopCountLimit) {
-        this.intentionAnt = intentionAnt;
-    }
+	/**
+	 * Creates an ExplorationAnt that explores routes
+	 * @param intentionAnt The IntentionAnt that sent out this ExplorationAnt
+	 * @param stopCountLimit The amount of stops a planned out route should be
+	 */
+	public ExplorationAnt(IntentionAnt intentionAnt, int stopCountLimit) {
+		this.intentionAnt = intentionAnt;
+	}
 
-    private final IntentionAnt intentionAnt;
+	private final IntentionAnt intentionAnt;
 
-    /* EXPLORATION */
-
-
+	/* EXPLORATION */
 
 
-    /* IMPLEMENTED INTERFACE METHODS */
-
-    @Override
-    public void tick(TimeLapse timeLapse) {
-        // TODO
-    }
-
-    @Override
-    public void afterTick(TimeLapse timeLapse) {
-        // TODO
-    }
 
 
-    /* DEPENDENCY INJECTION */
-    // TODO: dependency injection van deze Model fixen
+	/* IMPLEMENTED INTERFACE METHODS */
 
-    void injectRoadSignModel(RoadSignModel m) {
-        roadSignModel = m;
-    }
+	@Override
+	public void tick(TimeLapse timeLapse) {
+		// TODO
+	}
 
-    private RoadSignModel roadSignModel;
+	@Override
+	public void afterTick(TimeLapse timeLapse) {
+		// TODO
+	}
+
+
+	/* DEPENDENCY INJECTION */
+	// TODO: dependency injection van deze Model fixen
+
+	void injectRoadSignModel(RoadSignModel m) {
+		roadSignModel = m;
+	}
+
+	private RoadSignModel roadSignModel;
 
 
 }

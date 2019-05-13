@@ -21,114 +21,113 @@ import java.io.IOException;
 
 public class Simulation {
 
-    private static final double PARCEL_SPAWN_CHANCE = 0.006;
+	private static final double PARCEL_SPAWN_CHANCE = 0.006;
 
-    public static void main(String[] args) {
-        run();
-    }
+	public static void main(String[] args) {
+		run();
+	}
 
-    // in intelliJ doe: rechtermuisknop > Copy relative path (Crtl + Alt + Shift + c)
-    private static final String MAP_FILE = "leuven.dot";
-
-
-    public static Simulator run() {
-
-        // build view
-        View.Builder view = createGui();
-
-        // create simulator and add models
-        final Simulator simulator = Simulator.builder()
-            .addModel(RoadModelBuilders.staticGraph(loadGraph(MAP_FILE))) // add map of Leuven
-            .addModel(DefaultPDPModel.builder())
-            .addModel(roadSign.RoadSignModel.builder())
-            .addModel(view)
-            .build();
+	// in intelliJ doe: rechtermuisknop > Copy relative path (Crtl + Alt + Shift + c)
+	private static final String MAP_FILE = "leuven.dot";
 
 
-        // get rng object
-        final RandomGenerator rng = simulator.getRandomGenerator();
+	public static Simulator run() {
 
-        // get RoadModel
-        final RoadModel roadModel = simulator.getModelProvider().getModel(RoadModel.class);
+		// build view
+		View.Builder view = createGui();
 
-        // register depot (uitvalsbasis vd AGVs)
-        simulator.register(new Depot(roadModel.getRandomPosition(rng)));
-
-        //TODO: what is a Ufo?
-        // register Ufos
-        for (int i = 0; i < 10; i++) {
-            simulator.register(new IntentionAnt(roadModel.getRandomPosition(rng)));
-        }
-
-        // random package generation
-        simulator.addTickListener(new TickListener() {
-            @Override
-            public void tick(TimeLapse time) {
-                if (rng.nextDouble() < PARCEL_SPAWN_CHANCE) {
-                    simulator.register(new RoadSignParcel(
-                        Parcel.builder(roadModel.getRandomPosition(rng),roadModel.getRandomPosition(rng))
-                            .buildDTO()));
-                }
-            }
-
-            @Override
-            public void afterTick(TimeLapse timeLapse) {}
-        });
+		// create simulator and add models
+		final Simulator simulator = Simulator.builder()
+			.addModel(RoadModelBuilders.staticGraph(loadGraph(MAP_FILE))) // add map of Leuven
+			.addModel(DefaultPDPModel.builder())
+			.addModel(roadSign.RoadSignModel.builder())
+			.addModel(view)
+			.build();
 
 
-        simulator.start();
+		// get rng object
+		final RandomGenerator rng = simulator.getRandomGenerator();
 
-        roadModel.getObjects();
+		// get RoadModel
+		final RoadModel roadModel = simulator.getModelProvider().getModel(RoadModel.class);
 
-        return simulator;
-    }
+		// register depot (uitvalsbasis vd AGVs)
+		simulator.register(new Depot(roadModel.getRandomPosition(rng)));
+
+		//TODO: what is a Ufo?
+		// register Ufos
+		for (int i = 0; i < 10; i++) {
+			simulator.register(new IntentionAnt(roadModel.getRandomPosition(rng)));
+		}
+
+		// random package generation
+		simulator.addTickListener(new TickListener() {
+			@Override
+			public void tick(TimeLapse time) {
+				if (rng.nextDouble() < PARCEL_SPAWN_CHANCE) {
+					simulator.register(new RoadSignParcel(
+						Parcel.builder(roadModel.getRandomPosition(rng),roadModel.getRandomPosition(rng))
+							.buildDTO()));
+				}
+			}
+
+			@Override
+			public void afterTick(TimeLapse timeLapse) {}
+		});
 
 
+		simulator.start();
 
-    static View.Builder createGui() {
+		roadModel.getObjects();
 
-        View.Builder view = View.builder()
-            .with(GraphRoadModelRenderer.builder())
-            .with(RoadUserRenderer.builder()
-                .withImageAssociation(
-                    Depot.class, "/images/saturnus.png")
-                .withImageAssociation(
-                    IntentionAnt.class, "/images/ufo.png")
-                .withImageAssociation(
-                    RoadSignParcel.class, "/images/parcel.png"));
-
-        return view;
-    }
-
-
-    static Graph<MultiAttributeData> loadGraph(String name) {
-        try {
-            final Graph<MultiAttributeData> g = DotGraphIO
-                .getMultiAttributeGraphIO(
-                    Filters.selfCycleFilter())
-                .read(
-                    Simulation.class.getResourceAsStream(name));
-            return g;
-        } catch (final FileNotFoundException e) {
-            throw new IllegalStateException(e);
-        } catch (final IOException e) {
-            throw new IllegalStateException(e);
-        }
-    }
+		return simulator;
+	}
 
 
 
-    // TODO: time windows
-    static class Package extends Parcel {
-        Package(ParcelDTO dto) {
-            super(dto);
-        }
+	static View.Builder createGui() {
 
-        @Override
-        public void initRoadPDP(RoadModel pRoadModel, PDPModel pPdpModel) {}
-    }
+		View.Builder view = View.builder()
+			.with(GraphRoadModelRenderer.builder())
+			.with(RoadUserRenderer.builder()
+				.withImageAssociation(
+					Depot.class, "/images/saturnus.png")
+				.withImageAssociation(
+					IntentionAnt.class, "/images/ufo.png")
+				.withImageAssociation(
+					RoadSignParcel.class, "/images/parcel.png"));
 
+		return view;
+	}
+
+
+	static Graph<MultiAttributeData> loadGraph(String name) {
+		try {
+			final Graph<MultiAttributeData> g = DotGraphIO
+				.getMultiAttributeGraphIO(
+					Filters.selfCycleFilter())
+				.read(
+					Simulation.class.getResourceAsStream(name));
+			return g;
+		} catch (final FileNotFoundException e) {
+			throw new IllegalStateException(e);
+		} catch (final IOException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
+
+
+	// TODO: time windows
+	static class Package extends Parcel {
+		Package(ParcelDTO dto) {
+			super(dto);
+		}
+
+		@Override
+		public void initRoadPDP(RoadModel pRoadModel, PDPModel pPdpModel) {}
+	}
 
 }
 
-// vim: set tabstop=4 shiftwidth=4 expandtab:
+// vim: noexpandtab:
