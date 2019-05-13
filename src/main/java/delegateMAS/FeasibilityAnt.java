@@ -15,6 +15,7 @@ import javax.measure.Measure;
 import javax.measure.quantity.Length;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class FeasibilityAnt implements TickListener {
 
@@ -46,6 +47,10 @@ public class FeasibilityAnt implements TickListener {
     private RoadSignPoint currentRSPoint;
     private RoadModel roadModel;
 
+    private RoadModel getRoadModel() {
+        return roadModel;
+    }
+
 
     /* ROADSIGN METHODS */
 
@@ -68,7 +73,7 @@ public class FeasibilityAnt implements TickListener {
         if (next != null) {
             // create RoadSign
             createRoadSign(currentRSPoint, next);
-            // TODO: beslissen of we hier ook ineens een RoadSign in de andere richting aanmaken adhv createRoadSign(next, currentRSPoint);
+            createRoadSign(next, currentRSPoint);
 
             // move to new RoadSign
             currentRSPoint = next;
@@ -81,7 +86,10 @@ public class FeasibilityAnt implements TickListener {
      * @param to the destination RoadSignPoint
      */
     private void createRoadSign(RoadSignPoint from, RoadSignPoint to) {
-        Measure<Double, Length> distance = roadModel.getDistanceOfPath(new ArrayList<Point>(Arrays.asList(from, to)));
+
+        List<Point> path = getRoadModel().getShortestPathTo(from, to); // shortest path
+        Measure<Double, Length> distance = roadModel.getDistanceOfPath(path); // distance of shortest path
+
         // TODO: controleren of distance.getValue() effectief het juiste getal is (Measure<Double, Length> is niet helemaal duidelijk)
         from.addRoadSign(new RoadSign(to, distance.getValue()));
     }

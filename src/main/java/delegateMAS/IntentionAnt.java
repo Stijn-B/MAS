@@ -101,7 +101,8 @@ public class IntentionAnt extends Vehicle implements TickListener {
 
     @Override
     protected void tickImpl(TimeLapse time) {
-
+        // TODO
+        // getRoadModel().followPath();
     }
 
     /* DEPENDENCY INJECTION */
