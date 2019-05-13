@@ -119,7 +119,6 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignParcel> {
 
 
     /* DEPENDENCY INJECTION */
-    // TODO: dependency injection van deze Model fixen
 
     public static RoadSignModelBuilder builder() {
         return new RoadSignModelBuilder();
