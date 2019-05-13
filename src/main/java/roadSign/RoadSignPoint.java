@@ -103,6 +103,7 @@ public class RoadSignPoint extends Point {
     public int hashCode() { return getID(); }
 
 
+    //TODO: remove
     // ROAD SIGN POINT TEST
     /*
     public static void main(String[] args) {
@@ -144,3 +145,5 @@ public class RoadSignPoint extends Point {
     */
 
 }
+
+// vim: set shiftwidth=4 tabstop=4 expandtab:

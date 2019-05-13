@@ -8,7 +8,7 @@ import com.github.rinde.rinsim.core.model.road.RoadModel;
 import java.util.ArrayList;
 import java.util.Random;
 
-
+//TODO: header with dependencies etcetera
 public class RoadSignModel extends Model.AbstractModel<RoadSignParcel> {
 
     RoadSignModel(RoadModel rm)
@@ -101,6 +101,7 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignParcel> {
     @Override
     public boolean register(RoadSignParcel element){
         addRoadSignParcel(element);
+	element.injectRoadSignModel(this);
         return true;
     }
 
@@ -127,8 +128,7 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignParcel> {
     public static class RoadSignModelBuilder extends ModelBuilder.AbstractModelBuilder<RoadSignModel, RoadSignParcel> {
 
         RoadSignModelBuilder() {
-            setProvidingTypes(RoadSignModel.class);
-            setDependencies(RoadSignModel.class);
+            setDependencies(RoadModel.class);
         }
 
         @Override

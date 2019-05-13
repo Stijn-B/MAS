@@ -40,7 +40,7 @@ public class Simulation {
         final Simulator simulator = Simulator.builder()
             .addModel(RoadModelBuilders.staticGraph(loadGraph(MAP_FILE))) // add map of Leuven
             .addModel(DefaultPDPModel.builder())
-            //.addModel(roadSign.RoadSignModel.builder()) TODO
+            .addModel(roadSign.RoadSignModel.builder())
             .addModel(view)
             .build();
 
@@ -51,9 +51,10 @@ public class Simulation {
         // get RoadModel
         final RoadModel roadModel = simulator.getModelProvider().getModel(RoadModel.class);
 
-        // register depot (uitvalsbasis vd AVGs)
+        // register depot (uitvalsbasis vd AGVs)
         simulator.register(new Depot(roadModel.getRandomPosition(rng)));
 
+        //TODO: what is a Ufo?
         // register Ufos
         for (int i = 0; i < 10; i++) {
             simulator.register(new IntentionAnt(roadModel.getRandomPosition(rng)));

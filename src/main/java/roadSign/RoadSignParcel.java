@@ -25,6 +25,12 @@ public class RoadSignParcel extends Parcel {
         deliveryRSPoint = new RoadSignPoint(this, parcelDto.getDeliveryLocation());
     }
 
+    private RoadSignModel model;
+
+    public void injectRoadSignModel(RoadSignModel model) {
+        this.model = model;
+    }
+
     private final int ID;
 
     public int getID() {
@@ -48,3 +54,5 @@ public class RoadSignParcel extends Parcel {
 
     public int hashCode() { return getID(); }
 }
+
+// vim: set shiftwidth=4 tabstop=4 expandtab:
