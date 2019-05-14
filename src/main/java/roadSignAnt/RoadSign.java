@@ -16,7 +16,7 @@ public class RoadSign implements Comparable<RoadSign> {
 	 * @param distance the distance between the start- and endpoints
 	 * @param lifeTime how long the roadSign.RoadSign should stay alive in milliseconds
 	 */
-	public RoadSign(Point destination, double distance, long lifeTime) {
+	public RoadSign(RoadSignPoint destination, double distance, long lifeTime) {
 		this.dest = destination;
 		this.distance = distance;
 		this.life = lifeTime;
@@ -27,11 +27,11 @@ public class RoadSign implements Comparable<RoadSign> {
 	 * @param destination the destination point of the roadSign.RoadSign
 	 * @param distance the distance between the start- and endpoints
 	 */
-	public RoadSign(Point destination, double distance) {
+	public RoadSign(RoadSignPoint destination, double distance) {
 		this(destination, distance, DEFAULT_LIFETIME_MS);
 	}
 
-	private final Point dest;
+	private final RoadSignPoint dest;
 	private final double distance;
 	private double life;
 
@@ -39,7 +39,7 @@ public class RoadSign implements Comparable<RoadSign> {
 	 * Get the endpoint of the Roadsign
 	 * @return the endpoint of the Roadsign
 	 */
-	public Point getDestination() {
+	public RoadSignPoint getDestination() {
 		return dest;
 	}
 

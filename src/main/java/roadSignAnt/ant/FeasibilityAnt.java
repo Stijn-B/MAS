@@ -9,6 +9,8 @@ import roadSignAnt.*;
 
 import javax.measure.Measure;
 import javax.measure.quantity.Length;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
@@ -42,34 +44,35 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 		return currentRSPoint;
 	}
 
+	private RoadSignPointOwner currOwner;
+
+	public RoadSignPointOwner getCurrOwner() {
+		return currOwner;
+	}
 
 	/* ROADSIGN METHODS */
 
-	/**
-	 * Choose a next RoadSignPoint, create a RoadSigns, and move to this chosen RoadSignPoint
-	 */
-	private void nextRoadSign() {
-		RoadSignPoint next;
+	private void exploreNextOwner() {
+		exploreNextOwner(getRoadSignModel().getRandomOwner());
+	}
 
-		// if at pickup point, might go straight to delivery point (otherwise to a random point)
-		if (getCurrentRSPoint().getRoadSignPointOwner().getType() == RoadSignPointOwner.Type.PARCEL)
-		if (currentRSPoint == currentRSPoint.getParcel().getPickupLocationRoadSignPoint() && roadSignModel.getRandomDouble() <= FROM_PICKUP_TO_DEL_CHANCE) {
-			next = currentRSPoint.getParcel().getDeliveryLocationRoadSignPoint();
-		} else {
-			// get a random roadSignParcel
-			RoadSignParcel parcel = getModel().getRandomRoadSignParcel();
-			// 60/40 chance of going to the pickup/delivery location
-			next = getModel().getRandomDouble() < 0.6 ? parcel.getPickupLocationRoadSignPoint() : parcel.getDeliveryLocationRoadSignPoint();
+	private void exploreNextOwner(RoadSignPointOwner nextOwner) {
+
+		// create list of all RoadSignPoints (of both the current and next RoadSignPointOwner)
+		List<RoadSignPoint> points = new ArrayList<>();
+		points.addAll(Arrays.asList(currOwner.getRoadSignPoints()));
+		points.addAll(Arrays.asList(nextOwner.getRoadSignPoints()));
+		int size = points.size();
+
+		// create RoadSigns between all the objects in the list, in both directions (e.g. iterates over (1,0) and (0,1))
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				if (i != j) createRoadSign(points.get(i), points.get(j));
+			}
 		}
 
-		if (next != null) {
-			// create RoadSign
-			createRoadSign(currentRSPoint, next);
-			createRoadSign(next, currentRSPoint);
-
-			// move to new RoadSign
-			currentRSPoint = next;
-		}
+		// 'move' to next owner
+		currOwner = nextOwner;
 	}
 
 	/**
@@ -96,7 +99,7 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 
 		// create RoadSigns untill there is no time left
 		while (MS_PER_ROADSIGN <= time) {
-			nextRoadSign();
+			exploreNextOwner();
 			time -= MS_PER_ROADSIGN;
 		}
 	}

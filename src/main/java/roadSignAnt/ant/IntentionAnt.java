@@ -52,7 +52,7 @@ public class IntentionAnt extends Ant {
 //		Point from = getRoadModel().getPosition(this);
 //
 //		// iterate over parcel list
-//		ArrayList<RoadSignParcel> list = getModel().getParcelList();
+//		ArrayList<RoadSignParcel> list = getModel().getOwnerList();
 //		for (int i = 0; i < list.size(); i++) {
 //
 //			// get RoadSignPoint of parcel pickuplocation and distance to it

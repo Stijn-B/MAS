@@ -50,6 +50,10 @@ public class RoadSignPoint extends Point {
 		roadSigns.add(newSign);
 	}
 
+	public Iterator<RoadSign> getRoadSignsIterator() {
+		return roadSigns.iterator();
+	}
+
 	/**
 	 * Returns the first n RoadSigns (pointing the n closest destinations)
 	 * If there are less than n RoadSigns, less RoadSigns will be returned.
@@ -62,7 +66,11 @@ public class RoadSignPoint extends Point {
 
 		// add the first n elements to the result
 		for(int i = 0; i < n; i ++) {
-			result.add(iter.next());
+			try {
+				result.add(iter.next());
+			} catch (NoSuchElementException e) { // no elements left
+				return result;
+			}
 		}
 		return result;
 	}
