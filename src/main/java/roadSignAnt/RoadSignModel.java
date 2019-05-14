@@ -140,9 +140,6 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignAntObject> {
 	}
 	*/
 
-
-	/* DEPENDENCY INJECTION */
-
 	public static RoadSignModelBuilder builder() {
 		return new RoadSignModelBuilder();
 	}
