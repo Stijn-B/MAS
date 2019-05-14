@@ -11,19 +11,16 @@ public class RoadSignPoint extends Point {
 
 	private static int ID_COUNTER = 0;
 
-	public RoadSignPoint(RoadSignParcel parcel, double pX, double pY) {
+	public RoadSignPoint(RoadSignPointOwner holder, double pX, double pY) {
 		super(pX, pY);
-		this.parcel = parcel;
+		this.roadSignPointHolder = holder;
 
 		ID = ID_COUNTER;
-		if (ID_COUNTER < Integer.MAX_VALUE)
-			ID_COUNTER += 1;
-		else
-			ID_COUNTER = 0;
+		ID_COUNTER = RoadSignPointOwner.loopAroundIncrement(ID_COUNTER);
 	}
 
-	public RoadSignPoint(RoadSignParcel parcel, Point point) {
-		this(parcel, point.x, point.y);
+	public RoadSignPoint(RoadSignPointOwner roadSignPointHolder, Point point) {
+		this(roadSignPointHolder, point.x, point.y);
 	}
 
 	private final int ID;
@@ -32,16 +29,17 @@ public class RoadSignPoint extends Point {
 		return ID;
 	}
 
-	private final RoadSignParcel parcel;
+	private final RoadSignPointOwner roadSignPointHolder;
 
-	public RoadSignParcel getParcel() {
-		return parcel;
+	public RoadSignPointOwner getRoadSignPointHolder() {
+		return roadSignPointHolder;
 	}
 
 	/**
 	 * RoadSigns are stored sorted by ascending distance in a LinkedList
 	 */
 	//TODO: Sander: consider some kind of hash-based sorted list for faster sorting
+	// -> is een linked list die altijd gesorteerd blijft (zie addRoadSign), dus er moet nooit een 'sort' operatie uitgevoerd worden
 	List<RoadSign> roadSigns = new LinkedList<>();
 
 	/**
@@ -102,48 +100,6 @@ public class RoadSignPoint extends Point {
 	}
 
 	public int hashCode() { return getID(); }
-
-
-	//TODO: remove
-	// ROAD SIGN POINT TEST
-	/*
-	public static void main(String[] args) {
-
-		roadSign.RoadSignPoint rsPoint = new roadSign.RoadSignPoint(5.0, 5.0);
-
-		for (int i = 0; i < 5; i++) {
-			rsPoint.addRoadSign(new roadSign.RoadSign(new Point(i, i), 10*i, 200*i+50));
-		}
-
-		for (int i = 0; i < rsPoint.getRoadSignCount(); i++) {
-			System.out.println(rsPoint.getRoadSign(i));
-		}
-		System.out.println("-- add more roadsigns");
-
-
-		for (int i = 0; i < 5; i++) {
-			rsPoint.addRoadSign(new roadSign.RoadSign(new Point(i, i), 50/(i+1), 200*i));
-		}
-
-		for (int i = 0; i < rsPoint.getRoadSignCount(); i++) {
-			System.out.println(rsPoint.getRoadSign(i));
-		}
-		System.out.println("-- age 50 ms");
-
-		rsPoint.age(50);
-
-		for (int i = 0; i < rsPoint.getRoadSignCount(); i++) {
-			System.out.println(rsPoint.getRoadSign(i));
-		}
-		System.out.println("-- age 500 ms");
-
-		rsPoint.age(500);
-
-		for (int i = 0; i < rsPoint.getRoadSignCount(); i++) {
-			System.out.println(rsPoint.getRoadSign(i));
-		}
-	}
-	*/
 
 }
 
