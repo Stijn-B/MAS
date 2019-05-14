@@ -1,4 +1,4 @@
-package delegateMAS;
+package roadSignAnt.ant;
 
 import com.github.rinde.rinsim.core.model.pdp.PDPModel;
 import com.github.rinde.rinsim.core.model.pdp.PDPObjectImpl;
@@ -6,10 +6,10 @@ import com.github.rinde.rinsim.core.model.road.RoadModel;
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
-import roadSign.RoadSign;
-import roadSign.RoadSignModel;
-import roadSign.RoadSignParcel;
-import roadSign.RoadSignPoint;
+import roadSignAnt.RoadSign;
+import roadSignAnt.RoadSignModel;
+import roadSignAnt.RoadSignParcel;
+import roadSignAnt.RoadSignPoint;
 
 import javax.measure.Measure;
 import javax.measure.quantity.Length;
@@ -26,7 +26,7 @@ public class FeasibilityAnt implements TickListener {
 	public static final long MS_PER_ROADSIGN = Math.round(Math.ceil(1000/ROADSIGNS_PER_SEC)); // amount of ms the ant uses to create a RoadSign
 
 
-	//TODO: this should be done by BDI I think
+	//TODO: Sander: pick suitable chance here
 	// de kans dat als de ant bij een pickup location is, de bijbehorende delivery location als volgende punt gekozen wordt (ipv een random punt)
 	public static final double FROM_PICKUP_TO_DEL_CHANCE = 0.25;
 
@@ -112,13 +112,13 @@ public class FeasibilityAnt implements TickListener {
 	@Override
 	public void afterTick(TimeLapse timeLapse) {
 		// TODO: hier evt de ant laten 'sterven' indien nodig
+		// TODO: Sander: I do not think feasibility ants should die
 	}
 
 
 	/* DEPENDENCY INJECTION */
-	// TODO: dependency injection van deze Model fixen
 
-	void injectRoadSignModel(RoadSignModel m) {
+	public void injectRoadSignModel(RoadSignModel m) {
 		roadSignModel = m;
 	}
 

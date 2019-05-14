@@ -1,9 +1,9 @@
-package delegateMAS;
+package roadSignAnt.ant;
 
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
-import roadSign.RoadSignModel;
+import roadSignAnt.RoadSignModel;
 
 import java.util.List;
 

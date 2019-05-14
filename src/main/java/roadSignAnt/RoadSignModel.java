@@ -1,4 +1,4 @@
-package roadSign;
+package roadSignAnt;
 
 import com.github.rinde.rinsim.core.model.DependencyProvider;
 import com.github.rinde.rinsim.core.model.Model;
@@ -7,6 +7,9 @@ import com.github.rinde.rinsim.core.model.road.RoadModel;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+//TODO: remove
+import roadSignAnt.ant.FeasibilityAnt;
 
 //TODO: header with dependencies etcetera
 public class RoadSignModel extends Model.AbstractModel<RoadSignParcel> {
@@ -32,6 +35,7 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignParcel> {
 	/* ROADSIGNPARCEL LIST */
 
 	private ArrayList<RoadSignParcel> parcelList = new ArrayList<>();
+	//TODO: Sander: what is this?
 	private ArrayList<RoadSignParcel> randomParcelList = new ArrayList<>();
 
 	/**
@@ -101,7 +105,12 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignParcel> {
 	@Override
 	public boolean register(RoadSignParcel element){
 		addRoadSignParcel(element);
-	element.injectRoadSignModel(this);
+		element.injectRoadSignModel(this);
+		return true;
+	}
+	//TODO: generalize for all ants
+	public boolean register(FeasibilityAnt element){
+		element.injectRoadSignModel(this);
 		return true;
 	}
 

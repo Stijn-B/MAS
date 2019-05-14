@@ -1,4 +1,4 @@
-package roadSign;
+package roadSignAnt;
 
 import com.github.rinde.rinsim.geom.Point;
 import org.jetbrains.annotations.NotNull;

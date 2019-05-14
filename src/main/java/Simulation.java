@@ -11,9 +11,11 @@ import com.github.rinde.rinsim.geom.io.Filters;
 import com.github.rinde.rinsim.ui.View;
 import com.github.rinde.rinsim.ui.renderers.GraphRoadModelRenderer;
 import com.github.rinde.rinsim.ui.renderers.RoadUserRenderer;
-import delegateMAS.IntentionAnt;
 import org.apache.commons.math3.random.RandomGenerator;
-import roadSign.RoadSignParcel;
+
+import roadSignAnt.RoadSignModel;
+import roadSignAnt.RoadSignParcel;
+import roadSignAnt.ant.IntentionAnt;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -40,7 +42,7 @@ public class Simulation {
 		final Simulator simulator = Simulator.builder()
 			.addModel(RoadModelBuilders.staticGraph(loadGraph(MAP_FILE))) // add map of Leuven
 			.addModel(DefaultPDPModel.builder())
-			.addModel(roadSign.RoadSignModel.builder())
+			.addModel(RoadSignModel.builder())
 			.addModel(view)
 			.build();
 

@@ -1,4 +1,4 @@
-package delegateMAS;
+package roadSignAnt.ant;
 
 import com.github.rinde.rinsim.core.model.pdp.Vehicle;
 import com.github.rinde.rinsim.core.model.pdp.VehicleDTO;
@@ -6,9 +6,9 @@ import com.github.rinde.rinsim.core.model.road.RoadModel;
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
-import roadSign.RoadSignModel;
-import roadSign.RoadSignParcel;
-import roadSign.RoadSignPoint;
+import roadSignAnt.RoadSignModel;
+import roadSignAnt.RoadSignParcel;
+import roadSignAnt.RoadSignPoint;
 
 import javax.measure.Measure;
 import javax.measure.quantity.Length;

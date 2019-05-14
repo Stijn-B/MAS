@@ -1,4 +1,4 @@
-package roadSign;
+package roadSignAnt;
 
 import com.github.rinde.rinsim.geom.Point;
 
@@ -41,6 +41,7 @@ public class RoadSignPoint extends Point {
 	/**
 	 * RoadSigns are stored sorted by ascending distance in a LinkedList
 	 */
+	//TODO: Sander: consider some kind of hash-based sorted list for faster sorting
 	List<RoadSign> roadSigns = new LinkedList<>();
 
 	/**

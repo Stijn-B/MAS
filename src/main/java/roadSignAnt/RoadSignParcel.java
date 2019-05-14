@@ -1,4 +1,4 @@
-package roadSign;
+package roadSignAnt;
 
 import com.github.rinde.rinsim.core.model.pdp.Parcel;
 import com.github.rinde.rinsim.core.model.pdp.ParcelDTO;
