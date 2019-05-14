@@ -5,9 +5,7 @@ import com.github.rinde.rinsim.core.model.pdp.ParcelDTO;
 
 import javax.annotation.Nullable;
 
-public class RoadSignParcel extends Parcel {
-
-	private static int ID_COUNTER = 0;
+public class RoadSignParcel extends Parcel implements RoadSignPointOwner {
 
 	public RoadSignParcel(ParcelDTO parcelDto) {
 		super(parcelDto);
@@ -15,26 +13,35 @@ public class RoadSignParcel extends Parcel {
 		if (parcelDto.getPickupLocation() == null || parcelDto.getDeliveryLocation() == null)
 			throw new NullPointerException("Pickup- and DeliveryLocation have to be specified in the ParcelDTO");
 
-		ID = ID_COUNTER;
-		if (ID_COUNTER < Integer.MAX_VALUE)
-			ID_COUNTER += 1;
-		else
-			ID_COUNTER = 0;
+		ID = RoadSignPointOwnerID.getID();
 
-		pickupRSPoint = new RoadSignPoint(this, parcelDto.getPickupLocation());
-		deliveryRSPoint = new RoadSignPoint(this, parcelDto.getDeliveryLocation());
+		pickupRSPoint = new RoadSignPoint(this, RoadSignPoint.Type.PARCEL_PICKUP, parcelDto.getPickupLocation());
+		deliveryRSPoint = new RoadSignPoint(this, RoadSignPoint.Type.PARCEL_DELIVERY, parcelDto.getDeliveryLocation());
+		points = new RoadSignPoint[]{ pickupRSPoint, deliveryRSPoint };
 	}
 
-	private RoadSignModel model;
-
-	public void injectRoadSignModel(RoadSignModel model) {
-		this.model = model;
-	}
+	/* ID */
 
 	private final int ID;
 
 	public int getID() {
 		return ID;
+	}
+
+
+	/* TYPE */
+
+	public RoadSignPointOwner.Type getRoadSignPointOwnerType() {
+		return Type.PARCEL;
+	}
+
+
+	/* ROADSINGPOINTS */
+
+	private final RoadSignPoint[] points;
+
+	public RoadSignPoint[] getRoadSignPoints() {
+		return points.clone();
 	}
 
 	private final RoadSignPoint pickupRSPoint;
@@ -47,12 +54,24 @@ public class RoadSignParcel extends Parcel {
 		return deliveryRSPoint;
 	}
 
+	/* DEPENDENCY INJECTION*/
+
+	private RoadSignModel model;
+
+	public void injectRoadSignModel(RoadSignModel model) {
+		this.model = model;
+	}
+
+
+	/* OTHER */
+
 	@Override
 	public boolean equals(@Nullable Object other) {
 		return other != null && other instanceof RoadSignParcel && this.getID() == ((RoadSignParcel) other).getID();
 	}
 
 	public int hashCode() { return getID(); }
+
 }
 
 // vim: noexpandtab:

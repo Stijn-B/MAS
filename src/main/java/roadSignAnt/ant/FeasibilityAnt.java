@@ -1,30 +1,22 @@
 package roadSignAnt.ant;
 
-import com.github.rinde.rinsim.core.model.pdp.PDPModel;
-import com.github.rinde.rinsim.core.model.pdp.PDPObjectImpl;
 import com.github.rinde.rinsim.core.model.road.RoadModel;
+import com.github.rinde.rinsim.core.model.road.RoadUser;
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
-import roadSignAnt.RoadSign;
-import roadSignAnt.RoadSignModel;
-import roadSignAnt.RoadSignParcel;
-import roadSignAnt.RoadSignPoint;
+import roadSignAnt.*;
 
 import javax.measure.Measure;
 import javax.measure.quantity.Length;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class FeasibilityAnt implements TickListener {
-
+public class FeasibilityAnt implements TickListener, RoadUser {
 
 	/* STATIC VAR */
 
 	public static final double ROADSIGNS_PER_SEC = 20; // amount of RoadSigns the ant creates per seconds
 	public static final long MS_PER_ROADSIGN = Math.round(Math.ceil(1000/ROADSIGNS_PER_SEC)); // amount of ms the ant uses to create a RoadSign
-
 
 	//TODO: Sander: pick suitable chance here
 	// de kans dat als de ant bij een pickup location is, de bijbehorende delivery location als volgende punt gekozen wordt (ipv een random punt)
@@ -37,30 +29,30 @@ public class FeasibilityAnt implements TickListener {
 	 * Create a FeasibilityAnt at the given RoadSignParcel
 	 * @param curr the RoadSignParcel where to create the new FeasibilityAnt
 	 */
-	FeasibilityAnt(RoadSignParcel curr, RoadModel rm) {
-		currentRSPoint = curr.getPickupLocationRoadSignPoint();
+	FeasibilityAnt(RoadSignPoint curr, RoadModel rm) {
+		currentRSPoint = curr;
 		roadModel = rm;
 	}
 
 	private long time = 0;
 
 	private RoadSignPoint currentRSPoint;
-	private RoadModel roadModel;
 
-	private RoadModel getRoadModel() {
-		return roadModel;
+	public RoadSignPoint getCurrentRSPoint() {
+		return currentRSPoint;
 	}
 
 
 	/* ROADSIGN METHODS */
 
 	/**
-	 * Choose a next RoadSignPoint, create a RoadSign that points to it, and move to this chosen RoadSignPoint
+	 * Choose a next RoadSignPoint, create a RoadSigns, and move to this chosen RoadSignPoint
 	 */
 	private void nextRoadSign() {
 		RoadSignPoint next;
 
-		// if at pickup point, might go straight to delivery point (otherwise to a random point
+		// if at pickup point, might go straight to delivery point (otherwise to a random point)
+		if (getCurrentRSPoint().getRoadSignPointOwner().getType() == RoadSignPointOwner.Type.PARCEL)
 		if (currentRSPoint == currentRSPoint.getParcel().getPickupLocationRoadSignPoint() && roadSignModel.getRandomDouble() <= FROM_PICKUP_TO_DEL_CHANCE) {
 			next = currentRSPoint.getParcel().getDeliveryLocationRoadSignPoint();
 		} else {
@@ -116,13 +108,28 @@ public class FeasibilityAnt implements TickListener {
 	}
 
 
-	/* DEPENDENCY INJECTION */
+	/* DEPENDENCY INJECTIONS */
+
+	private RoadModel roadModel;
+
+	public void initRoadUser(RoadModel model) {
+		roadModel = model;
+	}
+
+	public RoadModel getRoadModel() {
+		return roadModel;
+	}
+
 
 	public void injectRoadSignModel(RoadSignModel m) {
 		roadSignModel = m;
 	}
 
 	private RoadSignModel roadSignModel;
+
+	public RoadSignModel getRoadSignModel() {
+		return roadSignModel;
+	}
 
 
 }
