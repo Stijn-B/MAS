@@ -1,6 +1,6 @@
 package roadSignAnt;
 
-public abstract class RoadSignPointHolder {
+public abstract class RoadSignPointHolder extends RoadSignAntObject {
 
 	private static long ID_COUNTER = 0;
 

@@ -12,7 +12,8 @@ import java.util.Random;
 import roadSignAnt.ant.FeasibilityAnt;
 
 //TODO: header with dependencies etcetera
-public class RoadSignModel extends Model.AbstractModel<RoadSignParcel> {
+//TODO: rename to RoadSignAntModel
+public class RoadSignModel extends Model.AbstractModel<RoadSignAntObject> {
 
 	RoadSignModel(RoadModel rm)
 	{
@@ -103,16 +104,20 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignParcel> {
 	 * @return true if the object was successfully registered
 	 */
 	@Override
+	public boolean register(RoadSignAntObject element) {
+		element.injectRoadSignModel(this);
+		return true;
+	}
+	//TODO: add register for RoadSignPointHolders / RoadSignParcels
+	/*
+	//TODO: should we add override here?
 	public boolean register(RoadSignParcel element){
+		element.injectRoadSignModel(this);
+		//TODO: return false if element has already been registered
 		addRoadSignParcel(element);
-		element.injectRoadSignModel(this);
 		return true;
 	}
-	//TODO: generalize for all ants
-	public boolean register(FeasibilityAnt element){
-		element.injectRoadSignModel(this);
-		return true;
-	}
+	*/
 
 	/**
 	 * Unregister element from a model.
@@ -121,10 +126,19 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignParcel> {
 	 *		 the model and it was successfully removed)
 	 */
 	@Override
+	public boolean unregister(RoadSignAntObject element) {
+		//TODO: remove injection?
+		return true;
+	}
+	//TODO: add unregister for RoadSignPointHolders / RoadSignParcels
+	/*
+	//TODO: should we add override here?
 	public boolean unregister(RoadSignParcel element) {
+		//TODO: remove injection?
 		removeRoadSignParcel(element);
 		return true;
 	}
+	*/
 
 
 	/* DEPENDENCY INJECTION */
@@ -133,7 +147,7 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignParcel> {
 		return new RoadSignModelBuilder();
 	}
 
-	public static class RoadSignModelBuilder extends ModelBuilder.AbstractModelBuilder<RoadSignModel, RoadSignParcel> {
+	public static class RoadSignModelBuilder extends ModelBuilder.AbstractModelBuilder<RoadSignModel, RoadSignAntObject> {
 
 		RoadSignModelBuilder() {
 			setDependencies(RoadModel.class);
@@ -147,3 +161,5 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignParcel> {
 	}
 
 }
+
+// vim: set noexpandtab:

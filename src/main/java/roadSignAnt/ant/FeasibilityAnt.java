@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FeasibilityAnt implements TickListener {
+public class FeasibilityAnt extends Ant implements TickListener {
 
 
 	/* STATIC VAR */
@@ -61,13 +61,13 @@ public class FeasibilityAnt implements TickListener {
 		RoadSignPoint next;
 
 		// if at pickup point, might go straight to delivery point (otherwise to a random point
-		if (currentRSPoint == currentRSPoint.getParcel().getPickupLocationRoadSignPoint() && roadSignModel.getRandomDouble() <= FROM_PICKUP_TO_DEL_CHANCE) {
+		if (currentRSPoint == currentRSPoint.getParcel().getPickupLocationRoadSignPoint() && getModel().getRandomDouble() <= FROM_PICKUP_TO_DEL_CHANCE) {
 			next = currentRSPoint.getParcel().getDeliveryLocationRoadSignPoint();
 		} else {
 			// get a random roadSignParcel
-			RoadSignParcel parcel = roadSignModel.getRandomRoadSignParcel();
+			RoadSignParcel parcel = getModel().getRandomRoadSignParcel();
 			// 60/40 chance of going to the pickup/delivery location
-			next = roadSignModel.getRandomDouble() < 0.6 ? parcel.getPickupLocationRoadSignPoint() : parcel.getDeliveryLocationRoadSignPoint();
+			next = getModel().getRandomDouble() < 0.6 ? parcel.getPickupLocationRoadSignPoint() : parcel.getDeliveryLocationRoadSignPoint();
 		}
 
 		if (next != null) {
@@ -114,16 +114,6 @@ public class FeasibilityAnt implements TickListener {
 		// TODO: hier evt de ant laten 'sterven' indien nodig
 		// TODO: Sander: I do not think feasibility ants should die
 	}
-
-
-	/* DEPENDENCY INJECTION */
-
-	public void injectRoadSignModel(RoadSignModel m) {
-		roadSignModel = m;
-	}
-
-	private RoadSignModel roadSignModel;
-
 
 }
 

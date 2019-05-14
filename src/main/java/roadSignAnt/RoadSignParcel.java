@@ -25,12 +25,6 @@ public class RoadSignParcel extends Parcel {
 		deliveryRSPoint = new RoadSignPoint(this, parcelDto.getDeliveryLocation());
 	}
 
-	private RoadSignModel model;
-
-	public void injectRoadSignModel(RoadSignModel model) {
-		this.model = model;
-	}
-
 	private final int ID;
 
 	public int getID() {
