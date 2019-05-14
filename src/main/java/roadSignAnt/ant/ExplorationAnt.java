@@ -7,7 +7,7 @@ import roadSignAnt.RoadSignModel;
 
 import java.util.List;
 
-public class ExplorationAnt implements TickListener {
+public class ExplorationAnt extends Ant implements TickListener {
 
 	public final static int DEFAULT_STOP_COUNT_LIMIT = 4;
 
@@ -38,16 +38,5 @@ public class ExplorationAnt implements TickListener {
 	public void afterTick(TimeLapse timeLapse) {
 		// TODO
 	}
-
-
-	/* DEPENDENCY INJECTION */
-	// TODO: dependency injection van deze Model fixen
-
-	void injectRoadSignModel(RoadSignModel m) {
-		roadSignModel = m;
-	}
-
-	private RoadSignModel roadSignModel;
-
 
 }

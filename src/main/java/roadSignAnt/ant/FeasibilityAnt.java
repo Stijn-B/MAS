@@ -57,9 +57,9 @@ public class FeasibilityAnt implements TickListener, RoadUser {
 			next = currentRSPoint.getParcel().getDeliveryLocationRoadSignPoint();
 		} else {
 			// get a random roadSignParcel
-			RoadSignParcel parcel = roadSignModel.getRandomRoadSignParcel();
+			RoadSignParcel parcel = getModel().getRandomRoadSignParcel();
 			// 60/40 chance of going to the pickup/delivery location
-			next = roadSignModel.getRandomDouble() < 0.6 ? parcel.getPickupLocationRoadSignPoint() : parcel.getDeliveryLocationRoadSignPoint();
+			next = getModel().getRandomDouble() < 0.6 ? parcel.getPickupLocationRoadSignPoint() : parcel.getDeliveryLocationRoadSignPoint();
 		}
 
 		if (next != null) {

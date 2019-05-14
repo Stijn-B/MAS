@@ -56,11 +56,12 @@ public class Simulation {
 		// register depot (uitvalsbasis vd AGVs)
 		simulator.register(new Depot(roadModel.getRandomPosition(rng)));
 
-		//TODO: what is a Ufo?
-		// register Ufos
+		//TODO: register AGV's
+		/*
 		for (int i = 0; i < 10; i++) {
 			simulator.register(new IntentionAnt(roadModel.getRandomPosition(rng)));
 		}
+		*/
 
 		// random package generation
 		simulator.addTickListener(new TickListener() {
