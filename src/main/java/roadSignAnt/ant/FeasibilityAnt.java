@@ -11,7 +11,7 @@ import javax.measure.Measure;
 import javax.measure.quantity.Length;
 import java.util.List;
 
-public class FeasibilityAnt implements TickListener, RoadUser {
+public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 
 	/* STATIC VAR */
 
