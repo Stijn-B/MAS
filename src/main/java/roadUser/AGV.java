@@ -21,11 +21,13 @@ public class AGV implements TickListener, RoadSignPointOwner {
         ID = RoadSignPointOwnerID.getNewID();
     }
 
+
     private final Heuristic heuristic;
 
     public Heuristic getHeuristic() {
         return heuristic;
     }
+
 
     /* EXPLORATION */
 
@@ -36,6 +38,7 @@ public class AGV implements TickListener, RoadSignPointOwner {
     public List<PlannedPath> explorePaths() {
         return new ExplorationAnt().explore(roadSignPoint);
     }
+
 
     /* INTENTIONS */
 
@@ -60,6 +63,7 @@ public class AGV implements TickListener, RoadSignPointOwner {
         // TODO
     }
 
+
     /* INTERFACE RoadSignPointOwner */
 
     private int ID;
@@ -80,7 +84,7 @@ public class AGV implements TickListener, RoadSignPointOwner {
 
     @Override
     public Type getRoadSignPointOwnerType() {
-        return null;
+        return Type.AGV;
     }
 
     @Override

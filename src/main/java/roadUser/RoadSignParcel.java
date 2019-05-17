@@ -24,6 +24,7 @@ public class RoadSignParcel extends Parcel implements RoadSignPointOwner {
 		points = new RoadSignPoint[]{ pickupRSPoint, deliveryRSPoint };
 	}
 
+
 	/* ID */
 
 	private final int ID;
@@ -57,6 +58,7 @@ public class RoadSignParcel extends Parcel implements RoadSignPointOwner {
 	public RoadSignPoint getDeliveryLocationRoadSignPoint() {
 		return deliveryRSPoint;
 	}
+
 
 	/* DEPENDENCY INJECTION*/
 
