@@ -1,10 +1,10 @@
-package roadSignAnt;
+package roadSignAnt.roadSignPoint;
 
 public class RoadSignPointOwnerID {
 
     private static int ID = 0;
 
-    public static int getID() {
+    public static int getNewID() {
         ID = loopAroundIncrement(ID);
         return ID;
     }

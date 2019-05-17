@@ -1,9 +1,35 @@
 package heuristic;
 
-import roadSignAnt.AntPath;
+import roadSignAnt.ant.PlannedPath;
 
-public interface Heuristic {
+import java.util.Collections;
+import java.util.List;
 
-    double calculate(AntPath path);
+public abstract class Heuristic {
 
+    /**
+     *  Calculates the heuristic of the given roadSignAnt.ant.PlannedPath.
+     * @param path the path for which to calculate the heuristic
+     * @return the heuristic of the given roadSignAnt.ant.PlannedPath
+     */
+    public abstract double calculate(PlannedPath path);
+
+    /**
+     * Assigns heuristics to the AntPaths in the given list.
+     * @param list list of AntPaths
+     */
+    public void assignHeuristics(List<PlannedPath> list) {
+        for (PlannedPath ap : list) {
+            ap.setHeuristic(calculate(ap));
+        }
+    }
+
+    /**
+     * Assigns heuristics to the AntPaths in the given list and sorts the list based on these heuristics.
+     * @param list
+     */
+    public void sortAntPathList(List<PlannedPath> list) {
+        assignHeuristics(list);
+        Collections.sort(list);
+    }
 }

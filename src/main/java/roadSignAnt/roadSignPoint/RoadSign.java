@@ -1,6 +1,5 @@
-package roadSignAnt;
+package roadSignAnt.roadSignPoint;
 
-import com.github.rinde.rinsim.geom.Point;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;

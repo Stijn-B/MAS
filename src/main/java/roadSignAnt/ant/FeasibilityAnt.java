@@ -6,6 +6,9 @@ import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
 import roadSignAnt.*;
+import roadSignAnt.roadSignPoint.RoadSign;
+import roadSignAnt.roadSignPoint.RoadSignPoint;
+import roadSignAnt.roadSignPoint.RoadSignPointOwner;
 
 import javax.measure.Measure;
 import javax.measure.quantity.Length;
@@ -28,8 +31,8 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 	/* CONSTRUCTOR AND OBJECT VAR */
 
 	/**
-	 * Create a FeasibilityAnt at the given RoadSignParcel
-	 * @param curr the RoadSignParcel where to create the new FeasibilityAnt
+	 * Create a FeasibilityAnt at the given roadUser.RoadSignParcel
+	 * @param curr the roadUser.RoadSignParcel where to create the new FeasibilityAnt
 	 */
 	FeasibilityAnt(RoadSignPoint curr, RoadModel rm) {
 		currentRSPoint = curr;

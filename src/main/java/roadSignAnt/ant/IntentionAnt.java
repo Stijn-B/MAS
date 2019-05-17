@@ -1,20 +1,5 @@
 package roadSignAnt.ant;
 
-import com.github.rinde.rinsim.core.model.pdp.Vehicle;
-import com.github.rinde.rinsim.core.model.pdp.VehicleDTO;
-import com.github.rinde.rinsim.core.model.road.RoadModel;
-import com.github.rinde.rinsim.core.model.time.TickListener;
-import com.github.rinde.rinsim.core.model.time.TimeLapse;
-import com.github.rinde.rinsim.geom.Point;
-import roadSignAnt.RoadSignModel;
-import roadSignAnt.RoadSignParcel;
-import roadSignAnt.RoadSignPoint;
-
-import javax.measure.Measure;
-import javax.measure.quantity.Length;
-import java.lang.reflect.Array;
-import java.util.*;
-
 /**
  * Transporting AVG that sends out scouting AVGs and transports packages based on their intel
  */
@@ -52,7 +37,7 @@ public class IntentionAnt extends Ant {
 //		Point from = getRoadModel().getPosition(this);
 //
 //		// iterate over parcel list
-//		ArrayList<RoadSignParcel> list = getModel().getOwnerList();
+//		ArrayList<roadUser.RoadSignParcel> list = getModel().getOwnerList();
 //		for (int i = 0; i < list.size(); i++) {
 //
 //			// get RoadSignPoint of parcel pickuplocation and distance to it

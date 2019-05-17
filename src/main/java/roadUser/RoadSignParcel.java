@@ -1,7 +1,11 @@
-package roadSignAnt;
+package roadUser;
 
 import com.github.rinde.rinsim.core.model.pdp.Parcel;
 import com.github.rinde.rinsim.core.model.pdp.ParcelDTO;
+import roadSignAnt.RoadSignModel;
+import roadSignAnt.roadSignPoint.RoadSignPoint;
+import roadSignAnt.roadSignPoint.RoadSignPointOwner;
+import roadSignAnt.roadSignPoint.RoadSignPointOwnerID;
 
 import javax.annotation.Nullable;
 
@@ -13,7 +17,7 @@ public class RoadSignParcel extends Parcel implements RoadSignPointOwner {
 		if (parcelDto.getPickupLocation() == null || parcelDto.getDeliveryLocation() == null)
 			throw new NullPointerException("Pickup- and DeliveryLocation have to be specified in the ParcelDTO");
 
-		ID = RoadSignPointOwnerID.getID();
+		ID = RoadSignPointOwnerID.getNewID();
 
 		pickupRSPoint = new RoadSignPoint(this, RoadSignPoint.Type.PARCEL_PICKUP, parcelDto.getPickupLocation());
 		deliveryRSPoint = new RoadSignPoint(this, RoadSignPoint.Type.PARCEL_DELIVERY, parcelDto.getDeliveryLocation());

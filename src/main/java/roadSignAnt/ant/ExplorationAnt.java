@@ -2,9 +2,8 @@ package roadSignAnt.ant;
 
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
-import roadSignAnt.AntPath;
-import roadSignAnt.RoadSign;
-import roadSignAnt.RoadSignPoint;
+import roadSignAnt.roadSignPoint.RoadSign;
+import roadSignAnt.roadSignPoint.RoadSignPoint;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,8 +11,9 @@ import java.util.List;
 
 public class ExplorationAnt extends Ant implements TickListener {
 
-	public final static int DEFAULT_HOP_COUNT_LIMIT = 4;
-	public final static int DEFAULT_BRANCH_AMOUNT = 3;
+	// aantal explored paden =  branch amount ** hop count(4 ** 4 = 256)
+	public final static int DEFAULT_BRANCH_AMOUNT = 4; // breedte
+	public final static int DEFAULT_HOP_COUNT_LIMIT = 4; // diepte
 
 
 	/* CONSTRUCTOR */
@@ -52,41 +52,53 @@ public class ExplorationAnt extends Ant implements TickListener {
 
 	/* EXPLORATION */
 
+	public List<PlannedPath> explore(RoadSignPoint point) {
+		return explore(point, new PlannedPath());
+	}
+
 	/**
 	 * Returns a List of paths
 	 * A path is a list of Pair<RoadSignPoint,Double distance>
 	 */
-	public List<AntPath> explore(RoadSignPoint point, AntPath path) {
+	public List<PlannedPath> explore(RoadSignPoint point, PlannedPath path) {
 
-		List<AntPath> result = new ArrayList<>();
+		// if no path given, execute method withouth path argument
+		if (path == null) return explore(point);
 
-		// if no hop amount left, return the current path
-		if (getHopAmount() <= 0) {
-			result.add(path);
-			return result;
-		}
 
-		// send out ants until no more roadsigns are left or until the max amount of ants is sent out
-		int sentAntCount = 0;
-		Iterator<RoadSign> iterator = point.getRoadSignsIterator();
-		while (iterator.hasNext() && sentAntCount < getBranchAmount()) {
+		// create an ArrayList for the resulting AntPaths
+		List<PlannedPath> result = new ArrayList<>();
 
-			RoadSign roadSign = iterator.next();
+		// if there are still hops left, explore
+		if (0 < getHopAmount()) { // otherwise, explore (make another hop)
+			// send out ants until no more roadsigns are left or until the max amount of ants is sent out
+			int sentAntCount = 0;
+			Iterator<RoadSign> iterator = point.getRoadSignsIterator();
+			while (iterator.hasNext() && sentAntCount < getBranchAmount()) {
 
-			// if the RoadSign destination is suitable, send a new explorer ant to explore it
-			if (path.acceptableNextHop(roadSign.getDestination())) {
+				RoadSign roadSign = iterator.next();
 
-				// create a copy of the AntPath with the RoadSign destination appended to it
-				AntPath pathCopy = path.copy();
-				pathCopy.append(roadSign);
+				// if the RoadSign destination is suitable, send a new explorer ant to explore it
+				if (path.acceptableNextHop(roadSign.getDestination())) {
 
-				// send an ant (with hopCount - 1) to this destination
-				ExplorationAnt newAnt = new ExplorationAnt(getHopAmount()-1);
-				List<AntPath> returnedList = newAnt.explore(roadSign.getDestination(), pathCopy);
+					// extend a copy of the current path with the new destination
+					PlannedPath pathCopy = path.copy();
+					pathCopy.append(roadSign);
 
-				// save the returned list of AntPaths
-				result.addAll(returnedList);
+					// send an ant (with hopCount - 1) to this destination
+					ExplorationAnt newAnt = new ExplorationAnt(getHopAmount()-1);
+					List<PlannedPath> returnedList = newAnt.explore(roadSign.getDestination(), pathCopy);
+					sentAntCount++;
+
+					// add the returned list of AntPaths to the result
+					result.addAll(returnedList);
+				}
 			}
+
+		} else { // else (no hops left), just add the current path to the list
+			result.add(path);
+			// TODO: overwegen om deze buiten de 'else' te zetten
+			// zou als gevolg hebben dat ook de korte paden in de lijst staan ipv alleen de path met lengte = hopCount
 		}
 
 		return result;

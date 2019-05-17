@@ -1,9 +1,9 @@
-package roadSignAnt;
+package roadSignAnt.roadSignPoint;
 
-public interface RoadSignPointOwner {
+public interface RoadSignPointOwner extends RoadSignPointUser {
 
 	// ID of the RoadSignPointOwner
-	public int getID();
+	int getID();
 
 	// Type of the RoadSignPointOwner
 	enum Type { PARCEL, AGV, BASE }

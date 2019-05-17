@@ -4,8 +4,11 @@ import com.github.rinde.rinsim.core.model.DependencyProvider;
 import com.github.rinde.rinsim.core.model.Model;
 import com.github.rinde.rinsim.core.model.ModelBuilder;
 import com.github.rinde.rinsim.core.model.road.RoadModel;
+import roadSignAnt.roadSignPoint.RoadSignPointOwner;
+import roadSignAnt.roadSignPoint.RoadSignPointUser;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 //TODO: remove
@@ -13,7 +16,7 @@ import java.util.Random;
 
 //TODO: header with dependencies etcetera
 //TODO: rename to RoadSignAntModel
-public class RoadSignModel extends Model.AbstractModel<RoadSignAntObject> {
+public class RoadSignModel extends Model.AbstractModel<RoadSignPointUser> {
 
 	RoadSignModel(RoadModel rm)
 	{
@@ -35,7 +38,7 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignAntObject> {
 
 	/* ROADSIGNPOINT OWNER LIST */
 
-	private ArrayList<RoadSignPointOwner> ownerList = new ArrayList<>();
+	private List<RoadSignPointOwner> ownerList = new ArrayList<>();
 
 	public void addOwner(RoadSignPointOwner owner) {
 		ownerList.add(owner);
@@ -50,7 +53,8 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignAntObject> {
 		else return ownerList.get(randomGenerator.nextInt(ownerList.size()));
 	}
 
-	/* INTERFACE IMPLEMENTATIONS */
+
+	/* DEPENDENCY INJECTION */
 
 	/**
 	 * Register element in a model.
@@ -58,20 +62,16 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignAntObject> {
 	 * @return true if the object was successfully registered
 	 */
 	@Override
-	public boolean register(RoadSignAntObject element) {
+	public boolean register(RoadSignPointUser element) {
 		element.injectRoadSignModel(this);
 		return true;
 	}
-	//TODO: add register for RoadSignPointHolders / RoadSignParcels
-	/*
-	//TODO: should we add override here?
-	public boolean register(RoadSignParcel element){
-		element.injectRoadSignModel(this);
-		//TODO: return false if element has already been registered
-		addRoadSignParcel(element);
+
+	public boolean register(RoadSignPointOwner owner){
+		owner.injectRoadSignModel(this);
+		addOwner(owner);
 		return true;
 	}
-	*/
 
 	/**
 	 * Unregister element from a model.
@@ -80,25 +80,24 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignAntObject> {
 	 *		 the model and it was successfully removed)
 	 */
 	@Override
-	public boolean unregister(RoadSignAntObject element) {
-		//TODO: remove injection?
+	public boolean unregister(RoadSignPointUser element) {
+		//TODO: remove injection? ik denk dat dit overbodig is
 		return true;
 	}
-	//TODO: add unregister for RoadSignPointHolders / RoadSignParcels
-	/*
-	//TODO: should we add override here?
-	public boolean unregister(RoadSignParcel element) {
-		//TODO: remove injection?
-		removeRoadSignParcel(element);
+
+	public boolean unregister(RoadSignPointOwner owner) {
+		removeOwner(owner);
 		return true;
 	}
-	*/
+
+
+	/* MODELBUILDER */
 
 	public static RoadSignModelBuilder builder() {
 		return new RoadSignModelBuilder();
 	}
 
-	public static class RoadSignModelBuilder extends ModelBuilder.AbstractModelBuilder<RoadSignModel, RoadSignAntObject> {
+	public static class RoadSignModelBuilder extends ModelBuilder.AbstractModelBuilder<RoadSignModel, RoadSignPointUser> {
 
 		RoadSignModelBuilder() {
 			setDependencies(RoadModel.class);
