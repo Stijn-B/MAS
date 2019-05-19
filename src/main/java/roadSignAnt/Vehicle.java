@@ -71,13 +71,6 @@ public class Vehicle implements TickListener {
 
 	private RoadSignPoint roadSignPoint;
 
-	private RoadSignModel roadSignModel;
-
-	@Override
-	public void injectRoadSignModel(RoadSignModel model) {
-		roadSignModel = model;
-	}
-
 	@Override
 	public int getID() {
 		return ID;

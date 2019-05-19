@@ -6,7 +6,7 @@ public class DeliveryPoint extends ParcelPoint {
 	public setParcel(RoadSignAntParcel parcel) {
 		if (! parcel.getDeliveryPoint().equals(this)) {
 			//TODO: throw suitable exception
-			throw Exception("Inconsistent state: trying to set parcel with different delivery point);
+			throw Exception("Inconsistent state: trying to set parcel with different delivery point");
 		}
 		super.setParcel();
 	}

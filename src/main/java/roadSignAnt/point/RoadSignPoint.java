@@ -50,7 +50,7 @@ public abstract class RoadSignPoint extends Point implements RoadSignAntObject, 
 	 * Declare an intention of visiting this point at some future time.
 	 * @param ETA The estimated time of arrival.
 	 */
-	public boolean delcareIntention(int ETA) {
+	public boolean declareIntention(int ETA) {
 		//TODO: implement: use declared intentions to decide availibility. Possible just return true and let subclasses implement this.
 		throw java.lang.UnsupportedOperationException("not implemented");
 	}

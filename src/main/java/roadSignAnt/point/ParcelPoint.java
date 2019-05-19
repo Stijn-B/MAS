@@ -4,13 +4,6 @@ import roadSignAnt.RoadSignAntParcel;
 
 public abstract class ParcelPoint extends RoadSignPoint {
 
-	/*
-	public ParcelPoint(RoadSignAntParcel parcel, double pX, double pY) {
-		super(pX, pY);
-		this.parcel = parcel;
-	}
-	*/
-
 	private RoadSignAntParcel parcel;
 
 	public void setParcel(RoadSignAntParcel parcel) {
