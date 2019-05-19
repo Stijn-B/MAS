@@ -5,6 +5,7 @@ import roadSignAnt.ant.PlannedPath;
 import java.util.Collections;
 import java.util.List;
 
+//TODO: not refactored yet
 public abstract class Heuristic {
 
     /**

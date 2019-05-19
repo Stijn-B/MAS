@@ -1,18 +1,19 @@
 package roadSignAnt.ant;
 
-import roadSignAnt.RoadSignModel;
-import roadSignAnt.roadSignPoint.RoadSignPointUser;
+public abstract class Ant implements RoadSignAntObject {
 
-public abstract class Ant implements RoadSignPointUser {
 
-    private RoadSignModel model;
+	//TODO: is owner a good name? Colony?
+	Ant(RoadSignPoint owner) {
+		this.owner = owner;
+	}
 
-    public RoadSignModel getModel() {
-        return this.model;
-    }
+	private RoadSignPoint owner;
 
-    public void injectRoadSignModel(RoadSignModel model) {
-        this.model = model;
-    }
+	public RoadSignPoint getOwner() {
+		return this.owner;
+	}
 
 }
+
+// vim: set noexpandtab:

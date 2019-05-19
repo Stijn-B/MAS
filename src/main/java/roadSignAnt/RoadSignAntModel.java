@@ -4,21 +4,16 @@ import com.github.rinde.rinsim.core.model.DependencyProvider;
 import com.github.rinde.rinsim.core.model.Model;
 import com.github.rinde.rinsim.core.model.ModelBuilder;
 import com.github.rinde.rinsim.core.model.road.RoadModel;
-import roadSignAnt.roadSignPoint.RoadSignPointOwner;
-import roadSignAnt.roadSignPoint.RoadSignPointUser;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-//TODO: remove
-
 
 //TODO: header with dependencies etcetera
-//TODO: rename to RoadSignAntModel
-public class RoadSignModel extends Model.AbstractModel<RoadSignPointUser> {
+public class RoadSignAntModel extends Model.AbstractModel<RoadSignAntObject> {
 
-	RoadSignModel(RoadModel rm)
+	RoadSignAntModel(RoadModel rm)
 	{
 		roadModel = rm;
 		randomGenerator = new Random();
@@ -62,14 +57,22 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignPointUser> {
 	 * @return true if the object was successfully registered
 	 */
 	@Override
-	public boolean register(RoadSignPointUser element) {
-		element.injectRoadSignModel(this);
+	public boolean register(RoadSignAntObject element) {
+		element.injectRoadSignAntModel(this);
 		return true;
 	}
 
-	public boolean register(RoadSignPointOwner owner){
-		owner.injectRoadSignModel(this);
-		addOwner(owner);
+	public boolean register(RoadSignAntParcel parcel){
+		parcel.injectRoadSignAntModel(this);
+		register(parcel.getPickupPoint());
+		register(parcel.getDeliveryPoint());
+		//TODO: store parcel
+		return true;
+	}
+
+	public boolean register(RoadSignPoint point){
+		point.injectRoadSignAntModel(this);
+		//TODO: store point
 		return true;
 	}
 
@@ -80,33 +83,27 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignPointUser> {
 	 *		 the model and it was successfully removed)
 	 */
 	@Override
-	public boolean unregister(RoadSignPointUser element) {
-		//TODO: remove injection? ik denk dat dit overbodig is
-		return true;
-	}
-
-	public boolean unregister(RoadSignPointOwner owner) {
-		removeOwner(owner);
+	public boolean unregister(RoadSignAntObject element) {
 		return true;
 	}
 
 
 	/* MODELBUILDER */
 
-	public static RoadSignModelBuilder builder() {
-		return new RoadSignModelBuilder();
+	public static RoadSignAntModelBuilder builder() {
+		return new RoadSignAntModelBuilder();
 	}
 
-	public static class RoadSignModelBuilder extends ModelBuilder.AbstractModelBuilder<RoadSignModel, RoadSignPointUser> {
+	public static class RoadSignAntModelBuilder extends ModelBuilder.AbstractModelBuilder<RoadSignAntModel, RoadSignPointObject> {
 
-		RoadSignModelBuilder() {
+		RoadSignAntModelBuilder() {
 			setDependencies(RoadModel.class);
 		}
 
 		@Override
-		public RoadSignModel build(DependencyProvider dependencyProvider) {
+		public RoadSignAntModel build(DependencyProvider dependencyProvider) {
 			final RoadModel rm = dependencyProvider.get(RoadModel.class);
-			return new RoadSignModel(rm);
+			return new RoadSignAntModel(rm);
 		}
 	}
 
