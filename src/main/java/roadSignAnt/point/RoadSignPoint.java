@@ -1,38 +1,42 @@
 package roadSignAnt.point;
 
-import java.util.HashMap
+import roadSignAnt.RoadSign;
+
+import java.util.HashMap;
 
 import com.github.rinde.rinsim.geom.Point;
 import com.github.rinde.rinsim.core.model.time.TickListener;
 
-//TODO: mostly refactored, but hashMap should still be replaced by a collection of RoadSign instances from commit cc36f15
 public abstract class RoadSignPoint extends Point implements RoadSignAntObject, TickListener {
 
 	//TODO: pick a suitable number
 	public static final int NB_FEASABILITY_ANTS = 20;
 
-	//TODO: might be better to use RoadSign instances from commit cc36f15, think about it
-	private HashMap<RoadSignPoint, Double> signs = new HashMap<>();
+	private Map<RoadSignPoint, RoadSign> signs = new HashMap<>();
 
 	public double getDistance(RoadSignPoint target) {
-		Double distance = this.signs.get(target);
-		if (distance == null) {
+		RoadSign sign = this.signs.get(target);
+		if (sign == null) {
 			//TODO: throw suitable exception
 			throw new Exception("No sign for specified target");
 		}
-		return distance.doubleValue();
+		return sign.getDistance();
 	}
 
+	//TODO: enforce two-way signs within this class
 	public void addSign(RoadSignPoint target) {
 		List<Point> path = getModel().getShortestPathTo(getOwner(), target);
 		Measure<Double, Length> distance = getModel().getDistanceOfPath(path);
-		this.signs.put(target, distance.getValue());
+		this.signs.put(target, new RoadSign(target, distance.getValue()));
 	}
 
 	public void destroySign(RoadSignPoint target) {
 		this.signs.remove(target);
 	}
 
+	/**
+	 * Prepare RoadSignPoint for termination. Removes all known RoadSigns to this point.
+	 */
 	public void close() {
 		Iterator iterator = this.signs.keySet().iterator();
 		while (iterator.hasNext()) {
