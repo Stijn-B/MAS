@@ -1,6 +1,8 @@
 package roadSignAnt;
 
 import org.jetbrains.annotations.NotNull;
+import roadSignAnt.point.RoadSignPoint;
+
 import javax.annotation.Nullable;
 
 public class RoadSign implements Comparable<RoadSign> {

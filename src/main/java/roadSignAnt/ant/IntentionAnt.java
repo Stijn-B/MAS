@@ -1,5 +1,7 @@
 package roadSignAnt.ant;
 
+import roadSignAnt.RoadSignAntPath;
+
 public class IntentionAnt extends Ant {
 
 	//TODO: better name for this method

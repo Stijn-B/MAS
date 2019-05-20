@@ -1,10 +1,13 @@
 package roadSignAnt;
 
+import org.jetbrains.annotations.NotNull;
+import roadSignAnt.point.RoadSignPoint;
+
 import java.util.List;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
-public class RoadSignAntPath {
+public class RoadSignAntPath implements Comparable<RoadSignAntPath> {
 
 	private List<RoadSign> path = new LinkedList<>();
 
@@ -62,6 +65,10 @@ public class RoadSignAntPath {
 		}
 	}
 
+	@Override
+	public int compareTo(@NotNull RoadSignAntPath o) {
+		return 0;
+	}
 }
 
 // vim: set noexpandtab:

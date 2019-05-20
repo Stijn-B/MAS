@@ -2,6 +2,9 @@ package roadSignAnt.ant;
 
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
+import roadSignAnt.RoadSign;
+import roadSignAnt.RoadSignAntPath;
+import roadSignAnt.point.RoadSignPoint;
 import roadSignAnt.roadSignPoint.RoadSign;
 import roadSignAnt.roadSignPoint.RoadSignPoint;
 
@@ -53,7 +56,7 @@ public class ExplorationAnt extends Ant {
 
 	/* EXPLORATION */
 
-	public List<PlannedPath> explore(RoadSignPoint point) {
+	public List<RoadSignAntPath> explore(RoadSignPoint point) {
 		return explore(point, new PlannedPath());
 	}
 
@@ -61,14 +64,14 @@ public class ExplorationAnt extends Ant {
 	 * Returns a List of paths
 	 * A path is a list of Pair<RoadSignPoint,Double distance>
 	 */
-	public List<PlannedPath> explore(RoadSignPoint point, PlannedPath path) {
+	public List<RoadSignAntPath> explore(RoadSignPoint point, RoadSignAntPath path) {
 
 		// if no path given, execute method withouth path argument
 		if (path == null) return explore(point);
 
 
 		// create an ArrayList for the resulting AntPaths
-		List<PlannedPath> result = new ArrayList<>();
+		List<RoadSignAntPath> result = new ArrayList<>();
 
 		// if there are still hops left, explore
 		if (0 < getHopAmount()) { // otherwise, explore (make another hop)
@@ -83,12 +86,12 @@ public class ExplorationAnt extends Ant {
 				if (path.acceptableNextHop(roadSign.getDestination())) {
 
 					// extend a copy of the current path with the new destination
-					PlannedPath pathCopy = path.copy();
+					RoadSignAntPath pathCopy = path.copy();
 					pathCopy.append(roadSign);
 
 					// send an ant (with hopCount - 1) to this destination
 					ExplorationAnt newAnt = new ExplorationAnt(getHopAmount()-1);
-					List<PlannedPath> returnedList = newAnt.explore(roadSign.getDestination(), pathCopy);
+					List<RoadSignAntPath> returnedList = newAnt.explore(roadSign.getDestination(), pathCopy);
 					sentAntCount++;
 
 					// add the returned list of AntPaths to the result

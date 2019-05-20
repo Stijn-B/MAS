@@ -1,5 +1,8 @@
 package roadSignAnt.ant;
 
+import roadSignAnt.RoadSignAntObject;
+import roadSignAnt.point.RoadSignPoint;
+
 public abstract class Ant implements RoadSignAntObject {
 
 

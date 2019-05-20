@@ -1,5 +1,8 @@
 package roadSignAnt;
 
+import roadSignAnt.point.DeliveryPoint;
+import roadSignAnt.point.PickupPoint;
+
 public class RoadSignAntParcel {
 
 	public RoadSignAntParcel(PickupPoint pickup, DeliveryPoint delivery) {
