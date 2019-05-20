@@ -18,7 +18,6 @@ public class FeasibilityAnt extends Ant {
 	//TODO: better name for this method
 	public void crawl() {
 		//TODO: implement: select random destination from getModel().getRoadSignPoints() and call getOwner().addSign(destination);
-		//	IMPORTANT: signs should always be two-way! So also call destination.addSign(getOwner())
 		throw java.lang.UnsupportedOperationException("not implemented");
 	}
 

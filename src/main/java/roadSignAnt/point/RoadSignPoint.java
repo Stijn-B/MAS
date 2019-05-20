@@ -23,15 +23,27 @@ public abstract class RoadSignPoint extends Point implements RoadSignAntObject, 
 		return sign.getDistance();
 	}
 
-	//TODO: enforce two-way signs within this class
 	public void addSign(RoadSignPoint target) {
 		List<Point> path = getModel().getShortestPathTo(getOwner(), target);
 		Measure<Double, Length> distance = getModel().getDistanceOfPath(path);
 		this.signs.put(target, new RoadSign(target, distance.getValue()));
+		try {
+			target.getDistance(this);
+			//TODO: catch specific exception
+		} catch (Exception e) {
+			target.addSign(this);
+		}
 	}
 
 	public void destroySign(RoadSignPoint target) {
 		this.signs.remove(target);
+		try {
+			target.getDistance(this);
+			target.destroySign(this);
+			//TODO: catch specific exception
+		} catch (Exception e) {
+			return;
+		}
 	}
 
 	/**
