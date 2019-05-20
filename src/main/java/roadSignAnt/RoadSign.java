@@ -10,16 +10,26 @@ public class RoadSign implements Comparable<RoadSign> {
 	 * @param destination the destination point of the roadSignAnt.RoadSign
 	 * @param distance the distance to the destination
 	 */
-	public RoadSign(RoadSignPoint destination, double distance) {
+	public RoadSign(RoadSignPoint location, RoadSignPoint destination, double distance) {
+		this.location = location;
 		this.destination = destination;
 		this.distance = distance;
 	}
 
+	private final RoadSignPoint location;
 	private final RoadSignPoint destination;
 	private final double distance;
 
 	/**
-	 * Get the endpoint of the Roadsign
+	 * Get the location of the RoadSign
+	 * @return the location of the Roadsign
+	 */
+	public RoadSignPoint getLocation() {
+		return this.location;
+	}
+
+	/**
+	 * Get the endpoint of the RoadSign
 	 * @return the endpoint of the Roadsign
 	 */
 	public RoadSignPoint getDestination() {

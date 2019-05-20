@@ -7,6 +7,7 @@ import java.util.HashMap;
 import com.github.rinde.rinsim.geom.Point;
 import com.github.rinde.rinsim.core.model.time.TickListener;
 
+//TODO: write equals method
 public abstract class RoadSignPoint extends Point implements RoadSignAntObject, TickListener {
 
 	//TODO: pick a suitable number
@@ -26,7 +27,7 @@ public abstract class RoadSignPoint extends Point implements RoadSignAntObject, 
 	public void addSign(RoadSignPoint target) {
 		List<Point> path = getModel().getShortestPathTo(getOwner(), target);
 		Measure<Double, Length> distance = getModel().getDistanceOfPath(path);
-		this.signs.put(target, new RoadSign(target, distance.getValue()));
+		this.signs.put(target, new RoadSign(this, target, distance.getValue()));
 		try {
 			target.getDistance(this);
 			//TODO: catch specific exception
