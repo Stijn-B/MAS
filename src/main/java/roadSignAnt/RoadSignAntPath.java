@@ -65,10 +65,19 @@ public class RoadSignAntPath implements Comparable<RoadSignAntPath> {
 		}
 	}
 
+	/* INTERFACE Comparable<roadSignAnt.ant.PlannedPath> */
+
 	@Override
-	public int compareTo(@NotNull RoadSignAntPath o) {
-		return 0;
+	public int compareTo(@NotNull PlannedPath o) {
+		if (this.getHeuristic() > o.getHeuristic()) { // Highest heuristic should be first in list -> other object is seen as bigger number and thus placed later in list
+			return 1;
+		} else if (this.getHeuristic() == o.getHeuristic()) {
+			return 0;
+		} else {
+			return -1;
+		}
 	}
+
 }
 
 // vim: set noexpandtab:
