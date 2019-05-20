@@ -14,11 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FeasibilityAnt extends Ant {
-
-	public void crawl() {
-		exploreNextOwner();
-	}
+public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 
 	/* STATIC VAR */
 
@@ -57,7 +53,7 @@ public class FeasibilityAnt extends Ant {
 	/* ROADSIGN METHODS */
 
 	private void exploreNextOwner() {
-		exploreNextOwner(getRoadSignModel().getRandomOwner());
+		exploreNextOwner(getModel().getRandomOwner());
 	}
 
 	private void exploreNextOwner(RoadSignPointOwner nextOwner) {
@@ -128,15 +124,7 @@ public class FeasibilityAnt extends Ant {
 	}
 
 
-	public void injectRoadSignModel(RoadSignModel m) {
-		roadSignModel = m;
-	}
 
-	private RoadSignModel roadSignModel;
-
-	public RoadSignModel getRoadSignModel() {
-		return roadSignModel;
-	}
 
 }
 

@@ -1,11 +1,16 @@
 package roadSignAnt.point;
 
+import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import roadSignAnt.RoadSign;
 
-import java.util.HashMap;
+import java.util.*;
 
 import com.github.rinde.rinsim.geom.Point;
 import com.github.rinde.rinsim.core.model.time.TickListener;
+import roadSignAnt.RoadSignAntObject;
+import sun.security.util.Length;
+
+import javax.measure.Measure;
 
 //TODO: write equals method
 public abstract class RoadSignPoint extends Point implements RoadSignAntObject, TickListener {
@@ -15,7 +20,14 @@ public abstract class RoadSignPoint extends Point implements RoadSignAntObject, 
 
 	private Map<RoadSignPoint, RoadSign> signs = new HashMap<>();
 
-	public double getDistance(RoadSignPoint target) {
+	/**
+	 * Returns the distance to the given RoadSignPoint (using the RoadSigns)
+	 * Throws an Exception if no RoadSign contains the target
+	 * @param target
+	 * @return the distance to the given RoadSignPoint
+	 * @throws Exception if no RoadSign contains the target
+	 */
+	public double getDistance(RoadSignPoint target) throws Exception {
 		RoadSign sign = this.signs.get(target);
 		if (sign == null) {
 			//TODO: throw suitable exception
@@ -25,7 +37,7 @@ public abstract class RoadSignPoint extends Point implements RoadSignAntObject, 
 	}
 
 	public void addSign(RoadSignPoint target) {
-		List<Point> path = getModel().getShortestPathTo(getOwner(), target);
+		List<Point> path = getModel().getShortestPathTo(this, target);
 		Measure<Double, Length> distance = getModel().getDistanceOfPath(path);
 		this.signs.put(target, new RoadSign(this, target, distance.getValue()));
 		try {
@@ -57,25 +69,38 @@ public abstract class RoadSignPoint extends Point implements RoadSignAntObject, 
 		}
 	}
 
+
+	public Map<Integer, Long> etaMap; // <Identifier , ETA (in ms)>
+
 	/**
 	 * Returns true if this point will be available at some future time.
 	 * @param ETA The estimated time of arrival, the time to check availability for.
 	 */
-	public boolean isAvailable(int ETA);
+	public boolean isAvailable(int ID, long ETA) {
+		Set<Integer> IDset = etaMap.keySet();
+		Iterator<Integer> iter = IDset.iterator();
+
+		while (iter.hasNext()) {
+			int currID = iter.next();
+			if (ID != currID && ETA > etaMap.get(currID)) return false; // if another ID has a lower ETA, return false
+		}
+
+		return true;
+	}
+
+
 
 	/**
 	 * Declare an intention of visiting this point at some future time.
 	 * @param ETA The estimated time of arrival.
 	 */
-	public boolean declareIntention(int ETA) {
+	public boolean declareIntention(int ID, long ETA) { // TODO; iets van ID toevoegen zodat we weten WIE de ETA plaatste (anders conflict AGV mss met zichzelf)
 		//TODO: implement: use declared intentions to decide availibility. Possible just return true and let subclasses implement this.
-		throw java.lang.UnsupportedOperationException("not implemented");
 	}
 
 	@Override
 	public void tick(TimeLapse timeLapse) {
 		//TODO: implement: send out NB_FEASABILITY_ANTS (call crawl() on each)
-		throw java.lang.UnsupportedOperationException("not implemented");
 	}
 
 	@Override

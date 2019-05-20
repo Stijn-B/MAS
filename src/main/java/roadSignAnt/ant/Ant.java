@@ -1,5 +1,6 @@
 package roadSignAnt.ant;
 
+import roadSignAnt.RoadSignAntModel;
 import roadSignAnt.RoadSignAntObject;
 import roadSignAnt.point.RoadSignPoint;
 
@@ -15,6 +16,19 @@ public abstract class Ant implements RoadSignAntObject {
 
 	public RoadSignPoint getOwner() {
 		return this.owner;
+	}
+
+
+	/* INTERFACE RoadSignAntObject */
+
+	private RoadSignAntModel model;
+
+	public RoadSignAntModel getRoadSignAntModel() {
+		return model;
+	}
+
+	public void injectRoadSignAntModel(RoadSignAntModel model) {
+		this.model = model;
 	}
 
 }

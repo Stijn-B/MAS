@@ -6,6 +6,7 @@ import com.github.rinde.rinsim.geom.Point;
 import heuristic.Heuristic;
 import roadSignAnt.*;
 import roadSignAnt.ant.*;
+import roadSignAnt.point.RoadSignPoint;
 import roadSignAnt.roadSignPoint.RoadSignPoint;
 import roadSignAnt.roadSignPoint.RoadSignPointOwner;
 import roadSignAnt.roadSignPoint.RoadSignPointOwnerID;
@@ -36,7 +37,7 @@ public class Vehicle implements TickListener {
 	 * Explores viable paths using ExplorationAnts
 	 * @return a List<roadSignAnt.ant.PlannedPath> containing viable paths (can be empty)
 	 */
-	public List<PlannedPath> explorePaths() {
+	public List<RoadSignAntPath> explorePaths() {
 		return new ExplorationAnt().explore(roadSignPoint);
 	}
 
@@ -45,7 +46,7 @@ public class Vehicle implements TickListener {
 
 	private IntentionAnt currIntention;
 
-	public void commit(PlannedPath path) {
+	public void commit(RoadSignAntPath path) {
 		// TODO
 	}
 

@@ -57,7 +57,7 @@ public class ExplorationAnt extends Ant {
 	/* EXPLORATION */
 
 	public List<RoadSignAntPath> explore(RoadSignPoint point) {
-		return explore(point, new PlannedPath());
+		return explore(point, new RoadSignAntPath());
 	}
 
 	/**
