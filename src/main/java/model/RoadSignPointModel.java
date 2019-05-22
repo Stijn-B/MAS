@@ -95,13 +95,10 @@ public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 	 * given owner. Returns null if there is no other RoadSignPointOwner registered to this Model.
 	 */
 	public RoadSignPointOwner getRandomOwnerOtherThan(RoadSignPointOwner owner) {
-
-		// while the Model contains an owner other than the given one, loop for a random one
 		while (containsOwnerOtherThan(owner)) {
 			RoadSignPointOwner curr = getNextRandomOwner();
 			if (curr != owner) return curr;
 		}
-
 		return null;
 	}
 
