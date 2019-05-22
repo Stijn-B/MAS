@@ -20,7 +20,7 @@ public abstract class Heuristic {
      */
     public void assignHeuristics(List<PlannedPath> list) {
         for (PlannedPath ap : list) {
-            ap.setHeuristic(calculate(ap));
+            ap.setHeuristicScore(calculate(ap));
         }
     }
 

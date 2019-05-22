@@ -9,7 +9,7 @@ import roadSignAnt.roadSignPoint.RoadSignPointOwnerID;
 public class Base implements RoadSignPointOwner {
 
     public Base(Point position) {
-        roadSignPoint = new RoadSignPoint(this, RoadSignPoint.Type.BASE, position);
+        roadSignPoint = new RoadSignPoint(this, RoadSignPoint.PointType.BASE, position);
         ID = RoadSignPointOwnerID.getNewID();
     }
 
@@ -30,11 +30,6 @@ public class Base implements RoadSignPointOwner {
         isRegisteredToRoadSignModel = false;
     }
 
-    @Override
-    public boolean hasRoadSignModel() {
-        return isRegisteredToRoadSignModel;
-    }
-
     private int ID;
 
     @Override
@@ -52,5 +47,9 @@ public class Base implements RoadSignPointOwner {
     @Override
     public RoadSignPoint[] getRoadSignPoints() {
         return new RoadSignPoint[]{ roadSignPoint };
+    }
+
+    public boolean equals(RoadSignPointOwner other) {
+        return getID() == other.getID();
     }
 }

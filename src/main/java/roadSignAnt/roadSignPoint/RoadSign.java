@@ -6,8 +6,12 @@ import javax.annotation.Nullable;
 
 public class RoadSign implements Comparable<RoadSign> {
 
-	// default life time of a roadSign.RoadSign
-	public static long DEFAULT_LIFETIME_MS = 20000;
+	/* STATIC VAR */
+
+	public static long DEFAULT_LIFETIME_MS = 20000; // default life time of a RoadSign in milliseconds
+
+
+	/* CONSTRUCTORS */
 
 	/**
 	 * Creates a roadSign.RoadSign object
@@ -17,7 +21,7 @@ public class RoadSign implements Comparable<RoadSign> {
 	 */
 	public RoadSign(RoadSignPoint location, RoadSignPoint destination, double distance, long lifeTime) {
 		this.location = location;
-		this.dest = destination;
+		this.destination = destination;
 		this.distance = distance;
 		this.life = lifeTime;
 	}
@@ -31,10 +35,12 @@ public class RoadSign implements Comparable<RoadSign> {
 		this(location, destination, distance, DEFAULT_LIFETIME_MS);
 	}
 
+
+	/* INFORMATION */
+
 	private final RoadSignPoint location;
-	private final RoadSignPoint dest;
+	private final RoadSignPoint destination;
 	private final double distance;
-	private double life;
 
 	public RoadSignPoint getLocation() {
 		return location;
@@ -45,7 +51,7 @@ public class RoadSign implements Comparable<RoadSign> {
 	 * @return the endpoint of the Roadsign
 	 */
 	public RoadSignPoint getDestination() {
-		return dest;
+		return destination;
 	}
 
 	/**
@@ -56,12 +62,24 @@ public class RoadSign implements Comparable<RoadSign> {
 		return distance;
 	}
 
+	/* AGE */
+
+	private double life;
+
 	/**
 	 * Get the remaining life time of the roadSign.RoadSign
 	 * @return the remaining life time of the roadSign.RoadSign
 	 */
 	public double getRemainingLifeTime() {
 		return life;
+	}
+
+	/**
+	 * Returns whether the given RoadSign is still alive.
+	 * @return whether the given RoadSign is still alive
+	 */
+	public boolean alive() {
+		return 0 < getRemainingLifeTime();
 	}
 
 	/**
@@ -73,13 +91,8 @@ public class RoadSign implements Comparable<RoadSign> {
 		return alive();
 	}
 
-	/**
-	 * Returns whether the given RoadSign is still alive.
-	 * @return whether the given RoadSign is still alive
-	 */
-	public boolean alive() {
-		return 0 < life;
-	}
+
+	/* OVERRIDDEN METHODS */
 
 	@Override
 	public String toString() {

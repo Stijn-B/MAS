@@ -11,14 +11,14 @@ public class RoadSignPoint extends Point implements TickListener {
 
 	/* CONSTRUCTOR */
 
-	public RoadSignPoint(RoadSignPointOwner owner, Type type, double pX, double pY) {
+	public RoadSignPoint(RoadSignPointOwner owner, PointType pointType, double pX, double pY) {
 		super(pX, pY);
 		this.roadSignPointOwner = owner;
-		this.type = type;
+		this.pointType = pointType;
 	}
 
-	public RoadSignPoint(RoadSignPointOwner owner, Type type, Point point) {
-		this(owner, type, point.x, point.y);
+	public RoadSignPoint(RoadSignPointOwner owner, PointType pointType, Point point) {
+		this(owner, pointType, point.x, point.y);
 	}
 
 
@@ -33,29 +33,41 @@ public class RoadSignPoint extends Point implements TickListener {
 
 	/* TYPES */
 
-	public enum Type { PARCEL_PICKUP, PARCEL_DELIVERY, AGV, BASE }
-	private final Type type;
-	public Type getType() {
-		return type;
+	public enum PointType { PARCEL_PICKUP, PARCEL_DELIVERY, AGV, BASE }
+	private final PointType pointType;
+	public PointType getPointType() {
+		return pointType;
 	}
 
 
 	/* ROADSIGNS */
 
+	/**
+	 * The RoadSigns are saved in a SortedSet keeping them sorted by distance to destination (ascending order)
+	 */
 	SortedSet<RoadSign> roadSigns = new TreeSet<>();
 
-	public void addRoadSign(RoadSignPoint to, double dist) {
-		addRoadSign(new RoadSign(this, to, dist));
+	/**
+	 * Adds a new RoadSing pointing to the given destination with given distance.
+	 * @param destination destination of the RoadSign
+	 * @param dist distance to the given destination
+	 */
+	public void addRoadSign(RoadSignPoint destination, double dist) {
+		addRoadSign(new RoadSign(this, destination, dist));
 	}
 
 	/**
-	 * Adds the given RoadSign
+	 * Adds the given RoadSign to this RoadSignPoint
 	 * @param newSign the RoadSign to add
 	 */
 	public void addRoadSign(RoadSign newSign) {
 		roadSigns.add(newSign);
 	}
 
+	/**
+	 * Get an Iterator of all the RoadSigns this RoadSignPoint contains.
+	 * @return an Iterator of all the RoadSigns this RoadSignPoint contains
+	 */
 	public Iterator<RoadSign> getRoadSignsIterator() {
 		return roadSigns.iterator();
 	}
@@ -102,7 +114,7 @@ public class RoadSignPoint extends Point implements TickListener {
 		while(iter.hasNext()) {
 			// if the next roadSign.RoadSign doesn't survive the aging, remove it
 			if (!iter.next().age(ms)) {
-				iter.remove();
+				iter.remove(); // removes the last item given by iter.next() from the underlying collection
 			}
 		}
 	}
@@ -115,10 +127,8 @@ public class RoadSignPoint extends Point implements TickListener {
 
 	@Override
 	public void afterTick(TimeLapse timeLapse) {
-
+		// do nothing
 	}
-
-
 
 
 	/* OTHER */
@@ -127,7 +137,7 @@ public class RoadSignPoint extends Point implements TickListener {
 	public boolean equals(@Nullable Object other) {
 		return other != null && other instanceof RoadSignPoint
 				&& this.getRoadSignPointOwner() == ((RoadSignPoint) other).getRoadSignPointOwner()
-				&& this.getType() == ((RoadSignPoint) other).getType()
+				&& this.getPointType() == ((RoadSignPoint) other).getPointType()
 				&& this.x == ((RoadSignPoint) other).x
 				&& this.y == ((RoadSignPoint) other).y;
 	}

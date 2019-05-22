@@ -9,5 +9,4 @@ public interface RoadSignPointUser {
 
     // unregister this Owner
     void removeRoadSignPointModel();
-    boolean hasRoadSignModel();
 }

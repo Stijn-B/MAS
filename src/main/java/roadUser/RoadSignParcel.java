@@ -19,8 +19,8 @@ public class RoadSignParcel extends Parcel implements RoadSignPointOwner {
 
 		ID = RoadSignPointOwnerID.getNewID();
 
-		pickupRSPoint = new RoadSignPoint(this, RoadSignPoint.Type.PARCEL_PICKUP, parcelDto.getPickupLocation());
-		deliveryRSPoint = new RoadSignPoint(this, RoadSignPoint.Type.PARCEL_DELIVERY, parcelDto.getDeliveryLocation());
+		pickupRSPoint = new RoadSignPoint(this, RoadSignPoint.PointType.PARCEL_PICKUP, parcelDto.getPickupLocation());
+		deliveryRSPoint = new RoadSignPoint(this, RoadSignPoint.PointType.PARCEL_DELIVERY, parcelDto.getDeliveryLocation());
 		points = new RoadSignPoint[]{ pickupRSPoint, deliveryRSPoint };
 	}
 
@@ -60,11 +60,6 @@ public class RoadSignParcel extends Parcel implements RoadSignPointOwner {
 		isRegisteredToRoadSignModel = false;
 	}
 
-	@Override
-	public boolean hasRoadSignModel() {
-		return isRegisteredToRoadSignModel;
-	}
-
 	private int ID;
 
 	@Override
@@ -77,12 +72,15 @@ public class RoadSignParcel extends Parcel implements RoadSignPointOwner {
 		return Type.PARCEL;
 	}
 
+	public boolean equals(RoadSignPointOwner other) {
+		return getID() == other.getID();
+	}
 
 	/* OTHER */
 
 	@Override
 	public boolean equals(@Nullable Object other) {
-		return other != null && other instanceof RoadSignParcel && this.getID() == ((RoadSignParcel) other).getID();
+		return other != null && other instanceof RoadSignParcel && equals((RoadSignPointOwner) other);
 	}
 
 	public int hashCode() { return getID(); }

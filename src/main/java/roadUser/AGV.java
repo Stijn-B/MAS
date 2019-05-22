@@ -15,7 +15,7 @@ import java.util.List;
 public class AGV implements TickListener, RoadSignPointOwner {
 
     public AGV(Point position, Heuristic heuristic) {
-        roadSignPoint = new RoadSignPoint(this, RoadSignPoint.Type.AGV, position);
+        roadSignPoint = new RoadSignPoint(this, RoadSignPoint.PointType.AGV, position);
         this.heuristic = heuristic;
 
         ID = RoadSignPointOwnerID.getNewID();
@@ -56,7 +56,7 @@ public class AGV implements TickListener, RoadSignPointOwner {
     public void tick(TimeLapse timeLapse) {
         // TODO
         // EXPLORE: List<roadSignAnt.ant.PlannedPath> paths = explorePaths();
-        // HEURISTICS: getHeuristic().sortAntPathList(paths); // works on the given list so returns no value
+        // HEURISTICS: getHeuristicScore().sortAntPathList(paths); // works on the given list so returns no value
     }
 
     @Override
@@ -81,11 +81,6 @@ public class AGV implements TickListener, RoadSignPointOwner {
         isRegisteredToRoadSignModel = false;
     }
 
-    @Override
-    public boolean hasRoadSignModel() {
-        return isRegisteredToRoadSignModel;
-    }
-
     private int ID;
 
     @Override
@@ -105,7 +100,9 @@ public class AGV implements TickListener, RoadSignPointOwner {
         return new RoadSignPoint[]{ roadSignPoint };
     }
 
-
+    public boolean equals(RoadSignPointOwner other) {
+        return getID() == other.getID();
+    }
 
 
 }
