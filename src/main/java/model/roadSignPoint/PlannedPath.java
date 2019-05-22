@@ -1,5 +1,6 @@
-package model.pheromones.roadSign;
+package model.roadSignPoint;
 
+import model.roadSignPoint.pheromones.RoadSign;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
@@ -17,9 +18,9 @@ public class PlannedPath implements Comparable<PlannedPath> {
     private double heuristic = -1;
 
     /**
-     * Returns the heuristic assigned to the given model.pheromones.roadSign.PlannedPath.
+     * Returns the heuristic assigned to the given PlannedPath.
      * heuristic == -1 means no value was assigned yet.
-     * @return he heuristic assigned to the given model.pheromones.roadSign.PlannedPath
+     * @return he heuristic assigned to the given PlannedPath
      */
     public double getHeuristicScore() {
         return heuristic;
@@ -170,7 +171,7 @@ public class PlannedPath implements Comparable<PlannedPath> {
     }
 
 
-    /* INTERFACE Comparable<model.pheromones.roadSign.PlannedPath> */
+    /* INTERFACE Comparable<PlannedPath> */
 
     @Override
     public int compareTo(@NotNull PlannedPath o) {

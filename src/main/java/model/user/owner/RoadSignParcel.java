@@ -3,7 +3,7 @@ package model.user.owner;
 import com.github.rinde.rinsim.core.model.pdp.Parcel;
 import com.github.rinde.rinsim.core.model.pdp.ParcelDTO;
 import model.RoadSignPointModel;
-import model.pheromones.roadSign.RoadSignPoint;
+import model.roadSignPoint.RoadSignPoint;
 
 import javax.annotation.Nullable;
 

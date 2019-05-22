@@ -1,6 +1,6 @@
 package model.user.owner;
 
-import model.pheromones.roadSign.RoadSignPoint;
+import model.roadSignPoint.RoadSignPoint;
 import model.user.RoadSignPointUser;
 
 public interface RoadSignPointOwner extends RoadSignPointUser {

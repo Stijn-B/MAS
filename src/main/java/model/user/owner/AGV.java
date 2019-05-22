@@ -6,9 +6,9 @@ import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
 import heuristic.Heuristic;
-import model.pheromones.roadSign.PlannedPath;
+import model.roadSignPoint.PlannedPath;
 import model.user.ant.*;
-import model.pheromones.roadSign.RoadSignPoint;
+import model.roadSignPoint.RoadSignPoint;
 
 import java.util.List;
 
@@ -47,10 +47,28 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
 
     /* EXPLORATION */
 
+    private long lastExploreTime = 0;
+
+    private long deltaTimeExplore = 5000;
+
+    /**
+     * Returns whether the AGV should explore
+     * @param now
+     * @return
+     */
+    private boolean exploreCondition(long now) {
+        if (now - lastExploreTime >= deltaTimeExplore) {
+            lastExploreTime = now;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // TODO: exploration een bepaald duur geven.
     /**
      * Explores viable paths using ExplorationAnts
-     * @return a List<model.pheromones.roadSign.PlannedPath> containing viable paths (can be empty)
+     * @return a List<PlannedPath> containing viable paths (can be empty)
      */
     public List<PlannedPath> explorePaths() {
         return new ExplorationAnt().explore(getRoadSignPoints()[0]);
@@ -96,11 +114,24 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
     @Override
     public void tick(TimeLapse timeLapse) {
         long now = timeLapse.getTime();
-        // TODO
-        // EXPLORE: List<model.pheromones.roadSign.PlannedPath> paths = explorePaths();
-        // HEURISTICS: getHeuristicScore().sortAntPathList(paths); // works on the given list so returns no value
 
-        // TODO: roadSignPoint aanpassen
+        // EXPLORING NEW PATH
+
+        if (exploreCondition(now)) {
+
+            // explore possible paths
+            List<PlannedPath> paths = explorePaths();
+
+            // sort them by heuristic
+            getHeuristic().sortAntPathList(paths); // works on the given list so returns no value
+
+            // commit to best path
+            commit(paths.get(0), now);
+        }
+
+        // MOVING OVER COMITTED PATH
+
+        // TODO
     }
 
     @Override

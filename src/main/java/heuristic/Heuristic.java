@@ -1,16 +1,18 @@
 package heuristic;
 
-import model.pheromones.roadSign.PlannedPath;
+import model.roadSignPoint.PlannedPath;
 
 import java.util.Collections;
 import java.util.List;
 
 public abstract class Heuristic {
 
+    /* CALCULATING HEURISTIC */
+
     /**
-     *  Calculates the heuristic of the given model.pheromones.roadSign.PlannedPath.
+     *  Calculates the heuristic of the given PlannedPath.
      * @param path the path for which to calculate the heuristic
-     * @return the heuristic of the given model.pheromones.roadSign.PlannedPath
+     * @return the heuristic of the given PlannedPath
      */
     public abstract double calculate(PlannedPath path);
 
@@ -23,6 +25,9 @@ public abstract class Heuristic {
             ap.setHeuristicScore(calculate(ap));
         }
     }
+
+
+    /* SELECTING PATH */
 
     /**
      * Assigns heuristics to the AntPaths in the given list and sorts the list based on these heuristics.

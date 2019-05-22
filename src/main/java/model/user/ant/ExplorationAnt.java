@@ -1,8 +1,8 @@
 package model.user.ant;
 
-import model.pheromones.roadSign.PlannedPath;
-import model.pheromones.roadSign.RoadSign;
-import model.pheromones.roadSign.RoadSignPoint;
+import model.roadSignPoint.PlannedPath;
+import model.roadSignPoint.pheromones.RoadSign;
+import model.roadSignPoint.RoadSignPoint;
 
 import java.util.ArrayList;
 import java.util.Iterator;

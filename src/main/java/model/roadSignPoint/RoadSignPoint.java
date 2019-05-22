@@ -1,10 +1,11 @@
-package model.pheromones.roadSign;
+package model.roadSignPoint;
 
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
-import model.pheromones.AgingPheromone;
-import model.pheromones.IntentionData;
+import model.roadSignPoint.pheromones.AgingPheromone;
+import model.roadSignPoint.pheromones.IntentionData;
+import model.roadSignPoint.pheromones.RoadSign;
 import model.user.owner.AGV;
 import model.user.owner.RoadSignPointOwner;
 
@@ -121,6 +122,10 @@ public class RoadSignPoint extends Point implements TickListener {
 		intentions.add(intention);
 	}
 
+	public void registerIntention(AGV agv, long ETA) {
+		registerIntention(new IntentionData(agv, ETA));
+	}
+
 	/**
 	 * Returns whether the given AGV would arrive first at this RoadSignPoint if it would arrive at the given ETA.
 	 */
@@ -137,7 +142,7 @@ public class RoadSignPoint extends Point implements TickListener {
 	/* AGING */
 
 	/**
-	 * Ages all the RoadSigns that this model.pheromones.roadSign.RoadSignPoint holds
+	 * Ages all the RoadSigns that this RoadSignPoint holds
 	 * @param ms
 	 */
 	public void age(long ms) {
@@ -152,7 +157,7 @@ public class RoadSignPoint extends Point implements TickListener {
 		// Iterate over all AgingPheromones and age them
 		Iterator<? extends AgingPheromone> iter = agingSet.iterator();
 		while(iter.hasNext()) {
-			// if the next model.pheromones.roadSign.RoadSign doesn't survive the aging, remove it
+			// if the next RoadSign doesn't survive the aging, remove it
 			if (!iter.next().age(ms)) {
 				iter.remove(); // removes the last item given by iter.next() from the underlying collection
 			}

@@ -4,11 +4,14 @@ RinSim Docu https://rinsim.rinde.nl/design/core/
 
 
 # concrete TODO:
- o Heuristic: heuristiekmethode maken die heuristiek v e DeliveryPath berekend
- o ExplorationAnt rekening laten houden met welke parcels de AGV al bij heeft
- o IntentionAnt
+ o Heuristic implementeren
  o AGV
- o Simulation fixen / testen
+    o functionaliteit voor het werken met parcels implementeren (pickup, isCarrying, etc.)
+    o onTick verder implementeren
+ o ExplorationAnt
+    o rekening laten houden met welke parcels de AGV al bij heeft
+ o Simulation fixen
+ o optioneel nog Base implementeren (?)
 
 
 
