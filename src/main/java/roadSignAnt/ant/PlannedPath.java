@@ -67,7 +67,7 @@ public class PlannedPath implements Comparable<PlannedPath> {
     /**
      * Returns whether the given destination is acceptable considering the given path.
      */
-    public boolean acceptableNextHop(RoadSignPoint dest) {
+    public boolean acceptableHop(RoadSignPoint dest) {
 
         // if dest is an roadUser.AGV -> not ok
         if (dest.getType() == RoadSignPoint.Type.AGV) return false;

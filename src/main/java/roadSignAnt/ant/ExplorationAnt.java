@@ -79,7 +79,7 @@ public class ExplorationAnt extends Ant implements TickListener {
 				RoadSign roadSign = iterator.next();
 
 				// if the RoadSign destination is suitable, send a new explorer ant to explore it
-				if (path.acceptableNextHop(roadSign.getDestination())) {
+				if (path.acceptableHop(roadSign.getDestination())) {
 
 					// extend a copy of the current path with the new destination
 					PlannedPath pathCopy = path.copy();

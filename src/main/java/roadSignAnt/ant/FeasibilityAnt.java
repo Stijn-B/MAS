@@ -30,18 +30,11 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 	 * Create a FeasibilityAnt at the given roadUser.RoadSignParcel
 	 * @param curr the roadUser.RoadSignParcel where to create the new FeasibilityAnt
 	 */
-	FeasibilityAnt(RoadSignPoint curr, RoadModel rm) {
-		currentRSPoint = curr;
-		roadModel = rm;
+	FeasibilityAnt(RoadSignPointOwner curr) {
+		currOwner = curr;
 	}
 
 	private long time = 0;
-
-	private RoadSignPoint currentRSPoint;
-
-	public RoadSignPoint getCurrentRSPoint() {
-		return currentRSPoint;
-	}
 
 	private RoadSignPointOwner currOwner;
 
@@ -56,10 +49,12 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 	}
 
 	private void exploreNextOwner(RoadSignPointOwner nextOwner) {
+		// if one of the models is not registered yet, do nothing
+		if (roadModel == null || roadSignPointModel == null) return;
 
 		// create list of all RoadSignPoints (of both the current and next RoadSignPointOwner)
 		List<RoadSignPoint> points = new ArrayList<>();
-		points.addAll(Arrays.asList(currOwner.getRoadSignPoints()));
+		points.addAll(Arrays.asList(getCurrOwner().getRoadSignPoints()));
 		points.addAll(Arrays.asList(nextOwner.getRoadSignPoints()));
 		int size = points.size();
 

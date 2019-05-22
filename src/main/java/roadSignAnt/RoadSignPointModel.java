@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Random;
 
 
-//TODO: rename to RoadSignAntModel
 public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 
 	RoadSignPointModel(RoadModel rm)
