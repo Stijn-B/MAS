@@ -31,6 +31,7 @@ public class AGV implements TickListener, RoadSignPointOwner {
 
     /* EXPLORATION */
 
+    // TODO: exploration een bepaald duur geven.
     /**
      * Explores viable paths using ExplorationAnts
      * @return a List<roadSignAnt.ant.PlannedPath> containing viable paths (can be empty)
@@ -66,16 +67,26 @@ public class AGV implements TickListener, RoadSignPointOwner {
 
     /* INTERFACE RoadSignPointOwner */
 
-    private int ID;
-
-    private RoadSignPoint roadSignPoint;
-
     private RoadSignPointModel roadSignPointModel;
+    private boolean isRegisteredToRoadSignModel = false;
 
     @Override
     public void injectRoadSignModel(RoadSignPointModel model) {
         roadSignPointModel = model;
+        isRegisteredToRoadSignModel = true;
     }
+
+    @Override
+    public void unregisterFromRoadSignModel() {
+        isRegisteredToRoadSignModel = false;
+    }
+
+    @Override
+    public boolean isRegisteredToRoadSignModel() {
+        return isRegisteredToRoadSignModel;
+    }
+
+    private int ID;
 
     @Override
     public int getID() {
@@ -87,8 +98,14 @@ public class AGV implements TickListener, RoadSignPointOwner {
         return Type.AGV;
     }
 
+    private RoadSignPoint roadSignPoint;
+
     @Override
     public RoadSignPoint[] getRoadSignPoints() {
         return new RoadSignPoint[]{ roadSignPoint };
     }
+
+
+
+
 }

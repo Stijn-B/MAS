@@ -1,9 +1,20 @@
 package roadSignAnt.ant;
 
+import roadSignAnt.roadSignPoint.RoadSign;
+
+import java.util.Iterator;
+
 /**
  * Transporting AVG that sends out scouting AVGs and transports packages based on their intel
  */
 public class IntentionAnt extends Ant {
+
+    /**
+     * Check whether the roadSign is still valid and if it is, refresh it
+     */
+    public static boolean refresh(RoadSign rs) {
+        return rs.getDestination().getRoadSignPointOwner().isRegistered();
+    }
 
 	//TODO: deprecated code, though there might be something useful down here
 //	private static final double DEFAULT_SPEED = 1000d;

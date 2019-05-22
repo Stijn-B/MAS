@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ExplorationAnt extends Ant implements TickListener {
+public class ExplorationAnt extends Ant {
 
 	// aantal explored paden =  branch amount ** hop count(4 ** 4 = 256)
 	public final static int DEFAULT_BRANCH_AMOUNT = 4; // breedte
@@ -100,19 +100,6 @@ public class ExplorationAnt extends Ant implements TickListener {
 		}
 
 		return result;
-	}
-
-
-	/* IMPLEMENTED INTERFACE METHODS */
-
-	@Override
-	public void tick(TimeLapse timeLapse) {
-		// TODO
-	}
-
-	@Override
-	public void afterTick(TimeLapse timeLapse) {
-		// TODO
 	}
 
 }

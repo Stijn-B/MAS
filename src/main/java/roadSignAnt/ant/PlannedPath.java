@@ -35,13 +35,8 @@ public class PlannedPath implements Comparable<PlannedPath> {
     /* EDITING */
 
     public void append(RoadSign rs) {
-        append(new RoadSign(rs.getDestination(), rs.getDistance()));
+        append(rs);
     }
-
-    public void append(RoadSignPoint point, double dist) {
-        append(new RoadSign(point, dist));
-    }
-
 
     /* CONTENT */
 

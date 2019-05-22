@@ -14,6 +14,7 @@ import javax.measure.Measure;
 import javax.measure.quantity.Length;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
@@ -80,7 +81,7 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 		Measure<Double, Length> distance = roadModel.getDistanceOfPath(path); // distance of shortest path
 
 		// TODO: controleren of distance.getValue() effectief het juiste getal is (Measure<Double, Length> is niet helemaal duidelijk)
-		from.addRoadSign(new RoadSign(to, distance.getValue()));
+		from.addRoadSign(to, distance.getValue());
 	}
 
 

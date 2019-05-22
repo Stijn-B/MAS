@@ -4,7 +4,7 @@ simulator.getCurrentTime();
 
 TODO:
  - Zorgen dat overal RoadSigns zijn: parcel (pickup en delivery), IntentionAnt, Base
-    - Deze worden allemaal geregistreerd
+    - Deze worden allemaal geregistreerd 'unregister implementeren'
     - Fesibility gebruikt alle geregistreerde
  - Heuristic: heuristiekmethode maken die heuristiek v e DeliveryPath berekend
  - IntentionAnt

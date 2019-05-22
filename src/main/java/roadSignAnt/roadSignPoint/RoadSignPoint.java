@@ -44,6 +44,10 @@ public class RoadSignPoint extends Point implements TickListener {
 
 	SortedSet<RoadSign> roadSigns = new TreeSet<>();
 
+	public void addRoadSign(RoadSignPoint to, double dist) {
+		addRoadSign(new RoadSign(this, to, dist));
+	}
+
 	/**
 	 * Adds the given RoadSign
 	 * @param newSign the RoadSign to add
