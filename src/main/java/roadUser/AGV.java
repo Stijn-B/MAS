@@ -71,18 +71,18 @@ public class AGV implements TickListener, RoadSignPointOwner {
     private boolean isRegisteredToRoadSignModel = false;
 
     @Override
-    public void injectRoadSignModel(RoadSignPointModel model) {
+    public void injectRoadSignPointModel(RoadSignPointModel model) {
         roadSignPointModel = model;
         isRegisteredToRoadSignModel = true;
     }
 
     @Override
-    public void unregisterFromRoadSignModel() {
+    public void removeRoadSignPointModel() {
         isRegisteredToRoadSignModel = false;
     }
 
     @Override
-    public boolean isRegisteredToRoadSignModel() {
+    public boolean hasRoadSignModel() {
         return isRegisteredToRoadSignModel;
     }
 

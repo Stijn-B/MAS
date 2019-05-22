@@ -59,7 +59,7 @@ public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 	 */
 	@Override
 	public boolean register(RoadSignPointUser element) {
-		element.injectRoadSignModel(this);
+		element.injectRoadSignPointModel(this);
 		if (element instanceof RoadSignPointOwner) {
 			register((RoadSignPointOwner) element); // [spaghetti] voor als de overloading niet werkt
 		}
@@ -67,7 +67,7 @@ public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 	}
 
 	public boolean register(RoadSignPointOwner element){
-		element.injectRoadSignModel(this);
+		element.injectRoadSignPointModel(this);
 		addOwner(element);
 		return true;
 	}
@@ -83,11 +83,13 @@ public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 		if (element instanceof RoadSignPointOwner) {
 			unregister((RoadSignPointOwner) element); // [spaghetti] voor als de overloading niet werkt
 		}
+		element.removeRoadSignPointModel();
 		return true;
 	}
 
 	public boolean unregister(RoadSignPointOwner owner) {
 		removeOwner(owner);
+		owner.removeRoadSignPointModel();
 		return true;
 	}
 

@@ -25,22 +25,6 @@ public class RoadSignParcel extends Parcel implements RoadSignPointOwner {
 	}
 
 
-	/* ID */
-
-	private final int ID;
-
-	public int getID() {
-		return ID;
-	}
-
-
-	/* TYPE */
-
-	public RoadSignPointOwner.Type getRoadSignPointOwnerType() {
-		return Type.PARCEL;
-	}
-
-
 	/* ROADSINGPOINTS */
 
 	private final RoadSignPoint[] points;
@@ -60,12 +44,37 @@ public class RoadSignParcel extends Parcel implements RoadSignPointOwner {
 	}
 
 
-	/* DEPENDENCY INJECTION*/
+	/* INTERFACE RoadSignPointOwner */
 
-	private RoadSignPointModel model;
+	private RoadSignPointModel roadSignPointModel;
+	private boolean isRegisteredToRoadSignModel = false;
 
-	public void injectRoadSignModel(RoadSignPointModel model) {
-		this.model = model;
+	@Override
+	public void injectRoadSignPointModel(RoadSignPointModel model) {
+		roadSignPointModel = model;
+		isRegisteredToRoadSignModel = true;
+	}
+
+	@Override
+	public void removeRoadSignPointModel() {
+		isRegisteredToRoadSignModel = false;
+	}
+
+	@Override
+	public boolean hasRoadSignModel() {
+		return isRegisteredToRoadSignModel;
+	}
+
+	private int ID;
+
+	@Override
+	public int getID() {
+		return ID;
+	}
+
+	@Override
+	public Type getRoadSignPointOwnerType() {
+		return Type.PARCEL;
 	}
 
 

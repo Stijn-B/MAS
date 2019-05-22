@@ -120,8 +120,18 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 	}
 
 
-	public void injectRoadSignModel(RoadSignPointModel m) {
+	public void injectRoadSignPointModel(RoadSignPointModel m) {
 		roadSignPointModel = m;
+	}
+
+	@Override
+	public void removeRoadSignPointModel() {
+		roadSignPointModel = null;
+	}
+
+	@Override
+	public boolean hasRoadSignModel() {
+		return roadSignPointModel != null;
 	}
 
 	private RoadSignPointModel roadSignPointModel;

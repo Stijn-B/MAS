@@ -5,9 +5,9 @@ import roadSignAnt.RoadSignPointModel;
 public interface RoadSignPointUser {
 
     // dependency injection
-    void injectRoadSignModel(RoadSignPointModel model);
+    void injectRoadSignPointModel(RoadSignPointModel model);
 
     // unregister this Owner
-    void unregisterFromRoadSignModel();
-    boolean isRegisteredToRoadSignModel();
+    void removeRoadSignPointModel();
+    boolean hasRoadSignModel();
 }

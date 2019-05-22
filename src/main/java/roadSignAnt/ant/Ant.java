@@ -11,7 +11,7 @@ public abstract class Ant implements RoadSignPointUser {
         return this.model;
     }
 
-    public void injectRoadSignModel(RoadSignPointModel model) {
+    public void injectRoadSignPointModel(RoadSignPointModel model) {
         this.model = model;
     }
 
