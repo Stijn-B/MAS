@@ -1,17 +1,17 @@
 package roadSignAnt.ant;
 
-import roadSignAnt.RoadSignModel;
+import roadSignAnt.RoadSignPointModel;
 import roadSignAnt.roadSignPoint.RoadSignPointUser;
 
 public abstract class Ant implements RoadSignPointUser {
 
-    private RoadSignModel model;
+    private RoadSignPointModel model;
 
-    public RoadSignModel getRSModel() {
+    public RoadSignPointModel getRSModel() {
         return this.model;
     }
 
-    public void injectRoadSignModel(RoadSignModel model) {
+    public void injectRoadSignModel(RoadSignPointModel model) {
         this.model = model;
     }
 

@@ -70,11 +70,11 @@ public class AGV implements TickListener, RoadSignPointOwner {
 
     private RoadSignPoint roadSignPoint;
 
-    private RoadSignModel roadSignModel;
+    private RoadSignPointModel roadSignPointModel;
 
     @Override
-    public void injectRoadSignModel(RoadSignModel model) {
-        roadSignModel = model;
+    public void injectRoadSignModel(RoadSignPointModel model) {
+        roadSignPointModel = model;
     }
 
     @Override

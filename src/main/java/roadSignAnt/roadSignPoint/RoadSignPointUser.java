@@ -1,9 +1,9 @@
 package roadSignAnt.roadSignPoint;
 
-import roadSignAnt.RoadSignModel;
+import roadSignAnt.RoadSignPointModel;
 
 public interface RoadSignPointUser {
 
     // dependency injection
-    void injectRoadSignModel(RoadSignModel model);
+    void injectRoadSignModel(RoadSignPointModel model);
 }

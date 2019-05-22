@@ -2,7 +2,7 @@ package roadUser;
 
 import com.github.rinde.rinsim.core.model.pdp.Parcel;
 import com.github.rinde.rinsim.core.model.pdp.ParcelDTO;
-import roadSignAnt.RoadSignModel;
+import roadSignAnt.RoadSignPointModel;
 import roadSignAnt.roadSignPoint.RoadSignPoint;
 import roadSignAnt.roadSignPoint.RoadSignPointOwner;
 import roadSignAnt.roadSignPoint.RoadSignPointOwnerID;
@@ -62,9 +62,9 @@ public class RoadSignParcel extends Parcel implements RoadSignPointOwner {
 
 	/* DEPENDENCY INJECTION*/
 
-	private RoadSignModel model;
+	private RoadSignPointModel model;
 
-	public void injectRoadSignModel(RoadSignModel model) {
+	public void injectRoadSignModel(RoadSignPointModel model) {
 		this.model = model;
 	}
 

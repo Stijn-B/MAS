@@ -13,7 +13,7 @@ import com.github.rinde.rinsim.ui.renderers.GraphRoadModelRenderer;
 import com.github.rinde.rinsim.ui.renderers.RoadUserRenderer;
 import org.apache.commons.math3.random.RandomGenerator;
 
-import roadSignAnt.RoadSignModel;
+import roadSignAnt.RoadSignPointModel;
 import roadSignAnt.ant.IntentionAnt;
 import roadUser.RoadSignParcel;
 
@@ -42,7 +42,7 @@ public class Simulation {
 		final Simulator simulator = Simulator.builder()
 			.addModel(RoadModelBuilders.staticGraph(loadGraph(MAP_FILE))) // add map of Leuven
 			.addModel(DefaultPDPModel.builder())
-			.addModel(RoadSignModel.builder())
+			.addModel(RoadSignPointModel.builder())
 			.addModel(view)
 			.build();
 

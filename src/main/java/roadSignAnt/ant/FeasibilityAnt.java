@@ -52,7 +52,7 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 	/* ROADSIGN METHODS */
 
 	private void exploreNextOwner() {
-		exploreNextOwner(getRoadSignModel().getRandomOwner());
+		exploreNextOwner(getRoadSignPointModel().getRandomOwner());
 	}
 
 	private void exploreNextOwner(RoadSignPointOwner nextOwner) {
@@ -124,14 +124,14 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 	}
 
 
-	public void injectRoadSignModel(RoadSignModel m) {
-		roadSignModel = m;
+	public void injectRoadSignModel(RoadSignPointModel m) {
+		roadSignPointModel = m;
 	}
 
-	private RoadSignModel roadSignModel;
+	private RoadSignPointModel roadSignPointModel;
 
-	public RoadSignModel getRoadSignModel() {
-		return roadSignModel;
+	public RoadSignPointModel getRoadSignPointModel() {
+		return roadSignPointModel;
 	}
 
 

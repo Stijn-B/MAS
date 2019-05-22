@@ -11,14 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-//TODO: remove
 
-
-//TODO: header with dependencies etcetera
 //TODO: rename to RoadSignAntModel
-public class RoadSignModel extends Model.AbstractModel<RoadSignPointUser> {
+public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 
-	RoadSignModel(RoadModel rm)
+	RoadSignPointModel(RoadModel rm)
 	{
 		roadModel = rm;
 		randomGenerator = new Random();
@@ -102,16 +99,16 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignPointUser> {
 		return new RoadSignModelBuilder();
 	}
 
-	public static class RoadSignModelBuilder extends ModelBuilder.AbstractModelBuilder<RoadSignModel, RoadSignPointUser> {
+	public static class RoadSignModelBuilder extends ModelBuilder.AbstractModelBuilder<RoadSignPointModel, RoadSignPointUser> {
 
 		RoadSignModelBuilder() {
 			setDependencies(RoadModel.class);
 		}
 
 		@Override
-		public RoadSignModel build(DependencyProvider dependencyProvider) {
+		public RoadSignPointModel build(DependencyProvider dependencyProvider) {
 			final RoadModel rm = dependencyProvider.get(RoadModel.class);
-			return new RoadSignModel(rm);
+			return new RoadSignPointModel(rm);
 		}
 	}
 
