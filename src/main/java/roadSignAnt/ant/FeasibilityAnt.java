@@ -23,10 +23,6 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 	public static final double ROADSIGNS_PER_SEC = 20; // amount of RoadSigns the ant creates per seconds
 	public static final long MS_PER_ROADSIGN = Math.round(Math.ceil(1000/ROADSIGNS_PER_SEC)); // amount of ms the ant uses to create a RoadSign
 
-	//TODO: Sander: pick suitable chance here
-	// de kans dat als de ant bij een pickup location is, de bijbehorende delivery location als volgende punt gekozen wordt (ipv een random punt)
-	public static final double FROM_PICKUP_TO_DEL_CHANCE = 0.25;
-
 
 	/* CONSTRUCTOR AND OBJECT VAR */
 
@@ -99,6 +95,7 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 	public void tick(TimeLapse timeLapse) {
 		// add the time of this TimeLapse to the available time
 		time += timeLapse.getTimeLeft();
+		timeLapse.consumeAll();
 
 		// create RoadSigns untill there is no time left
 		while (MS_PER_ROADSIGN <= time) {

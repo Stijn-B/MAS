@@ -64,12 +64,15 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignPointUser> {
 	@Override
 	public boolean register(RoadSignPointUser element) {
 		element.injectRoadSignModel(this);
+		if (element instanceof RoadSignPointOwner) {
+			register((RoadSignPointOwner) element); // [spaghetti] voor als de overloading niet werkt
+		}
 		return true;
 	}
 
-	public boolean register(RoadSignPointOwner owner){
-		owner.injectRoadSignModel(this);
-		addOwner(owner);
+	public boolean register(RoadSignPointOwner element){
+		element.injectRoadSignModel(this);
+		addOwner(element);
 		return true;
 	}
 
@@ -81,7 +84,9 @@ public class RoadSignModel extends Model.AbstractModel<RoadSignPointUser> {
 	 */
 	@Override
 	public boolean unregister(RoadSignPointUser element) {
-		//TODO: remove injection? ik denk dat dit overbodig is
+		if (element instanceof RoadSignPointOwner) {
+			unregister((RoadSignPointOwner) element); // [spaghetti] voor als de overloading niet werkt
+		}
 		return true;
 	}
 

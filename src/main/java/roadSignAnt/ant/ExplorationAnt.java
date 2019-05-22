@@ -97,8 +97,6 @@ public class ExplorationAnt extends Ant implements TickListener {
 
 		} else { // else (no hops left), just add the current path to the list
 			result.add(path);
-			// TODO: overwegen om deze buiten de 'else' te zetten
-			// zou als gevolg hebben dat ook de korte paden in de lijst staan ipv alleen de path met lengte = hopCount
 		}
 
 		return result;

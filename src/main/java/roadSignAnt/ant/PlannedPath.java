@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PlannedPath implements Comparable<PlannedPath> {
 
-    public List<Pair<RoadSignPoint,Double>> path;
+    public List<RoadSign> path;
 
 
     /* HEURISTIC */
@@ -35,11 +35,11 @@ public class PlannedPath implements Comparable<PlannedPath> {
     /* EDITING */
 
     public void append(RoadSign rs) {
-        append(new Pair(rs.getDestination(), rs.getDistance()));
+        append(new RoadSign(rs.getDestination(), rs.getDistance()));
     }
 
-    public void append(Pair<RoadSignPoint,Double> a) {
-        path.add(a);
+    public void append(RoadSignPoint point, double dist) {
+        append(new RoadSign(point, dist));
     }
 
 
@@ -49,7 +49,7 @@ public class PlannedPath implements Comparable<PlannedPath> {
         return path.size();
     }
 
-    public Iterator<Pair<RoadSignPoint,Double>> getIterator() {
+    public Iterator<RoadSign> getIterator() {
         return path.iterator();
     }
 
@@ -88,9 +88,9 @@ public class PlannedPath implements Comparable<PlannedPath> {
      */
     public boolean pathContains(RoadSignPoint rsPoint) {
         // iterate over all list pairs
-        Iterator<Pair<RoadSignPoint,Double>> iterator = getIterator();
+        Iterator<RoadSign> iterator = getIterator();
         while (iterator.hasNext()) {
-            if (iterator.next().getKey() == rsPoint) return true;
+            if (iterator.next().getDestination() == rsPoint) return true;
         }
         return false;
     }
@@ -101,9 +101,9 @@ public class PlannedPath implements Comparable<PlannedPath> {
      */
     public boolean pathContainsOwnerID(int ID) {
         // iterate over all list pairs
-        Iterator<Pair<RoadSignPoint,Double>> iterator = getIterator();
+        Iterator<RoadSign> iterator = getIterator();
         while (iterator.hasNext()) {
-            if (iterator.next().getKey().getRoadSignPointOwner().getID() == ID) return true;
+            if (iterator.next().getDestination().getRoadSignPointOwner().getID() == ID) return true;
         }
         return false;
     }

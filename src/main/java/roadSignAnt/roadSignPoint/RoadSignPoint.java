@@ -1,11 +1,13 @@
 package roadSignAnt.roadSignPoint;
 
+import com.github.rinde.rinsim.core.model.time.TickListener;
+import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class RoadSignPoint extends Point {
+public class RoadSignPoint extends Point implements TickListener {
 
 	/* CONSTRUCTOR */
 
@@ -100,6 +102,19 @@ public class RoadSignPoint extends Point {
 			}
 		}
 	}
+
+	@Override
+	public void tick(TimeLapse timeLapse) {
+		age(timeLapse.getTime());
+		timeLapse.consumeAll();
+	}
+
+	@Override
+	public void afterTick(TimeLapse timeLapse) {
+
+	}
+
+
 
 
 	/* OTHER */
