@@ -5,13 +5,13 @@ Knoeien met RinSim en delegate MAS systeem uittypen en nadenken
 # 11 mei (~6u)
 De simulatie runnen en objecten toevoegen werkt (Simulation.java)
 
-roadSign.RoadSign en roadSign.RoadSignPoint toegevoegd
--> Een roadSign.RoadSign wordt aangemaakt door een explorer ant
+model.roadSign.RoadSign en model.roadSign.RoadSignPoint toegevoegd
+-> Een model.roadSign.RoadSign wordt aangemaakt door een explorer ant
 
-roadSign.RoadSignPoint extends Point : houdt alle RoadSigns v e Point bij in een georderde lijst (afstand tot punt oplopend)
-roadSign.roadUser.RoadSignParcel extends Parcel : bevat RoadSignPoint versie van het ophaal- en leverpun
+model.roadSign.RoadSignPoint extends Point : houdt alle RoadSigns v e Point bij in een georderde lijst (afstand tot punt oplopend)
+model.model.user.owner.RoadSignParcel extends Parcel : bevat RoadSignPoint versie van het ophaal- en leverpun
 
-roadSign.RoadSignModel : krijgt 'register' call als een roadUser.RoadSignParcel wordt toegevoegd, hierdoor is er een plaats waar
+model.RoadSignModel : krijgt 'register' call als een model.user.owner.RoadSignParcel wordt toegevoegd, hierdoor is er een plaats waar
     |                    alle RoadSignParcels beschikbaar zijn (zodat de FeasibilityAnts deze kunnen overlopen)
     |-> niet gelukt om aan te maken, zie evt (https://rinsim.rinde.nl/design/core/#model)
 

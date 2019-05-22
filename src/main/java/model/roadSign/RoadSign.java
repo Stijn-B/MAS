@@ -1,4 +1,4 @@
-package roadSignAnt.roadSignPoint;
+package model.roadSign;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -14,10 +14,10 @@ public class RoadSign implements Comparable<RoadSign> {
 	/* CONSTRUCTORS */
 
 	/**
-	 * Creates a roadSign.RoadSign object
-	 * @param destination the destination point of the roadSign.RoadSign
+	 * Creates a model.roadSign.RoadSign object
+	 * @param destination the destination point of the model.roadSign.RoadSign
 	 * @param distance the distance between the start- and endpoints
-	 * @param lifeTime how long the roadSign.RoadSign should stay alive in milliseconds
+	 * @param lifeTime how long the model.roadSign.RoadSign should stay alive in milliseconds
 	 */
 	public RoadSign(RoadSignPoint location, RoadSignPoint destination, double distance, long lifeTime) {
 		this.location = location;
@@ -27,8 +27,8 @@ public class RoadSign implements Comparable<RoadSign> {
 	}
 
 	/**
-	 * Creates a roadSign.RoadSign object. The roadSign.RoadSign.DEFAULT_LIFETIME_MS is taken as the lifeTime
-	 * @param destination the destination point of the roadSign.RoadSign
+	 * Creates a model.roadSign.RoadSign object. The model.roadSign.RoadSign.DEFAULT_LIFETIME_MS is taken as the lifeTime
+	 * @param destination the destination point of the model.roadSign.RoadSign
 	 * @param distance the distance between the start- and endpoints
 	 */
 	public RoadSign(RoadSignPoint location, RoadSignPoint destination, double distance) {
@@ -55,8 +55,8 @@ public class RoadSign implements Comparable<RoadSign> {
 	}
 
 	/**
-	 * Get the distance between the start and endpoint of the roadSign.RoadSign
-	 * @return the distance between the start and endpoint of the roadSign.RoadSign
+	 * Get the distance between the start and endpoint of the model.roadSign.RoadSign
+	 * @return the distance between the start and endpoint of the model.roadSign.RoadSign
 	 */
 	public double getDistance() {
 		return distance;
@@ -67,8 +67,8 @@ public class RoadSign implements Comparable<RoadSign> {
 	private double life;
 
 	/**
-	 * Get the remaining life time of the roadSign.RoadSign
-	 * @return the remaining life time of the roadSign.RoadSign
+	 * Get the remaining life time of the model.roadSign.RoadSign
+	 * @return the remaining life time of the model.roadSign.RoadSign
 	 */
 	public double getRemainingLifeTime() {
 		return life;
@@ -83,8 +83,8 @@ public class RoadSign implements Comparable<RoadSign> {
 	}
 
 	/**
-	 * Ages the roadSign.RoadSign by the given amount of milliseconds and returns whether the roadSign.RoadSign has life time left
-	 * @param ms how much milliseconds the roadSign.RoadSign should be aged
+	 * Ages the model.roadSign.RoadSign by the given amount of milliseconds and returns whether the model.roadSign.RoadSign has life time left
+	 * @param ms how much milliseconds the model.roadSign.RoadSign should be aged
 	 */
 	public boolean age(long ms) {
 		life -= ms;
@@ -96,7 +96,7 @@ public class RoadSign implements Comparable<RoadSign> {
 
 	@Override
 	public String toString() {
-		return "roadSign.RoadSign to " + getDestination().toString() + ", distance: " + String.valueOf(getDistance()) + ", remaining lifetime: " + String.valueOf(getRemainingLifeTime());
+		return "model.roadSign.RoadSign to " + getDestination().toString() + ", distance: " + String.valueOf(getDistance()) + ", remaining lifetime: " + String.valueOf(getRemainingLifeTime());
 	}
 
 	@Override

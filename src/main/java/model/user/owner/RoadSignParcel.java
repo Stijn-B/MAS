@@ -1,11 +1,9 @@
-package roadUser;
+package model.user.owner;
 
 import com.github.rinde.rinsim.core.model.pdp.Parcel;
 import com.github.rinde.rinsim.core.model.pdp.ParcelDTO;
-import roadSignAnt.RoadSignPointModel;
-import roadSignAnt.roadSignPoint.RoadSignPoint;
-import roadSignAnt.roadSignPoint.RoadSignPointOwner;
-import roadSignAnt.roadSignPoint.RoadSignPointOwnerID;
+import model.RoadSignPointModel;
+import model.roadSign.RoadSignPoint;
 
 import javax.annotation.Nullable;
 
@@ -17,21 +15,15 @@ public class RoadSignParcel extends Parcel implements RoadSignPointOwner {
 		if (parcelDto.getPickupLocation() == null || parcelDto.getDeliveryLocation() == null)
 			throw new NullPointerException("Pickup- and DeliveryLocation have to be specified in the ParcelDTO");
 
-		ID = RoadSignPointOwnerID.getNewID();
+		ID = AbstractRoadSignPointOwner.getNewID();
 
 		pickupRSPoint = new RoadSignPoint(this, RoadSignPoint.PointType.PARCEL_PICKUP, parcelDto.getPickupLocation());
 		deliveryRSPoint = new RoadSignPoint(this, RoadSignPoint.PointType.PARCEL_DELIVERY, parcelDto.getDeliveryLocation());
-		points = new RoadSignPoint[]{ pickupRSPoint, deliveryRSPoint };
 	}
 
 
 	/* ROADSINGPOINTS */
 
-	private final RoadSignPoint[] points;
-
-	public RoadSignPoint[] getRoadSignPoints() {
-		return points.clone();
-	}
 
 	private final RoadSignPoint pickupRSPoint;
 	private final RoadSignPoint deliveryRSPoint;
@@ -44,21 +36,28 @@ public class RoadSignParcel extends Parcel implements RoadSignPointOwner {
 	}
 
 
-	/* INTERFACE RoadSignPointOwner */
+	/* INTERFACE RoadSignPointOwner (extends RoadSignPointUser) */
+
+	// RoadSignPointUser
 
 	private RoadSignPointModel roadSignPointModel;
-	private boolean isRegisteredToRoadSignModel = false;
 
 	@Override
 	public void injectRoadSignPointModel(RoadSignPointModel model) {
 		roadSignPointModel = model;
-		isRegisteredToRoadSignModel = true;
 	}
 
 	@Override
 	public void removeRoadSignPointModel() {
-		isRegisteredToRoadSignModel = false;
+		roadSignPointModel = null;
 	}
+
+	@Override
+	public boolean hasRoadSignPointModel() {
+		return roadSignPointModel != null;
+	}
+
+	// RoadSignPointOwner
 
 	private int ID;
 
@@ -68,22 +67,24 @@ public class RoadSignParcel extends Parcel implements RoadSignPointOwner {
 	}
 
 	@Override
-	public Type getRoadSignPointOwnerType() {
-		return Type.PARCEL;
+	public OwnerType getRoadSignPointOwnerType() {
+		return OwnerType.PARCEL;
 	}
 
-	public boolean equals(RoadSignPointOwner other) {
-		return getID() == other.getID();
+	@Override
+	public RoadSignPoint[] getRoadSignPoints() {
+		return new RoadSignPoint[]{getPickupLocationRoadSignPoint(), getDeliveryLocationRoadSignPoint()};
 	}
 
-	/* OTHER */
+	@Override
+	public int hashCode() { return getID(); }
 
 	@Override
 	public boolean equals(@Nullable Object other) {
-		return other != null && other instanceof RoadSignParcel && equals((RoadSignPointOwner) other);
+		return other != null
+				&& other instanceof RoadSignPointOwner
+				&& ((RoadSignPointOwner) other).getID() == getID();
 	}
-
-	public int hashCode() { return getID(); }
 
 }
 

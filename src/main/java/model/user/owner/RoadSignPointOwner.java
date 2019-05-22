@@ -1,6 +1,7 @@
-package roadSignAnt.roadSignPoint;
+package model.user.owner;
 
-import javax.annotation.Nullable;
+import model.roadSign.RoadSignPoint;
+import model.user.RoadSignPointUser;
 
 public interface RoadSignPointOwner extends RoadSignPointUser {
 
@@ -8,13 +9,17 @@ public interface RoadSignPointOwner extends RoadSignPointUser {
 	int getID();
 
 	// PointType of the RoadSignPointOwner
-	enum Type { PARCEL, AGV, BASE }
-	Type getRoadSignPointOwnerType();
+	enum OwnerType { PARCEL, AGV, BASE }
+	OwnerType getRoadSignPointOwnerType();
 
 	// Array of the RoadSignPoints owned by the RoadSignPointOwner
 	RoadSignPoint[] getRoadSignPoints();
 
-	boolean equals(RoadSignPointOwner other);
+	@Override
+	int hashCode();
+
+	@Override
+	boolean equals(Object other);
 
 }
 

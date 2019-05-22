@@ -1,8 +1,6 @@
-package roadSignAnt.ant;
+package model.user.ant;
 
-import roadSignAnt.roadSignPoint.RoadSign;
-
-import java.util.Iterator;
+import model.roadSign.RoadSign;
 
 /**
  * Transporting AVG that sends out scouting AVGs and transports packages based on their intel
@@ -10,10 +8,10 @@ import java.util.Iterator;
 public class IntentionAnt extends Ant {
 
     /**
-     * Check whether the roadSign is still valid and if it is, refresh it
+     * Check whether the model is still valid and if it is, refresh it
      */
     public static boolean refresh(RoadSign rs) {
-        return rs.getDestination().getRoadSignPointOwner().isRegistered();
+        return false; // TODO
     }
 
 	//TODO: deprecated code, though there might be something useful down here
@@ -48,7 +46,7 @@ public class IntentionAnt extends Ant {
 //		Point from = getRoadModel().getPosition(this);
 //
 //		// iterate over parcel list
-//		ArrayList<roadUser.RoadSignParcel> list = getRSModel().getOwnerList();
+//		ArrayList<model.user.owner.RoadSignParcel> list = getRSModel().getOwnerList();
 //		for (int i = 0; i < list.size(); i++) {
 //
 //			// get RoadSignPoint of parcel pickuplocation and distance to it

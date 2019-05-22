@@ -1,20 +1,18 @@
-package roadSignAnt.ant;
+package model.user.ant;
 
 import com.github.rinde.rinsim.core.model.road.RoadModel;
 import com.github.rinde.rinsim.core.model.road.RoadUser;
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
-import roadSignAnt.*;
-import roadSignAnt.roadSignPoint.RoadSign;
-import roadSignAnt.roadSignPoint.RoadSignPoint;
-import roadSignAnt.roadSignPoint.RoadSignPointOwner;
+import model.roadSign.RoadSignPoint;
+import model.RoadSignPointModel;
+import model.user.owner.RoadSignPointOwner;
 
 import javax.measure.Measure;
 import javax.measure.quantity.Length;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
@@ -25,11 +23,11 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 	public static final long MS_PER_ROADSIGN = Math.round(Math.ceil(1000/ROADSIGNS_PER_SEC)); // amount of ms the ant uses to create a RoadSign
 
 
-	/* CONSTRUCTOR AND OBJECT VAR */
+	/* CONSTRUCTOR */
 
 	/**
-	 * Create a FeasibilityAnt at the given roadUser.RoadSignParcel
-	 * @param curr the roadUser.RoadSignParcel where to create the new FeasibilityAnt
+	 * Create a FeasibilityAnt at the given model.user.owner.RoadSignParcel
+	 * @param curr the model.user.owner.RoadSignParcel where to create the new FeasibilityAnt
 	 */
 	FeasibilityAnt(RoadSignPointOwner curr) {
 		currOwner = curr;
@@ -37,21 +35,31 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 
 	private long time = 0;
 
+
+	/* CURRENT LOCATION */
+
 	private RoadSignPointOwner currOwner;
 
 	public RoadSignPointOwner getCurrOwner() {
 		return currOwner;
 	}
 
+
 	/* ROADSIGN METHODS */
 
+	/**
+	 * Explores to another random RoadSignPointOwner
+	 */
 	private void exploreNextOwner() {
-		exploreNextOwner(getRoadSignPointModel().getRandomOwner());
+		exploreNextOwner(getRoadSignPointModel().getRandomOwnerOtherThan(getCurrOwner()));
 	}
 
+	/**
+	 * Takes the RoadSignPoints of the current and next RoadSignPointOwner and creates RoadSigns between all of them.
+	 */
 	private void exploreNextOwner(RoadSignPointOwner nextOwner) {
-		// if one of the models is not registered yet, do nothing
-		if (roadModel == null || roadSignPointModel == null) return;
+		// if one of the models is not registered yet or the argument is null, do nothing
+		if (getRoadModel() == null || !hasRoadSignPointModel() || nextOwner == null) return;
 
 		// create list of all RoadSignPoints (of both the current and next RoadSignPointOwner)
 		List<RoadSignPoint> points = new ArrayList<>();
@@ -77,11 +85,12 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 	 */
 	private void createRoadSign(RoadSignPoint from, RoadSignPoint to) {
 
-		List<Point> path = getRoadModel().getShortestPathTo(from, to); // shortest path
-		Measure<Double, Length> distance = roadModel.getDistanceOfPath(path); // distance of shortest path
+		if (from == to) return; // don't create a RoadSign from a point to itself
 
-		// TODO: controleren of distance.getValue() effectief het juiste getal is (Measure<Double, Length> is niet helemaal duidelijk)
-		from.addRoadSign(to, distance.getValue());
+		List<Point> shortestPath = getRoadModel().getShortestPathTo(from, to); // shortest path
+		double distance = getRoadModel().getDistanceOfPath(shortestPath).getValue(); // distance of shortest path
+
+		from.addRoadSign(to, distance);
 	}
 
 
@@ -107,7 +116,7 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 	}
 
 
-	/* DEPENDENCY INJECTIONS */
+	/* INJECTION RoadModel */
 
 	private RoadModel roadModel;
 
@@ -117,27 +126,6 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 
 	public RoadModel getRoadModel() {
 		return roadModel;
-	}
-
-
-	public void injectRoadSignPointModel(RoadSignPointModel m) {
-		roadSignPointModel = m;
-	}
-
-	@Override
-	public void removeRoadSignPointModel() {
-		roadSignPointModel = null;
-	}
-
-	@Override
-	public boolean hasRoadSignModel() {
-		return roadSignPointModel != null;
-	}
-
-	private RoadSignPointModel roadSignPointModel;
-
-	public RoadSignPointModel getRoadSignPointModel() {
-		return roadSignPointModel;
 	}
 
 

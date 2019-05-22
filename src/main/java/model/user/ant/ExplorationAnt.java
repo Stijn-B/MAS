@@ -1,9 +1,8 @@
-package roadSignAnt.ant;
+package model.user.ant;
 
-import com.github.rinde.rinsim.core.model.time.TickListener;
-import com.github.rinde.rinsim.core.model.time.TimeLapse;
-import roadSignAnt.roadSignPoint.RoadSign;
-import roadSignAnt.roadSignPoint.RoadSignPoint;
+import model.roadSign.PlannedPath;
+import model.roadSign.RoadSign;
+import model.roadSign.RoadSignPoint;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -50,8 +49,13 @@ public class ExplorationAnt extends Ant {
 	}
 
 
-	/* EXPLORATION */
+	/* RECURSIVE EXPLORATION */
 
+	/**
+	 * Returns a list of explored PlannedPaths starting from the given RoadSignPoint.
+	 * @param point The starting RoadSignPoint
+	 * @return a list of explored PlannedPaths starting from the given RoadSignPoint
+	 */
 	public List<PlannedPath> explore(RoadSignPoint point) {
 		return explore(point, new PlannedPath());
 	}
@@ -79,7 +83,7 @@ public class ExplorationAnt extends Ant {
 				RoadSign roadSign = iterator.next();
 
 				// if the RoadSign destination is suitable, send a new explorer ant to explore it
-				if (path.acceptableHop(roadSign.getDestination())) {
+				if (path.acceptableRS(roadSign)) {
 
 					// extend a copy of the current path with the new destination
 					PlannedPath pathCopy = path.copy();

@@ -1,8 +1,9 @@
-package roadSignAnt.roadSignPoint;
+package model.roadSign;
 
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
+import model.user.owner.RoadSignPointOwner;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -105,14 +106,14 @@ public class RoadSignPoint extends Point implements TickListener {
 	/* AGING */
 
 	/**
-	 * Ages all the RoadSigns that this roadSign.RoadSignPoint holds
+	 * Ages all the RoadSigns that this model.roadSign.RoadSignPoint holds
 	 * @param ms
 	 */
 	public void age(long ms) {
 		Iterator<RoadSign> iter = roadSigns.iterator();
 
 		while(iter.hasNext()) {
-			// if the next roadSign.RoadSign doesn't survive the aging, remove it
+			// if the next model.roadSign.RoadSign doesn't survive the aging, remove it
 			if (!iter.next().age(ms)) {
 				iter.remove(); // removes the last item given by iter.next() from the underlying collection
 			}

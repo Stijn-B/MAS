@@ -1,6 +1,6 @@
-package roadSignAnt.roadSignPoint;
+package model.user;
 
-import roadSignAnt.RoadSignPointModel;
+import model.RoadSignPointModel;
 
 public interface RoadSignPointUser {
 
@@ -9,4 +9,7 @@ public interface RoadSignPointUser {
 
     // unregister this Owner
     void removeRoadSignPointModel();
+
+    // whether registered with RSPModel
+    boolean hasRoadSignPointModel();
 }

@@ -3,10 +3,10 @@ GET CURRENT TIME IN MS (time since start of simulation)
 simulator.getCurrentTime();
 
 TODO:
- - Zorgen dat overal RoadSigns zijn: parcel (pickup en delivery), IntentionAnt, Base
-    - Deze worden allemaal geregistreerd 'unregister implementeren'
-    - Fesibility gebruikt alle geregistreerde
- - Heuristic: heuristiekmethode maken die heuristiek v e DeliveryPath berekend
- - IntentionAnt
- - AGV
- - TESTEN
+ x Zorgen dat overal RoadSigns zijn: parcel (pickup en delivery), IntentionAnt, Base
+    x Deze worden allemaal geregistreerd 'unregister implementeren'
+    x Fesibility gebruikt alle geregistreerde
+ o Heuristic: heuristiekmethode maken die heuristiek v e DeliveryPath berekend
+ o IntentionAnt
+ o AGV
+ o TESTEN

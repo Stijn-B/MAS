@@ -1,11 +1,10 @@
-package roadSignAnt.ant;
+package model.roadSign;
 
 import org.jetbrains.annotations.NotNull;
-import roadSignAnt.roadSignPoint.RoadSign;
-import roadSignAnt.roadSignPoint.RoadSignPoint;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 public class PlannedPath implements Comparable<PlannedPath> {
 
@@ -18,9 +17,9 @@ public class PlannedPath implements Comparable<PlannedPath> {
     private double heuristic = -1;
 
     /**
-     * Returns the heuristic assigned to the given roadSignAnt.ant.PlannedPath.
+     * Returns the heuristic assigned to the given model.roadSign.PlannedPath.
      * heuristic == -1 means no value was assigned yet.
-     * @return he heuristic assigned to the given roadSignAnt.ant.PlannedPath
+     * @return he heuristic assigned to the given model.roadSign.PlannedPath
      */
     public double getHeuristicScore() {
         return heuristic;
@@ -77,7 +76,12 @@ public class PlannedPath implements Comparable<PlannedPath> {
      * @return the finishing point of the PlannedPath == the destination of the last RoadSign
      */
     public RoadSignPoint getFinishPoint() {
-        return path.getLast().getDestination();
+        try {
+            return path.getLast().getDestination();
+        } catch (NoSuchElementException e) { // if the path has no last element, finishing is null
+            return null;
+        }
+
     }
 
     /**
@@ -106,8 +110,8 @@ public class PlannedPath implements Comparable<PlannedPath> {
     /* PATH CHECKING */
 
     public boolean acceptableRS(RoadSign rs) {
-        // it must continue the current path AND its destination must be acceptable
-        return getFinishPoint() == rs.getLocation() && acceptableHop(rs.getDestination());
+        return (getFinishPoint() == null || getFinishPoint() == rs.getLocation()) // it must continue the current path
+                && acceptableHop(rs.getDestination()); // AND its destination must be acceptable
     }
 
     /**
@@ -115,7 +119,7 @@ public class PlannedPath implements Comparable<PlannedPath> {
      */
     public boolean acceptableHop(RoadSignPoint dest) {
 
-        // if dest is an roadUser.AGV -> not ok
+        // if dest is an model.user.owner.AGV -> not ok
         if (dest.getPointType() == RoadSignPoint.PointType.AGV) return false;
 
         // if dest was already passed -> not ok
@@ -155,7 +159,7 @@ public class PlannedPath implements Comparable<PlannedPath> {
     }
 
 
-    /* INTERFACE Comparable<roadSignAnt.ant.PlannedPath> */
+    /* INTERFACE Comparable<model.roadSign.PlannedPath> */
 
     @Override
     public int compareTo(@NotNull PlannedPath o) {

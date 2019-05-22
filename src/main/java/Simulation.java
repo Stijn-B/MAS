@@ -13,9 +13,9 @@ import com.github.rinde.rinsim.ui.renderers.GraphRoadModelRenderer;
 import com.github.rinde.rinsim.ui.renderers.RoadUserRenderer;
 import org.apache.commons.math3.random.RandomGenerator;
 
-import roadSignAnt.RoadSignPointModel;
-import roadSignAnt.ant.IntentionAnt;
-import roadUser.RoadSignParcel;
+import model.RoadSignPointModel;
+import model.user.ant.IntentionAnt;
+import model.user.owner.RoadSignParcel;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -56,7 +56,7 @@ public class Simulation {
 		// register depot (uitvalsbasis vd AGVs)
 		simulator.register(new Depot(roadModel.getRandomPosition(rng)));
 
-		//TODO: register roadUser.AGV's
+		//TODO: register model.user.owner.AGV's
 		/*
 		for (int i = 0; i < 10; i++) {
 			simulator.register(new IntentionAnt(roadModel.getRandomPosition(rng)));
