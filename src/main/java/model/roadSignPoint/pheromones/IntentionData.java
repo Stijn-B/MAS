@@ -1,4 +1,4 @@
-package model.pheromones;
+package model.roadSignPoint.pheromones;
 
 import model.user.owner.AGV;
 

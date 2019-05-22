@@ -1,6 +1,6 @@
-package model.pheromones.roadSign;
+package model.roadSignPoint.pheromones;
 
-import model.pheromones.AgingPheromone;
+import model.roadSignPoint.RoadSignPoint;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -10,10 +10,10 @@ public class RoadSign extends AgingPheromone implements Comparable<RoadSign> {
 	/* CONSTRUCTORS */
 
 	/**
-	 * Creates a model.pheromones.roadSign.RoadSign object
-	 * @param destination the destination point of the model.pheromones.roadSign.RoadSign
+	 * Creates a RoadSign object
+	 * @param destination the destination point of the RoadSign
 	 * @param distance the distance between the start- and endpoints
-	 * @param lifeTime how long the model.pheromones.roadSign.RoadSign should stay alive in milliseconds
+	 * @param lifeTime how long the RoadSign should stay alive in milliseconds
 	 */
 	public RoadSign(RoadSignPoint location, RoadSignPoint destination, double distance, long lifeTime) {
 		super(lifeTime);
@@ -23,8 +23,8 @@ public class RoadSign extends AgingPheromone implements Comparable<RoadSign> {
 	}
 
 	/**
-	 * Creates a model.pheromones.roadSign.RoadSign object. The model.pheromones.roadSign.RoadSign.DEFAULT_LIFETIME_MS is taken as the lifeTime
-	 * @param destination the destination point of the model.pheromones.roadSign.RoadSign
+	 * Creates a RoadSign object. The RoadSign.DEFAULT_LIFETIME_MS is taken as the lifeTime
+	 * @param destination the destination point of the RoadSign
 	 * @param distance the distance between the start- and endpoints
 	 */
 	public RoadSign(RoadSignPoint location, RoadSignPoint destination, double distance) {
@@ -51,8 +51,8 @@ public class RoadSign extends AgingPheromone implements Comparable<RoadSign> {
 	}
 
 	/**
-	 * Get the distance between the start and endpoint of the model.pheromones.roadSign.RoadSign
-	 * @return the distance between the start and endpoint of the model.pheromones.roadSign.RoadSign
+	 * Get the distance between the start and endpoint of the RoadSign
+	 * @return the distance between the start and endpoint of the RoadSign
 	 */
 	public double getDistance() {
 		return distance;
@@ -75,7 +75,7 @@ public class RoadSign extends AgingPheromone implements Comparable<RoadSign> {
 
 	@Override
 	public String toString() {
-		return "model.pheromones.roadSign.RoadSign to " + getDestination().toString() + ", distance: " + String.valueOf(getDistance()) + ", remaining lifetime: " + String.valueOf(getRemainingLifeTime());
+		return "RoadSign to " + getDestination().toString() + ", distance: " + String.valueOf(getDistance()) + ", remaining lifetime: " + String.valueOf(getRemainingLifeTime());
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package model.pheromones;
+package model.roadSignPoint.pheromones;
 
 public abstract class AgingPheromone {
 
@@ -23,8 +23,8 @@ public abstract class AgingPheromone {
     private long life;
 
     /**
-     * Get the remaining life time of the model.pheromones.roadSign.RoadSign
-     * @return the remaining life time of the model.pheromones.roadSign.RoadSign
+     * Get the remaining life time of the RoadSign
+     * @return the remaining life time of the RoadSign
      */
     public long getRemainingLifeTime() {
         return life;
@@ -43,8 +43,8 @@ public abstract class AgingPheromone {
     }
 
     /**
-     * Ages the model.pheromones.roadSign.RoadSign by the given amount of milliseconds and returns whether the model.pheromones.roadSign.RoadSign has life time left
-     * @param ms how much milliseconds the model.pheromones.roadSign.RoadSign should be aged
+     * Ages the RoadSign by the given amount of milliseconds and returns whether the RoadSign has life time left
+     * @param ms how much milliseconds the RoadSign should be aged
      */
     public boolean age(long ms) {
         life -= ms;
