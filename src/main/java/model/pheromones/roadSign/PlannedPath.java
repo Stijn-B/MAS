@@ -1,4 +1,4 @@
-package model.roadSign;
+package model.pheromones.roadSign;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,9 +17,9 @@ public class PlannedPath implements Comparable<PlannedPath> {
     private double heuristic = -1;
 
     /**
-     * Returns the heuristic assigned to the given model.roadSign.PlannedPath.
+     * Returns the heuristic assigned to the given model.pheromones.roadSign.PlannedPath.
      * heuristic == -1 means no value was assigned yet.
-     * @return he heuristic assigned to the given model.roadSign.PlannedPath
+     * @return he heuristic assigned to the given model.pheromones.roadSign.PlannedPath
      */
     public double getHeuristicScore() {
         return heuristic;
@@ -47,8 +47,8 @@ public class PlannedPath implements Comparable<PlannedPath> {
                 "The given RoadSign cannot be added to this PlannedPath! (see acceptableRS(RoadSign rs))");
     }
 
-    /* CONTENT */
 
+    /* CONTENT */
 
     /**
      * Returns the amount of RoadSigns this PlannedPath contains.
@@ -72,8 +72,8 @@ public class PlannedPath implements Comparable<PlannedPath> {
     }
 
     /**
-     * Returns the finishing point of the PlannedPath == the destination of the last RoadSign
-     * @return the finishing point of the PlannedPath == the destination of the last RoadSign
+     * Returns the finishing point of the PlannedPath == the destination of the last RoadSign. Null if there is none
+     * @return the finishing point of the PlannedPath == the destination of the last RoadSign. Null if there is none
      */
     public RoadSignPoint getFinishPoint() {
         try {
@@ -81,7 +81,18 @@ public class PlannedPath implements Comparable<PlannedPath> {
         } catch (NoSuchElementException e) { // if the path has no last element, finishing is null
             return null;
         }
+    }
 
+    /**
+     * Returns the first point of the PlannedPath == the destination of the first RoadSign. Null if there is none
+     * @return the first point of the PlannedPath == the destination of the first RoadSign. Null if there is none
+     */
+    public RoadSignPoint getFirstDest() {
+        try {
+            return path.getFirst().getDestination();
+        } catch (NoSuchElementException e) { // if the path has no last element, finishing is null
+            return null;
+        }
     }
 
     /**
@@ -159,7 +170,7 @@ public class PlannedPath implements Comparable<PlannedPath> {
     }
 
 
-    /* INTERFACE Comparable<model.roadSign.PlannedPath> */
+    /* INTERFACE Comparable<model.pheromones.roadSign.PlannedPath> */
 
     @Override
     public int compareTo(@NotNull PlannedPath o) {

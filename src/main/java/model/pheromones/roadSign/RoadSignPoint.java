@@ -1,8 +1,11 @@
-package model.roadSign;
+package model.pheromones.roadSign;
 
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
+import model.pheromones.AgingPheromone;
+import model.pheromones.IntentionData;
+import model.user.owner.AGV;
 import model.user.owner.RoadSignPointOwner;
 
 import javax.annotation.Nullable;
@@ -103,22 +106,61 @@ public class RoadSignPoint extends Point implements TickListener {
 	}
 
 
+	/* INTENTIONS */
+
+	SortedSet<IntentionData> intentions = new TreeSet<>();
+
+	public Iterator<IntentionData> getIntentionIterator() {
+		return intentions.iterator();
+	}
+
+	/**
+	 * Registers an intention for the given AGV who will arrive at the given time.
+	 */
+	public void registerIntention(IntentionData intention) {
+		intentions.add(intention);
+	}
+
+	/**
+	 * Returns whether the given AGV would arrive first at this RoadSignPoint if it would arrive at the given ETA.
+	 */
+	public boolean isFirst(AGV agv, long ETA) {
+		Iterator<IntentionData> iter = getIntentionIterator();
+		while (iter.hasNext()) {
+			IntentionData curr = iter.next();
+			if (curr.getETA() < ETA && curr.getAgv() != agv) return false;
+		}
+		return true;
+	}
+
+
 	/* AGING */
 
 	/**
-	 * Ages all the RoadSigns that this model.roadSign.RoadSignPoint holds
+	 * Ages all the RoadSigns that this model.pheromones.roadSign.RoadSignPoint holds
 	 * @param ms
 	 */
 	public void age(long ms) {
-		Iterator<RoadSign> iter = roadSigns.iterator();
+		age(roadSigns, ms);
+		age(intentions, ms);
+	}
 
+	/**
+	 * Ages all AgingPheromone in the given agingSet, removes AgingPheromone from the set if they are expired.
+	 */
+	public void age(Set<? extends AgingPheromone> agingSet, long ms) {
+		// Iterate over all AgingPheromones and age them
+		Iterator<? extends AgingPheromone> iter = agingSet.iterator();
 		while(iter.hasNext()) {
-			// if the next model.roadSign.RoadSign doesn't survive the aging, remove it
+			// if the next model.pheromones.roadSign.RoadSign doesn't survive the aging, remove it
 			if (!iter.next().age(ms)) {
 				iter.remove(); // removes the last item given by iter.next() from the underlying collection
 			}
 		}
 	}
+
+
+	/* INTERFACE TickListener */
 
 	@Override
 	public void tick(TimeLapse timeLapse) {

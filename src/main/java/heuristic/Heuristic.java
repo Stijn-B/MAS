@@ -1,6 +1,6 @@
 package heuristic;
 
-import model.roadSign.PlannedPath;
+import model.pheromones.roadSign.PlannedPath;
 
 import java.util.Collections;
 import java.util.List;
@@ -8,9 +8,9 @@ import java.util.List;
 public abstract class Heuristic {
 
     /**
-     *  Calculates the heuristic of the given model.roadSign.PlannedPath.
+     *  Calculates the heuristic of the given model.pheromones.roadSign.PlannedPath.
      * @param path the path for which to calculate the heuristic
-     * @return the heuristic of the given model.roadSign.PlannedPath
+     * @return the heuristic of the given model.pheromones.roadSign.PlannedPath
      */
     public abstract double calculate(PlannedPath path);
 

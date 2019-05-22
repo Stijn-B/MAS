@@ -1,38 +1,34 @@
-package model.roadSign;
+package model.pheromones.roadSign;
 
+import model.pheromones.AgingPheromone;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-public class RoadSign implements Comparable<RoadSign> {
-
-	/* STATIC VAR */
-
-	public static long DEFAULT_LIFETIME_MS = 20000; // default life time of a RoadSign in milliseconds
-
+public class RoadSign extends AgingPheromone implements Comparable<RoadSign> {
 
 	/* CONSTRUCTORS */
 
 	/**
-	 * Creates a model.roadSign.RoadSign object
-	 * @param destination the destination point of the model.roadSign.RoadSign
+	 * Creates a model.pheromones.roadSign.RoadSign object
+	 * @param destination the destination point of the model.pheromones.roadSign.RoadSign
 	 * @param distance the distance between the start- and endpoints
-	 * @param lifeTime how long the model.roadSign.RoadSign should stay alive in milliseconds
+	 * @param lifeTime how long the model.pheromones.roadSign.RoadSign should stay alive in milliseconds
 	 */
 	public RoadSign(RoadSignPoint location, RoadSignPoint destination, double distance, long lifeTime) {
+		super(lifeTime);
 		this.location = location;
 		this.destination = destination;
 		this.distance = distance;
-		this.life = lifeTime;
 	}
 
 	/**
-	 * Creates a model.roadSign.RoadSign object. The model.roadSign.RoadSign.DEFAULT_LIFETIME_MS is taken as the lifeTime
-	 * @param destination the destination point of the model.roadSign.RoadSign
+	 * Creates a model.pheromones.roadSign.RoadSign object. The model.pheromones.roadSign.RoadSign.DEFAULT_LIFETIME_MS is taken as the lifeTime
+	 * @param destination the destination point of the model.pheromones.roadSign.RoadSign
 	 * @param distance the distance between the start- and endpoints
 	 */
 	public RoadSign(RoadSignPoint location, RoadSignPoint destination, double distance) {
-		this(location, destination, distance, DEFAULT_LIFETIME_MS);
+		this(location, destination, distance, 10000);
 	}
 
 
@@ -55,48 +51,31 @@ public class RoadSign implements Comparable<RoadSign> {
 	}
 
 	/**
-	 * Get the distance between the start and endpoint of the model.roadSign.RoadSign
-	 * @return the distance between the start and endpoint of the model.roadSign.RoadSign
+	 * Get the distance between the start and endpoint of the model.pheromones.roadSign.RoadSign
+	 * @return the distance between the start and endpoint of the model.pheromones.roadSign.RoadSign
 	 */
 	public double getDistance() {
 		return distance;
 	}
 
+	/**
+	 * Returns whether this RoadSign is valid. A RoadSign is seen as valid if its location and destination have access
+	 * to the RoadSignPointModel (and thus are registered to it)
+	 * @return
+	 */
+	public boolean isValid() {
+		return getLocation().getRoadSignPointOwner().hasRoadSignPointModel() && getDestination().getRoadSignPointOwner().hasRoadSignPointModel();
+	}
+
 	/* AGE */
 
-	private double life;
-
-	/**
-	 * Get the remaining life time of the model.roadSign.RoadSign
-	 * @return the remaining life time of the model.roadSign.RoadSign
-	 */
-	public double getRemainingLifeTime() {
-		return life;
-	}
-
-	/**
-	 * Returns whether the given RoadSign is still alive.
-	 * @return whether the given RoadSign is still alive
-	 */
-	public boolean alive() {
-		return 0 < getRemainingLifeTime();
-	}
-
-	/**
-	 * Ages the model.roadSign.RoadSign by the given amount of milliseconds and returns whether the model.roadSign.RoadSign has life time left
-	 * @param ms how much milliseconds the model.roadSign.RoadSign should be aged
-	 */
-	public boolean age(long ms) {
-		life -= ms;
-		return alive();
-	}
 
 
 	/* OVERRIDDEN METHODS */
 
 	@Override
 	public String toString() {
-		return "model.roadSign.RoadSign to " + getDestination().toString() + ", distance: " + String.valueOf(getDistance()) + ", remaining lifetime: " + String.valueOf(getRemainingLifeTime());
+		return "model.pheromones.roadSign.RoadSign to " + getDestination().toString() + ", distance: " + String.valueOf(getDistance()) + ", remaining lifetime: " + String.valueOf(getRemainingLifeTime());
 	}
 
 	@Override

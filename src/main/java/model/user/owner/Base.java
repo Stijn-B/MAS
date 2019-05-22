@@ -1,7 +1,7 @@
 package model.user.owner;
 
 import com.github.rinde.rinsim.geom.Point;
-import model.roadSign.RoadSignPoint;
+import model.pheromones.roadSign.RoadSignPoint;
 
 public class Base extends AbstractRoadSignPointOwner {
 

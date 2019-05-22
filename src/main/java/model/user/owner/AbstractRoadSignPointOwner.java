@@ -2,7 +2,7 @@ package model.user.owner;
 
 import com.github.rinde.rinsim.geom.Point;
 import model.RoadSignPointModel;
-import model.roadSign.RoadSignPoint;
+import model.pheromones.roadSign.RoadSignPoint;
 
 import javax.annotation.Nullable;
 
@@ -103,7 +103,7 @@ public abstract class AbstractRoadSignPointOwner implements RoadSignPointOwner {
 
     @Override
     public OwnerType getRoadSignPointOwnerType() {
-        return OwnerType.PARCEL;
+        return OwnerType.UNDEFINED;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package model.user.owner;
 
-import model.roadSign.RoadSignPoint;
+import model.pheromones.roadSign.RoadSignPoint;
 import model.user.RoadSignPointUser;
 
 public interface RoadSignPointOwner extends RoadSignPointUser {
@@ -9,7 +9,7 @@ public interface RoadSignPointOwner extends RoadSignPointUser {
 	int getID();
 
 	// PointType of the RoadSignPointOwner
-	enum OwnerType { PARCEL, AGV, BASE }
+	enum OwnerType { PARCEL, AGV, BASE, UNDEFINED }
 	OwnerType getRoadSignPointOwnerType();
 
 	// Array of the RoadSignPoints owned by the RoadSignPointOwner

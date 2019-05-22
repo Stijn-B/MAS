@@ -5,12 +5,9 @@ import com.github.rinde.rinsim.core.model.road.RoadUser;
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
-import model.roadSign.RoadSignPoint;
-import model.RoadSignPointModel;
+import model.pheromones.roadSign.RoadSignPoint;
 import model.user.owner.RoadSignPointOwner;
 
-import javax.measure.Measure;
-import javax.measure.quantity.Length;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
