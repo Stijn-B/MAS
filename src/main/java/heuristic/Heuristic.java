@@ -37,4 +37,10 @@ public abstract class Heuristic {
         assignHeuristics(list);
         Collections.sort(list);
     }
+
+    public PlannedPath getBest(List<PlannedPath> paths) {
+        sortPlannedPathList(paths);
+        if (paths.isEmpty()) return null;
+        else return paths.get(0);
+    }
 }

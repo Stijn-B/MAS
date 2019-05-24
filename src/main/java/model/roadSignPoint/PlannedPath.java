@@ -1,14 +1,22 @@
 package model.roadSignPoint;
 
 import model.roadSignPoint.pheromones.RoadSign;
+import model.user.owner.AGV;
+import model.user.owner.RoadSignParcel;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class PlannedPath implements Comparable<PlannedPath> {
+
+    public PlannedPath(AGV agv) {
+        parcels.addAll(agv.getParcels());
+    }
+
+    public PlannedPath() {
+        // do nothing
+    }
+
 
     public LinkedList<RoadSign> path = new LinkedList<>();
 
@@ -49,8 +57,24 @@ public class PlannedPath implements Comparable<PlannedPath> {
                 "The given RoadSign cannot be added to this PlannedPath! (see acceptableRS(RoadSign rs))");
     }
 
+    /**
+     * Removes the first RoadSign from the PlannedPath if it is held by the given RoadSignPoint. Does nothing if
+     * the PlannedPath is empty.
+     */
+    public void popFirst(RoadSignPoint rsPoint) {
+        // if path empty, do nothing
+        if (path.getFirst() == null) return;
+
+        // remove the roadsign if it is held by the given point
+        if (rsPoint.holds(path.getFirst())) path.removeFirst();
+    }
+
 
     /* CONTENT */
+
+    public boolean isEmpty() {
+        return path.isEmpty();
+    }
 
     /**
      * Returns the amount of RoadSigns this PlannedPath contains.
@@ -74,11 +98,13 @@ public class PlannedPath implements Comparable<PlannedPath> {
     }
 
     public List<RoadSignPoint> getPoints() {
-        //TODO: try replacing lambda with RoadSign::getLocation
-        List<RoadSignPoint> result = this.path.stream().map(rs -> rs.getLocation()).collect(Collectors.toList());
-        if (result.size() > 0) {
-            result.add(getFinishPoint().getDestination());
+        LinkedList<RoadSignPoint> result = new LinkedList<>();
+
+        Iterator<RoadSign> iter = getIterator();
+        while (iter.hasNext()) {
+            result.add(iter.next().getDestination()); // TODO: opmerking: hier wordt getDestination gebruikt en niet getLocation
         }
+
         return result;
     }
 
@@ -141,6 +167,17 @@ public class PlannedPath implements Comparable<PlannedPath> {
         return ap;
     }
 
+    /* PARCELS */
+
+    /**
+     * Parcels which the AGV will have at the end of this path
+     */
+    private List<RoadSignParcel> parcels = new ArrayList<>();
+
+    public boolean hasParcel(RoadSignParcel parcel) {
+        return parcels.contains(parcel);
+    }
+
 
     /* PATH CHECKING */
 
@@ -160,9 +197,10 @@ public class PlannedPath implements Comparable<PlannedPath> {
         // if dest was already passed -> not ok
         if (pathContains(dest)) return false;
 
-        // if dest is a delivery point AND the dest owner has never been passed (so pickup was never passed) -> not ok
+        // if dest is a delivery point, not ok if the pickup wasn't passed
         if (dest.getPointType() == RoadSignPoint.PointType.PARCEL_DELIVERY
-                && !pathContainsOwnerID(dest.getRoadSignPointOwner().getID())) return false;
+                && dest.getRoadSignPointOwner() instanceof RoadSignParcel
+                && !hasParcel((RoadSignParcel) dest.getRoadSignPointOwner())) return false;
 
         // otherwise the destination is ok
         return true;
@@ -176,19 +214,6 @@ public class PlannedPath implements Comparable<PlannedPath> {
         Iterator<RoadSign> iterator = getIterator();
         while (iterator.hasNext()) {
             if (iterator.next().getDestination() == rsPoint) return true;
-        }
-        return false;
-    }
-
-    /**
-     * Returns whether the given path contains a RoadSignPoint of which the RoadSignPointOwners ID equals the given ID
-     * (used for checking whether a given path contains the pickup location)
-     */
-    public boolean pathContainsOwnerID(int ID) {
-        // iterate over all list pairs
-        Iterator<RoadSign> iterator = getIterator();
-        while (iterator.hasNext()) {
-            if (iterator.next().getDestination().getRoadSignPointOwner().getID() == ID) return true;
         }
         return false;
     }

@@ -6,11 +6,15 @@ import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Graph;
 import com.github.rinde.rinsim.geom.MultiAttributeData;
+import com.github.rinde.rinsim.geom.Point;
 import com.github.rinde.rinsim.geom.io.DotGraphIO;
 import com.github.rinde.rinsim.geom.io.Filters;
 import com.github.rinde.rinsim.ui.View;
 import com.github.rinde.rinsim.ui.renderers.GraphRoadModelRenderer;
 import com.github.rinde.rinsim.ui.renderers.RoadUserRenderer;
+import heuristic.DeliveredPerDistanceHeuristic;
+import model.user.owner.AGV;
+import model.user.owner.Base;
 import org.apache.commons.math3.random.RandomGenerator;
 
 import model.RoadSignPointModel;
@@ -23,6 +27,8 @@ import java.io.IOException;
 
 public class Simulation {
 
+	private static final int AGV_COUNT = 5;
+
 	private static final double PARCEL_SPAWN_CHANCE = 0.006;
 
 	public static void main(String[] args) {
@@ -34,6 +40,8 @@ public class Simulation {
 
 
 	public static Simulator run() {
+
+		/* * MODELS ETC. * */
 
 		// build view
 		View.Builder view = createGui();
@@ -53,24 +61,25 @@ public class Simulation {
 		// get RoadModel
 		final RoadModel roadModel = simulator.getModelProvider().getModel(RoadModel.class);
 
-		// register depot (uitvalsbasis vd AGVs)
-		simulator.register(new Depot(roadModel.getRandomPosition(rng)));
 
-		//TODO: register model.user.owner.AGV's
-		/*
-		for (int i = 0; i < 10; i++) {
-			simulator.register(new IntentionAnt(roadModel.getRandomPosition(rng)));
+		/* * REGISTER ENTITIES * */
+
+		// register Base
+		simulator.register(new Base(roadModel.getRandomPosition(rng)));
+
+		// register AGVs
+		for (int i = 0; i < AGV_COUNT; i++) {
+			simulator.register(new AGV(roadModel.getRandomPosition(rng), new DeliveredPerDistanceHeuristic()));
 		}
-		*/
 
-		// random package generation
+		// register RoadSignParcel random generation
 		simulator.addTickListener(new TickListener() {
 			@Override
 			public void tick(TimeLapse time) {
+				// if chance hit, register new RoadSignParcel
 				if (rng.nextDouble() < PARCEL_SPAWN_CHANCE) {
-					simulator.register(new RoadSignParcel(
-						Parcel.builder(roadModel.getRandomPosition(rng),roadModel.getRandomPosition(rng))
-							.buildDTO()));
+					ParcelDTO dto = Parcel.builder(roadModel.getRandomPosition(rng),roadModel.getRandomPosition(rng)).buildDTO();
+					simulator.register(new RoadSignParcel(dto));
 				}
 			}
 
@@ -79,9 +88,9 @@ public class Simulation {
 		});
 
 
-		simulator.start();
+		/* * START * */
 
-		roadModel.getObjects();
+		simulator.start();
 
 		return simulator;
 	}

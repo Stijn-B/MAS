@@ -113,7 +113,7 @@ public abstract class AbstractRoadSignPointOwner implements RoadSignPointOwner {
 
     @Override
     public boolean act(AGV agv, RoadSignPoint rsPoint) {
-        return false;
+        return true;
     }
 
     @Override

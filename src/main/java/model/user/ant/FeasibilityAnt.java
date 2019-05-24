@@ -99,7 +99,7 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 		if (from == to) return; // don't create a RoadSign from a point to itself
 		if (getRoadModel() == null) return; // if no access to RoadModel, do nothing
 
-		List<Point> shortestPath = getRoadModel().getShortestPathTo(from, to); // shortest path
+		List<Point> shortestPath = getRoadModel().getShortestPathTo(from.getPosition(), to.getPosition()); // shortest path
 		double distance = getRoadModel().getDistanceOfPath(shortestPath).getValue(); // distance of shortest path
 
 		from.addRoadSign(to, distance);

@@ -4,7 +4,7 @@ import com.github.rinde.rinsim.geom.Point;
 
 import java.lang.Iterable;
 import java.util.Iterator;
-
+/*
 public class LocalizedRectangleHeuristic extends LocalizedDeliveryHeuristic {
 
 	@Override
@@ -31,5 +31,5 @@ public class LocalizedRectangleHeuristic extends LocalizedDeliveryHeuristic {
 	}
 
 }
-
+*/
 // vim: set noexpandtab:

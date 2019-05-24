@@ -15,6 +15,11 @@ import java.util.List;
 
 public class AGV extends AbstractRoadSignPointOwner implements TickListener, MovingRoadUser, RoadSignPointOwner {
 
+    static final double AGV_SPEED = 5.5;
+
+    // default time between reconsidering the committed path
+    static final long RECONSIDER_DELAY = 5000;
+
     /* CONSTRUCTOR */
 
     public AGV(Point startPosition, Heuristic heuristic) {
@@ -24,22 +29,12 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
     }
 
 
-    /* SPEED */
+    /* PROPERTIES */
+
+    private double speed = AGV_SPEED;
 
     public long distanceToDuration(double distance) {
         return Math.round(distance/speed);
-    }
-
-    private double speed = 5.5;
-
-
-    /* ROADSIGN POINTS */
-
-    /**
-     * Acts on the given RoadSignPoint. Does nothing if not at the given RoadSignPoints location.
-     */
-    public void act(RoadSignPoint rsPoint) {
-        rsPoint.act(this);
     }
 
     /**
@@ -50,9 +45,14 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
                 && getRoadModel().getPosition(this) == point;
     }
 
+
     /* PARCELS */
 
     private LinkedList<RoadSignParcel> parcels = new LinkedList<>();
+
+    public LinkedList<RoadSignParcel> getParcels() {
+        return parcels;
+    }
 
     public void addParcel(RoadSignParcel parcel) {
         parcels.add(parcel);
@@ -67,9 +67,12 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
     }
 
     public void deliverParcel(RoadSignParcel parcel) {
-        removeParcel(parcel);
-        // TODO: registreren dat deze parcel is afgeleverd.
+        if (carries(parcel)) {
+            removeParcel(parcel);
+            // TODO: registreren dat deze parcel is afgeleverd.
+        }
     }
+
 
     /* HEURISTIC */
 
@@ -84,39 +87,48 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
     }
 
 
-    /* EXPLORATION */
+    /* PATH EXPLORATION */
 
-    private long lastExploreTime = 0;
-
-    private long deltaTimeExplore = 5000;
+    private long lastReconsiderTime = 0;
 
     /**
      * Returns whether the AGV should explore
-     * @param now
-     * @return
      */
-    private boolean exploreCondition(long now) {
-        if (now - lastExploreTime >= deltaTimeExplore) {
-            lastExploreTime = now;
+    private boolean reconsiderCondition(long now) {
+        if (now - lastReconsiderTime >= RECONSIDER_DELAY
+                || getIntendedPath() == null
+                || getIntendedPath().isEmpty()) {
+            lastReconsiderTime = now;
             return true;
         } else {
             return false;
         }
     }
 
-    // TODO: exploration een bepaald duur geven.
+    /**
+     * Chooses a new PlannedPath and registers it as the intended path
+     */
+    private void chooseNewPath(long now) {
+
+        // explore possible paths
+        List<PlannedPath> paths = explorePaths();
+
+        // commit to best path
+        commit(getHeuristic().getBest(paths), now);
+    }
+
     /**
      * Explores viable paths using ExplorationAnts
      * @return a List<PlannedPath> containing viable paths (can be empty)
      */
     public List<PlannedPath> explorePaths() {
-        return new ExplorationAnt().explore(getRoadSignPoints()[0]);
+        return new ExplorationAnt().explore(getRoadSignPoints()[0], new PlannedPath(this));
     }
 
 
     /* INTENDED PATH */
 
-    private PlannedPath intendedPath;
+    private PlannedPath intendedPath = new PlannedPath();
 
     private PlannedPath getIntendedPath() {
         return intendedPath;
@@ -146,6 +158,49 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
     }
 
 
+    /* ENVIRONMENT INTERACTION */
+
+    /**
+     * Moves the AGV towards the first destination in its PlannedPath
+     * @param tm
+     */
+    private void move(TimeLapse tm) {
+
+        // if no RoadModel, do nothing
+        if (getRoadModel() == null) return;
+
+        // if no destination, do nothing
+        if (getIntendedPath().getFirstDest() == null) return;
+
+        // move
+        getRoadModel().moveTo(this, getIntendedPath().getFirstDest().getPosition(), tm);
+
+        // keep RoadSignPoint position up to date
+        roadSignPoints[0].setPosition(getRoadModel().getPosition(this));
+    }
+
+    /**
+     * Acts on the given RoadSignPoint. Does nothing if not at the given RoadSignPoints location.
+     */
+    public void tryToAct(TimeLapse tm) {
+
+        // if there is no PlannedPath, do nothing
+        if (getIntendedPath() == null) return;
+
+        RoadSignPoint dest = getIntendedPath().getFirstDest();
+
+        // if the AGV has no destination to act on, do nothing
+        if (dest == null) return;
+
+        // if the AGV is not at the position of the destination, do nothing
+        if (!isAtPosition(dest.getPosition())) return;
+
+        // otherwise, act on the destination and remove it from the path
+        dest.act(this);
+        getIntendedPath().popFirst(dest);
+    }
+
+
     /* INTERFACES */
 
     // TickListener
@@ -154,26 +209,21 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
     public void tick(TimeLapse timeLapse) {
         long now = timeLapse.getTime();
 
-        // EXPLORING NEW PATH
+        // CONSIDER EXPLORING NEW PATH
 
-        if (exploreCondition(now)) {
+        if (reconsiderCondition(now)) chooseNewPath(now);
 
-            // explore possible paths
-            List<PlannedPath> paths = explorePaths();
+        // MOVING AND HANDLE
 
-            // sort them by heuristic
-            getHeuristic().sortPlannedPathList(paths); // works on the given list so returns no value
+        while (timeLapse.hasTimeLeft()) {
 
-            // commit to best path
-            commit(paths.get(0), now);
+            // move towards destination
+            move(timeLapse);
+
+            // if arrived at destination, act on it
+            tryToAct(timeLapse);
         }
 
-        // MOVING OVER COMITTED PATH
-
-        // TODO
-
-        // keep RoadSignPoint position up to date
-        roadSignPoints[0].setPosition(getRoadModel().getPosition(this));
     }
 
     @Override

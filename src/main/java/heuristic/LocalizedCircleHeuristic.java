@@ -5,7 +5,7 @@ import com.github.rinde.rinsim.geom.Point;
 import java.lang.Iterable;
 import java.util.Iterator;
 import java.lang.Math;
-
+/*
 public class LocalizedCircleHeuristic extends LocalizedDeliveryHeuristic {
 
 	@Override
@@ -23,5 +23,5 @@ public class LocalizedCircleHeuristic extends LocalizedDeliveryHeuristic {
 	}
 
 }
-
+*/
 // vim: set noexpandtab:

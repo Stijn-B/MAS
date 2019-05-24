@@ -69,6 +69,13 @@ public class RoadSignPoint implements TickListener {
 	SortedSet<RoadSign> roadSigns = new TreeSet<>();
 
 	/**
+	 * Returns whether this RoadSignPoint holds the given RoadSign.
+	 */
+	public boolean holds(RoadSign rs) {
+		return roadSigns.contains(rs);
+	}
+
+	/**
 	 * Adds a new RoadSing pointing to the given destination with given distance.
 	 * @param destination destination of the RoadSign
 	 * @param dist distance to the given destination

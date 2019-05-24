@@ -1,7 +1,7 @@
 package heuristic;
 
 import model.roadSignPoint.PlannedPath;
-
+/*
 public class LocalizedCircleDistanceHeuristic extends LocalizedCircleHeuristic {
 
 	@Override
@@ -10,5 +10,5 @@ public class LocalizedCircleDistanceHeuristic extends LocalizedCircleHeuristic {
 	}
 
 }
-
+*/
 // vim: set noexpandtab:
