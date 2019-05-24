@@ -123,7 +123,7 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
             List<PlannedPath> paths = explorePaths();
 
             // sort them by heuristic
-            getHeuristic().sortAntPathList(paths); // works on the given list so returns no value
+            getHeuristic().sortPlannedPathList(paths); // works on the given list so returns no value
 
             // commit to best path
             commit(paths.get(0), now);
