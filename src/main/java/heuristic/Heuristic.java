@@ -17,8 +17,8 @@ public abstract class Heuristic {
     public abstract double calculate(PlannedPath path);
 
     /**
-     * Assigns heuristics to the AntPaths in the given list.
-     * @param list list of AntPaths
+     * Assigns heuristics to the PlannedPaths in the given list.
+     * @param list list of PlannedPaths
      */
     public void assignHeuristics(List<PlannedPath> list) {
         for (PlannedPath ap : list) {
@@ -30,10 +30,10 @@ public abstract class Heuristic {
     /* SELECTING PATH */
 
     /**
-     * Assigns heuristics to the AntPaths in the given list and sorts the list based on these heuristics.
+     * Assigns heuristics to the PlannedPaths in the given list and sorts the list based on these heuristics.
      * @param list
      */
-    public void sortAntPathList(List<PlannedPath> list) {
+    public void sortPlannedPathList(List<PlannedPath> list) {
         assignHeuristics(list);
         Collections.sort(list);
     }

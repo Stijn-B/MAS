@@ -1,0 +1,14 @@
+package model;
+
+import heuristic.Heuristic;
+import model.roadSignPoint.PlannedPath;
+
+public class DeliveredPerDistanceHeuristic extends Heuristic {
+
+	public double calculate(PlannedPath path) {
+		return ((double) path.getNbDeliveries()) / path.getTotalPathLength();
+	}
+
+}
+
+// vim: set noexpandtab:

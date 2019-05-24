@@ -55,8 +55,21 @@ public class PlannedPath implements Comparable<PlannedPath> {
      * Returns the amount of RoadSigns this PlannedPath contains.
      * @return the amount of RoadSigns this PlannedPath contains
      */
-    public int GetNbRoadSigns() {
+    public int getNbRoadSigns() {
         return path.size();
+    }
+
+    public int getNbDeliveries() {
+        int count = 0;
+        Iterator<RoadSign> iterator = getIterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().getDestination().getPointType()
+                == RoadSignPoint.PointType.PARCEL_DELIVERY
+            ) {
+                count++;
+            }
+        }
+        return count;
     }
 
     /**
@@ -112,7 +125,7 @@ public class PlannedPath implements Comparable<PlannedPath> {
      */
     public PlannedPath copy() {
         PlannedPath ap = new PlannedPath();
-        for (int i = 0; i < GetNbRoadSigns(); i++) {
+        for (int i = 0; i < getNbRoadSigns(); i++) {
             ap.append(path.get(i));
         }
         return ap;
@@ -184,3 +197,5 @@ public class PlannedPath implements Comparable<PlannedPath> {
         }
     }
 }
+
+// vim: set tabstop=4 shiftwidth=4 expandtab:
