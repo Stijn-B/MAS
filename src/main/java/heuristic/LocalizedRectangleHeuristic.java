@@ -1,4 +1,4 @@
-package model;
+package heuristic;
 
 import com.github.rinde.rinsim.geom.Point;
 

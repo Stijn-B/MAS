@@ -1,4 +1,4 @@
-package model;
+package heuristic;
 
 import heuristic.Heuristic;
 import model.roadSignPoint.PlannedPath;

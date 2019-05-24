@@ -1,12 +1,10 @@
-package model;
+package heuristic;
 
 import com.github.rinde.rinsim.geom.Point;
 
 import java.lang.Iterable;
 import java.util.Iterator;
 import java.lang.Math;
-
-import model.roadSignPoint.PlannedPath;
 
 public class LocalizedCircleHeuristic extends LocalizedDeliveryHeuristic {
 
