@@ -5,6 +5,7 @@ import model.roadSignPoint.PlannedPath;
 
 public class DeliveredPerDistanceHeuristic extends Heuristic {
 
+	@Override
 	public double calculate(PlannedPath path) {
 		return ((double) path.getNbDeliveries()) / path.getTotalPathLength();
 	}

@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 public class PlannedPath implements Comparable<PlannedPath> {
 
@@ -70,6 +71,15 @@ public class PlannedPath implements Comparable<PlannedPath> {
             }
         }
         return count;
+    }
+
+    public List<RoadSignPoint> getPoints() {
+        //TODO: try replacing lambda with RoadSign::getLocation
+        List<RoadSignPoint> result = this.path.stream().map(rs -> rs.getLocation()).collect(Collectors.toList());
+        if (result.size() > 0) {
+            result.add(getFinishPoint().getDestination());
+        }
+        return result;
     }
 
     /**
