@@ -132,8 +132,9 @@ public abstract class AbstractRoadSignPointOwner implements RoadSignPointOwner {
     static int ID = 0;
 
     public static int getNewID() {
+        int d = ID;
         ID = loopAroundIncrement(ID);
-        return ID;
+        return d;
     }
 
     public static int loopAroundIncrement(int id) {

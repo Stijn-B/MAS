@@ -4,9 +4,9 @@ import com.github.rinde.rinsim.core.model.road.RoadModel;
 import com.github.rinde.rinsim.core.model.road.RoadModelBuilders;
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
+import com.github.rinde.rinsim.examples.taxi.TaxiRenderer;
 import com.github.rinde.rinsim.geom.Graph;
 import com.github.rinde.rinsim.geom.MultiAttributeData;
-import com.github.rinde.rinsim.geom.Point;
 import com.github.rinde.rinsim.geom.io.DotGraphIO;
 import com.github.rinde.rinsim.geom.io.Filters;
 import com.github.rinde.rinsim.ui.View;
@@ -18,7 +18,6 @@ import model.user.owner.Base;
 import org.apache.commons.math3.random.RandomGenerator;
 
 import model.RoadSignPointModel;
-import model.user.ant.IntentionAnt;
 import model.user.owner.RoadSignParcel;
 
 import java.io.FileNotFoundException;
@@ -42,6 +41,7 @@ public class Simulation {
 	public static Simulator run() {
 
 		/* * MODELS ETC. * */
+		System.out.println("/* * MODELS ETC. * */");
 
 		// build view
 		View.Builder view = createGui();
@@ -63,14 +63,19 @@ public class Simulation {
 
 
 		/* * REGISTER ENTITIES * */
+		System.out.println("/* * REGISTER ENTITIES * */");
+		System.out.println();
 
 		// register Base
 		simulator.register(new Base(roadModel.getRandomPosition(rng)));
+		System.out.println("Base registered");
 
 		// register AGVs
 		for (int i = 0; i < AGV_COUNT; i++) {
 			simulator.register(new AGV(roadModel.getRandomPosition(rng), new DeliveredPerDistanceHeuristic()));
 		}
+		System.out.println("AGVs registered");
+
 
 		// register RoadSignParcel random generation
 		simulator.addTickListener(new TickListener() {
@@ -86,9 +91,12 @@ public class Simulation {
 			@Override
 			public void afterTick(TimeLapse timeLapse) {}
 		});
+		System.out.println("RoadSignParcel generator registered");
+
 
 
 		/* * START * */
+		System.out.println("/* * START * */");
 
 		simulator.start();
 
@@ -103,11 +111,12 @@ public class Simulation {
 			.with(GraphRoadModelRenderer.builder())
 			.with(RoadUserRenderer.builder()
 				.withImageAssociation(
-					Depot.class, "/images/saturnus.png")
+					Base.class, "/images/saturnus.png")
 				.withImageAssociation(
-					IntentionAnt.class, "/images/ufo.png")
+					AGV.class, "/images/ufo.png")
 				.withImageAssociation(
-					RoadSignParcel.class, "/images/parcel.png"));
+					RoadSignParcel.class, "/images/parcel.png"))
+			.withTitleAppendix("MAS");
 
 		return view;
 	}

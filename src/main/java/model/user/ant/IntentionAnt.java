@@ -17,6 +17,8 @@ public class IntentionAnt extends Ant {
      */
     public boolean declareIntention(AGV agv, PlannedPath path, long now) {
 
+        if (path == null || path.isEmpty()) return true;
+
         double totalDist = 0;
 
         // iterate over the complete PlannedPath

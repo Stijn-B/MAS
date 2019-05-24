@@ -109,6 +109,7 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
      * Chooses a new PlannedPath and registers it as the intended path
      */
     private void chooseNewPath(long now) {
+        System.out.println("[AGV " + String.valueOf(getID()) + "] chooseNewPath()"); // PRINT
 
         // explore possible paths
         List<PlannedPath> paths = explorePaths();
@@ -131,13 +132,17 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
     private PlannedPath intendedPath = new PlannedPath();
 
     private PlannedPath getIntendedPath() {
-        return intendedPath;
+        if (intendedPath == null) return new PlannedPath();
+        else return intendedPath;
     }
 
     private void setIntendedPath(PlannedPath intendedPath) {
         this.intendedPath = intendedPath;
     }
 
+    public boolean hasDestination() {
+        return !getIntendedPath().isEmpty();
+    }
 
     /* COMMITTING */
 
@@ -209,13 +214,18 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
     public void tick(TimeLapse timeLapse) {
         long now = timeLapse.getTime();
 
+
+        System.out.println("[AGV " + String.valueOf(getID()) + "] tick()");  // PRINT
+
         // CONSIDER EXPLORING NEW PATH
 
         if (reconsiderCondition(now)) chooseNewPath(now);
 
         // MOVING AND HANDLE
 
-        while (timeLapse.hasTimeLeft()) {
+        while (hasDestination() && timeLapse.hasTimeLeft()) {
+
+            System.out.println("[AGV " + String.valueOf(getID()) + "] timeLapse.hasTimeLeft() = " + String.valueOf(timeLapse.hasTimeLeft()));
 
             // move towards destination
             move(timeLapse);

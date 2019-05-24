@@ -13,6 +13,7 @@ RinSim Docu https://rinsim.rinde.nl/design/core/
     x rekening laten houden met welke parcels de AGV al bij heeft
  o Simulation fixen
     o AGV.deliverParcel(RoadSignParcel parcel) ergens laten weten dat de parcel delivered is
+    o AGVs etc worden niet getoond op kaart
  o optioneel nog Base implementeren (?)
 
 
