@@ -12,18 +12,18 @@ import model.user.owner.RoadSignPointOwner;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class RoadSignPoint extends Point implements TickListener {
+public class RoadSignPoint implements TickListener {
 
 	/* CONSTRUCTOR */
 
-	public RoadSignPoint(RoadSignPointOwner owner, PointType pointType, double pX, double pY) {
-		super(pX, pY);
+	public RoadSignPoint(RoadSignPointOwner owner, PointType pointType, Point point) {
 		this.roadSignPointOwner = owner;
 		this.pointType = pointType;
+		setPosition(point);
 	}
 
-	public RoadSignPoint(RoadSignPointOwner owner, PointType pointType, Point point) {
-		this(owner, pointType, point.x, point.y);
+	public RoadSignPoint(RoadSignPointOwner owner, PointType pointType, double pX, double pY) {
+		this(owner, pointType, new Point(pX, pY));
 	}
 
 
@@ -35,6 +35,22 @@ public class RoadSignPoint extends Point implements TickListener {
 		return roadSignPointOwner;
 	}
 
+	public boolean act(AGV agv) {
+		return getRoadSignPointOwner().act(agv, this);
+	}
+
+
+	/* ROADSIGNPOINT POSITION */
+
+	private Point pos;
+
+	public Point getPosition() {
+		return pos;
+	}
+
+	public void setPosition(Point pos) {
+		this.pos = pos;
+	}
 
 	/* TYPES */
 
@@ -186,8 +202,7 @@ public class RoadSignPoint extends Point implements TickListener {
 		return other != null && other instanceof RoadSignPoint
 				&& this.getRoadSignPointOwner() == ((RoadSignPoint) other).getRoadSignPointOwner()
 				&& this.getPointType() == ((RoadSignPoint) other).getPointType()
-				&& this.x == ((RoadSignPoint) other).x
-				&& this.y == ((RoadSignPoint) other).y;
+				&& this.getPosition() == ((RoadSignPoint) other).getPosition();
 	}
 
 }

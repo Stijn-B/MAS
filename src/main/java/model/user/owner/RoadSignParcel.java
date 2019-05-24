@@ -21,6 +21,75 @@ public class RoadSignParcel extends Parcel implements RoadSignPointOwner {
 		deliveryRSPoint = new RoadSignPoint(this, RoadSignPoint.PointType.PARCEL_DELIVERY, parcelDto.getDeliveryLocation());
 	}
 
+	/* PICKED UP */
+
+	private boolean isPickedUp = false;
+	private boolean isDelivered = false;
+
+	private AGV carrier;
+
+	// pickup
+
+	public boolean isPickedUp() {
+		return isPickedUp;
+	}
+
+	/**
+	 * Checks whether this Parcel can be picked up by the given AGV and does so if possible.
+	 */
+	public boolean pickUp(AGV agv) {
+		if (!isPickedUp() && agv.isAtPosition(getPickupLocation())) {
+			isPickedUp = true;
+			carrier = agv;
+			agv.addParcel(this);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// carry
+
+	public boolean isCarriedBy(AGV agv) {
+		return isPickedUp() && carrier == agv;
+	}
+
+	// deliver
+
+	public boolean isDelivered() {
+		return isDelivered;
+	}
+
+	/**
+	 * Checks whether this Parcel can be delivered up by the given AGV and does so if possible.
+	 */
+	public boolean deliver(AGV agv) {
+		if (isCarriedBy(agv) && agv.isAtPosition(getDeliveryLocation())) {
+			isDelivered = true;
+			agv.deliverParcel(this);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// act
+
+	/**
+	 * Responds to the given AGV acting on the given RoadSignPoint owned by this Parcel
+	 */
+	@Override
+	public boolean act(AGV agv, RoadSignPoint rsPoint) {
+
+		// pickup attempt
+		if (rsPoint == getPickupLocationRoadSignPoint()) return pickUp(agv);
+
+		// delivery attempt
+		if (rsPoint == getDeliveryLocationRoadSignPoint()) return deliver(agv);
+
+		return false;
+	}
+
 
 	/* ROADSINGPOINTS */
 
@@ -71,9 +140,21 @@ public class RoadSignParcel extends Parcel implements RoadSignPointOwner {
 		return OwnerType.PARCEL;
 	}
 
+	/**
+	 * Depending on whether this parcel is picked up and or delivered, returns the pickup and delivery points.
+	 * (see implementation)
+	 */
 	@Override
 	public RoadSignPoint[] getRoadSignPoints() {
-		return new RoadSignPoint[]{getPickupLocationRoadSignPoint(), getDeliveryLocationRoadSignPoint()};
+		if (!isDelivered()) {
+			if (!isPickedUp()) {
+				return new RoadSignPoint[]{getPickupLocationRoadSignPoint(), getDeliveryLocationRoadSignPoint()};
+			} else {
+				return new RoadSignPoint[]{getDeliveryLocationRoadSignPoint()};
+			}
+		} else {
+			return new RoadSignPoint[]{};
+		}
 	}
 
 	@Override
@@ -81,9 +162,12 @@ public class RoadSignParcel extends Parcel implements RoadSignPointOwner {
 
 	@Override
 	public boolean equals(@Nullable Object other) {
-		return other != null
-				&& other instanceof RoadSignPointOwner
-				&& ((RoadSignPointOwner) other).getID() == getID();
+		return other instanceof RoadSignPointOwner
+				&& equals((RoadSignPointOwner) other);
+	}
+
+	public boolean equals(@Nullable RoadSignPointOwner other) {
+		return other.getID() == this.getID();
 	}
 
 }

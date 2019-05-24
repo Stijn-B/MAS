@@ -11,7 +11,14 @@ RinSim Docu https://rinsim.rinde.nl/design/core/
  o ExplorationAnt
     o rekening laten houden met welke parcels de AGV al bij heeft
  o Simulation fixen
+    o AGV.deliverParcel(RoadSignParcel parcel) ergens laten weten dat de parcel delivered is
  o optioneel nog Base implementeren (?)
+
+
+vandaag
+ x AGV parcel func
+ o PlannedPath <-> AGV parcel connectie
+ o exploration rekening laten houden met welke parcels de AGV al bij heeft
 
 
 

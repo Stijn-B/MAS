@@ -6,6 +6,7 @@ import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
 import model.roadSignPoint.RoadSignPoint;
+import model.user.owner.RoadSignParcel;
 import model.user.owner.RoadSignPointOwner;
 
 import java.util.ArrayList;
@@ -55,40 +56,56 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 	 * Takes the RoadSignPoints of the current and next RoadSignPointOwner and creates RoadSigns between all of them.
 	 */
 	private void exploreNextOwner(RoadSignPointOwner nextOwner) {
-		// if one of the models is not registered yet or the argument is null, do nothing
-		if (getRoadModel() == null || !hasRoadSignPointModel() || nextOwner == null) return;
 
-		// create list of all RoadSignPoints (of both the current and next RoadSignPointOwner)
-		List<RoadSignPoint> points = new ArrayList<>();
-		points.addAll(Arrays.asList(getCurrOwner().getRoadSignPoints()));
-		points.addAll(Arrays.asList(nextOwner.getRoadSignPoints()));
-		int size = points.size();
-
-		// create RoadSigns between all the objects in the list, in both directions (e.g. iterates over (1,0) and (0,1))
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				if (i != j) createRoadSign(points.get(i), points.get(j));
-			}
-		}
+		// create RoadSigns between the current and the next RoadSignPointOwner.
+		createRoadSigns(currOwner, nextOwner);
 
 		// 'move' to next owner
 		currOwner = nextOwner;
 	}
 
 	/**
-	 * Create a RoadSign from one RoadSignPoint to another RoadSignPoint
-	 * @param from the source RoadSignPoint
-	 * @param to the destination RoadSignPoint
+	 * Creates RoadSigns in both directions between all points owned by the given owners.
+	 */
+	private void createRoadSigns(RoadSignPointOwner ownerA, RoadSignPointOwner ownerB) {
+		// get all points
+		List<RoadSignPoint> points = new ArrayList<>();
+		points.addAll(Arrays.asList(ownerA.getRoadSignPoints()));
+		points.addAll(Arrays.asList(ownerB.getRoadSignPoints()));
+
+		// create roadsigns
+		createRoadSigns(points);
+	}
+
+	/**
+	 * Creates RoadSigns in both directions between all the given points.
+	 */
+	private void createRoadSigns(List<RoadSignPoint> points) {
+
+		int size = points.size();
+
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				if (i != j) createRoadSign(points.get(i), points.get(j));
+			}
+		}
+	}
+
+	/**
+	 * Create a RoadSign from one RoadSignPoint to another RoadSignPoint. Does nothing if this ant has no RoadModel.
 	 */
 	private void createRoadSign(RoadSignPoint from, RoadSignPoint to) {
 
 		if (from == to) return; // don't create a RoadSign from a point to itself
+		if (getRoadModel() == null) return; // if no access to RoadModel, do nothing
 
 		List<Point> shortestPath = getRoadModel().getShortestPathTo(from, to); // shortest path
 		double distance = getRoadModel().getDistanceOfPath(shortestPath).getValue(); // distance of shortest path
 
 		from.addRoadSign(to, distance);
 	}
+
+
 
 
 	/* IMPLEMENTED INTERFACE METHODS */

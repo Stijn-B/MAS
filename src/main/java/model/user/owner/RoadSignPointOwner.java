@@ -15,6 +15,11 @@ public interface RoadSignPointOwner extends RoadSignPointUser {
 	// Array of the RoadSignPoints owned by the RoadSignPointOwner
 	RoadSignPoint[] getRoadSignPoints();
 
+	/**
+	 * The given AGV is at one if this owners points and acts on it. Returns whether the act was successful.
+	 */
+	boolean act(AGV agv, RoadSignPoint rsPoint);
+
 	@Override
 	int hashCode();
 

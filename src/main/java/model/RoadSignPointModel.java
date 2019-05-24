@@ -4,6 +4,8 @@ import com.github.rinde.rinsim.core.model.DependencyProvider;
 import com.github.rinde.rinsim.core.model.Model;
 import com.github.rinde.rinsim.core.model.ModelBuilder;
 import com.github.rinde.rinsim.core.model.road.RoadModel;
+import com.github.rinde.rinsim.geom.Point;
+import model.roadSignPoint.RoadSignPoint;
 import model.user.RoadSignPointUser;
 import model.user.owner.RoadSignPointOwner;
 
@@ -70,6 +72,7 @@ public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 		return ! (ownerCount() == 0 || (ownerCount() == 1 && containsOwner(owner)));
 	}
 
+
 	/* RANDOM OWNER */
 
 	private LinkedList<RoadSignPointOwner> randomQueue = new LinkedList<>();
@@ -101,6 +104,7 @@ public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 		}
 		return null;
 	}
+
 
 	/* DEPENDENCY INJECTION */
 

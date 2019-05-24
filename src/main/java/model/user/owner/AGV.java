@@ -10,6 +10,7 @@ import model.roadSignPoint.PlannedPath;
 import model.user.ant.*;
 import model.roadSignPoint.RoadSignPoint;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class AGV extends AbstractRoadSignPointOwner implements TickListener, MovingRoadUser, RoadSignPointOwner {
@@ -31,6 +32,44 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
 
     private double speed = 5.5;
 
+
+    /* ROADSIGN POINTS */
+
+    /**
+     * Acts on the given RoadSignPoint. Does nothing if not at the given RoadSignPoints location.
+     */
+    public void act(RoadSignPoint rsPoint) {
+        rsPoint.act(this);
+    }
+
+    /**
+     * Returns whether this AGV is at the given point (on its RoadModel)
+     */
+    public boolean isAtPosition(Point point) {
+        return getRoadModel() != null
+                && getRoadModel().getPosition(this) == point;
+    }
+
+    /* PARCELS */
+
+    private LinkedList<RoadSignParcel> parcels = new LinkedList<>();
+
+    public void addParcel(RoadSignParcel parcel) {
+        parcels.add(parcel);
+    }
+
+    public void removeParcel(RoadSignParcel parcel) {
+        parcels.remove(parcel);
+    }
+
+    public boolean carries(RoadSignParcel parcel) {
+        return parcels.contains(parcel);
+    }
+
+    public void deliverParcel(RoadSignParcel parcel) {
+        removeParcel(parcel);
+        // TODO: registreren dat deze parcel is afgeleverd.
+    }
 
     /* HEURISTIC */
 
@@ -132,6 +171,9 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
         // MOVING OVER COMITTED PATH
 
         // TODO
+
+        // keep RoadSignPoint position up to date
+        roadSignPoints[0].setPosition(getRoadModel().getPosition(this));
     }
 
     @Override

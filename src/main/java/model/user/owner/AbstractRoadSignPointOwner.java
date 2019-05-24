@@ -70,7 +70,7 @@ public abstract class AbstractRoadSignPointOwner implements RoadSignPointOwner {
 
     private final int ownerID;
     private final OwnerType type;
-    private final RoadSignPoint[] roadSignPoints;
+    public final RoadSignPoint[] roadSignPoints;
 
     private RoadSignPointModel roadSignPointModel;
 
@@ -103,12 +103,17 @@ public abstract class AbstractRoadSignPointOwner implements RoadSignPointOwner {
 
     @Override
     public OwnerType getRoadSignPointOwnerType() {
-        return OwnerType.UNDEFINED;
+        return type;
     }
 
     @Override
     public RoadSignPoint[] getRoadSignPoints() {
         return roadSignPoints.clone();
+    }
+
+    @Override
+    public boolean act(AGV agv, RoadSignPoint rsPoint) {
+        return false;
     }
 
     @Override
