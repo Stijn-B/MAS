@@ -251,6 +251,9 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
 
     @Override
     public void initRoadUser(RoadModel model) {
+        System.out.println("[AGV] initRoadUser(RoadModel) -> RoadModel registered");
+        System.out.println(model.getClass());
+        // dit geeft een error 'RoadUser does not exist' : model.getPosition(this);
         roadModel = model;
     }
 

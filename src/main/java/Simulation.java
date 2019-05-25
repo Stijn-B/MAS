@@ -1,7 +1,9 @@
 import com.github.rinde.rinsim.core.Simulator;
 import com.github.rinde.rinsim.core.model.pdp.*;
+import com.github.rinde.rinsim.core.model.road.GraphRoadModelImpl;
 import com.github.rinde.rinsim.core.model.road.RoadModel;
 import com.github.rinde.rinsim.core.model.road.RoadModelBuilders;
+import com.github.rinde.rinsim.core.model.road.RoadUser;
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.examples.taxi.TaxiRenderer;
@@ -20,8 +22,10 @@ import org.apache.commons.math3.random.RandomGenerator;
 import model.RoadSignPointModel;
 import model.user.owner.RoadSignParcel;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Set;
 
 
 public class Simulation {
@@ -49,17 +53,19 @@ public class Simulation {
 		// create simulator and add models
 		final Simulator simulator = Simulator.builder()
 			.addModel(RoadModelBuilders.staticGraph(loadGraph(MAP_FILE))) // add map of Leuven
-			.addModel(DefaultPDPModel.builder())
+			.addModel(DefaultPDPModel.builder()) // doet niets ?
 			.addModel(RoadSignPointModel.builder())
 			.addModel(view)
 			.build();
 
-
 		// get rng object
 		final RandomGenerator rng = simulator.getRandomGenerator();
 
-		// get RoadModel
+		// get Models
 		final RoadModel roadModel = simulator.getModelProvider().getModel(RoadModel.class);
+		// -> is of type GraphRoadModelImpl
+
+		final RoadSignPointModel rspModel = simulator.getModelProvider().getModel(RoadSignPointModel.class);
 
 
 		/* * REGISTER ENTITIES * */
@@ -67,11 +73,9 @@ public class Simulation {
 		System.out.println();
 
 
-		// register depot (uitvalsbasis vd AGVs)
-		simulator.register(new Depot(roadModel.getRandomPosition(rng)));
-
 		// register Base
 		simulator.register(new Base(roadModel.getRandomPosition(rng)));
+
 		System.out.println("Base registered");
 
 		// register AGVs
@@ -95,8 +99,25 @@ public class Simulation {
 			@Override
 			public void afterTick(TimeLapse timeLapse) {}
 		});
-		System.out.println("RoadSignParcel generator registered");
 
+		System.out.println();
+		System.out.println("INFO");
+		System.out.println(rspModel.ownerCount());
+		System.out.println(roadModel.getObjects().size());
+		System.out.println(roadModel.getObjectsOfType(RoadUser.class).size());
+		System.out.println(roadModel.getObjectsOfType(AGV.class).size());
+		System.out.println();
+
+		// register depot (TaxiExample versie van Base, extends PDPObjectImpl)
+		simulator.register(new Depot(roadModel.getRandomPosition(rng)));
+
+		System.out.println(roadModel.getObjects().size());
+		System.out.println(roadModel.getObjectsOfType(RoadUser.class).size());
+		System.out.println(roadModel.getObjectsOfType(AGV.class).size());
+		System.out.println();
+		for (RoadUser user : roadModel.getObjects()) {
+			System.out.println(user);
+		}
 
 
 		/* * START * */
@@ -115,7 +136,7 @@ public class Simulation {
 			.with(GraphRoadModelRenderer.builder())
 			.with(RoadUserRenderer.builder()
 					.withImageAssociation(
-							Depot.class, "/images/saturnus.png")
+							Depot.class, "/graphics/perspective/tall-building-64.png")
 					.withImageAssociation(
 							Base.class, "/images/saturnus.png")
 					.withImageAssociation(
