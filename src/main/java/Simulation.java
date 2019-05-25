@@ -66,6 +66,10 @@ public class Simulation {
 		System.out.println("/* * REGISTER ENTITIES * */");
 		System.out.println();
 
+
+		// register depot (uitvalsbasis vd AGVs)
+		simulator.register(new Depot(roadModel.getRandomPosition(rng)));
+
 		// register Base
 		simulator.register(new Base(roadModel.getRandomPosition(rng)));
 		System.out.println("Base registered");
@@ -112,12 +116,12 @@ public class Simulation {
 			.with(RoadUserRenderer.builder()
 					.withImageAssociation(
 							Depot.class, "/images/saturnus.png")
-				.withImageAssociation(
-					Base.class, "/images/saturnus.png")
-				.withImageAssociation(
-					AGV.class, "/images/ufo.png")
-				.withImageAssociation(
-					RoadSignParcel.class, "/images/parcel.png"))
+					.withImageAssociation(
+							Base.class, "/images/saturnus.png")
+					.withImageAssociation(
+							AGV.class, "/images/ufo.png")
+					.withImageAssociation(
+							RoadSignParcel.class, "/images/parcel.png"))
 			.withTitleAppendix("MAS");
 
 		return view;
