@@ -185,7 +185,6 @@ public final class TaxiExample {
 								Taxi.class, "/graphics/flat/taxi-32.png")
 						.withImageAssociation(
 								Customer.class, "/graphics/flat/person-red-32.png"))
-				.with(TaxiRenderer.builder(Language.ENGLISH))
 				.withTitleAppendix("Taxi example");
 
 		if (testing) {

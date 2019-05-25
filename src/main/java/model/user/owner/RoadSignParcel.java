@@ -2,12 +2,13 @@ package model.user.owner;
 
 import com.github.rinde.rinsim.core.model.pdp.Parcel;
 import com.github.rinde.rinsim.core.model.pdp.ParcelDTO;
+import com.github.rinde.rinsim.core.model.road.RoadUser;
 import model.RoadSignPointModel;
 import model.roadSignPoint.RoadSignPoint;
 
 import javax.annotation.Nullable;
 
-public class RoadSignParcel extends Parcel implements RoadSignPointOwner {
+public class RoadSignParcel extends Parcel implements RoadSignPointOwner, RoadUser {
 
 	public RoadSignParcel(ParcelDTO parcelDto) {
 		super(parcelDto);
