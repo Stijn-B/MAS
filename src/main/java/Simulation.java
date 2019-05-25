@@ -110,6 +110,8 @@ public class Simulation {
 		View.Builder view = View.builder()
 			.with(GraphRoadModelRenderer.builder())
 			.with(RoadUserRenderer.builder()
+					.withImageAssociation(
+							Depot.class, "/images/saturnus.png")
 				.withImageAssociation(
 					Base.class, "/images/saturnus.png")
 				.withImageAssociation(
