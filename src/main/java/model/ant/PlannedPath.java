@@ -1,30 +1,24 @@
-package model.roadSignPoint;
+package model.ant;
 
-import com.github.rinde.rinsim.core.model.road.RoadUser;
-import model.roadSignPoint.pheromones.RoadSign;
-import model.user.owner.AGV;
-import model.user.owner.RoadSignParcel;
+import model.roadSignPoint.AGV;
+import model.roadSignPoint.Base;
+import model.roadSignPoint.RoadSignPoint;
+import model.roadSignPoint.parcel.ParcelDelivery;
+import model.roadSignPoint.parcel.ParcelPickup;
+import model.pheromones.RoadSign;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class PlannedPath implements Comparable<PlannedPath> {
 
-    public PlannedPath(AGV agv) {
-        if (agv != null) {
-            parcels.addAll(agv.getParcels());
-            this.agv = agv;
-        }
+    public PlannedPath(AGV agv) throws NullPointerException {
+        if (agv == null) throw new NullPointerException("given agv can't be nullpointer");
+        parcelIDs.addAll(agv.getParcelIDs());
+        this.agv = agv;
     }
 
-    public PlannedPath() {
-        // do nothing
-    }
-
-    private AGV agv = null;
-
-    public LinkedList<RoadSign> path = new LinkedList<>();
-
+    public final AGV agv;
 
     /* HEURISTIC */
 
@@ -49,7 +43,9 @@ public class PlannedPath implements Comparable<PlannedPath> {
     }
 
 
-    /* EDITING */
+    /* PATH EDITING */
+
+    public LinkedList<RoadSign> path = new LinkedList<>();
 
     /**
      * Appends the given RoadSign to this PlannedPath if possible, otherwise throws an IllegalArgumentException.
@@ -57,58 +53,45 @@ public class PlannedPath implements Comparable<PlannedPath> {
      * @throws IllegalArgumentException if the given RoadSign can't be added (see acceptableRS(RoadSign rs))
      */
     public void append(RoadSign rs) throws IllegalArgumentException {
-        if (acceptableRS(rs)) path.add(rs);
-        else throw new IllegalArgumentException(
+        if (acceptableRS(rs))
+            path.add(rs);
+        else
+            throw new IllegalArgumentException(
                 "The given RoadSign cannot be added to this PlannedPath! (see acceptableRS(RoadSign rs))");
 
         // if the RoadSign destination is a parcel pickup, add this parcel to the list
-        if (rs.getDestination().getPointType() == RoadSignPoint.PointType.PARCEL_PICKUP) {
-            parcels.add((RoadSignParcel) rs.getDestination().getRoadSignPointOwner());
-        }
+        if (rs.getDestination() instanceof ParcelPickup)
+            addParcel((ParcelPickup) rs.getDestination());
     }
 
-    /**
-     * Removes the first RoadSign from the PlannedPath if it is held by the given RoadSignPoint. Does nothing if
-     * the PlannedPath is empty.
-     */
     public void popFirst() {
-        // if path empty, do nothing
         if (path.getFirst() == null) return;
-
-        // remove the roadsign if it is held by the given point
-        // if (rsPoint.holds(path.getFirst())) path.removeFirst(); werkte niet
-        path.removeFirst();
+        else path.removeFirst();
     }
 
 
-    /* CONTENT */
+    /* PATH CONTENT */
 
     public boolean isEmpty() {
         return path.isEmpty();
     }
 
-    /**
-     * Returns the amount of RoadSigns this PlannedPath contains.
-     * @return the amount of RoadSigns this PlannedPath contains
-     */
     public int getNbRoadSigns() {
         return path.size();
     }
 
     public int getNbDeliveries() {
         int count = 0;
+
         Iterator<RoadSign> iterator = getIterator();
         while (iterator.hasNext()) {
-            if (iterator.next().getDestination().getPointType()
-                == RoadSignPoint.PointType.PARCEL_DELIVERY
-            ) {
-                count++;
-            }
+            if (iterator.next().getDestination() instanceof ParcelDelivery) count++;
         }
+
         return count;
     }
 
-    public List<RoadSignPoint> getPoints() {
+    public List<RoadSignPoint> getRoadSignPoint() {
         LinkedList<RoadSignPoint> result = new LinkedList<>();
 
         Iterator<RoadSign> iter = getIterator();
@@ -170,7 +153,7 @@ public class PlannedPath implements Comparable<PlannedPath> {
      * PlannedPath will affect the RoadSigns contained by the original PlannedPath.
      * @return a copy of this PlannedPath
      */
-    public PlannedPath copyPath() {
+    public PlannedPath getCopy() {
         PlannedPath ap = new PlannedPath(agv);
         for (int i = 0; i < getNbRoadSigns(); i++) {
             ap.append(path.get(i));
@@ -180,50 +163,64 @@ public class PlannedPath implements Comparable<PlannedPath> {
 
     /* PARCELS */
 
-    /**
-     * Parcels which the AGV will have at the end of this path
-     */
-    private List<RoadSignParcel> parcels = new ArrayList<>();
+    private HashSet<Integer> parcelIDs = new HashSet<>();
 
-    public List<RoadSignParcel> getParcels() {
-        return parcels;
+    public HashSet<Integer> getParcelIDs() {
+        return parcelIDs;
     }
 
-    public boolean hasParcel(RoadSignParcel parcel) {
-        return parcels.contains(parcel);
+    public void addParcel(ParcelPickup parcel) {
+        addParcelID(parcel.ID);
+    }
+
+    public void addParcelID(int id) {
+        parcelIDs.add(id);
+    }
+
+    public void removeParcelID(int id) {
+        parcelIDs.remove(id);
+    }
+
+    public boolean carriesParcel(int id) {
+        return parcelIDs.contains(id);
     }
 
 
     /* PATH CHECKING */
 
     public boolean acceptableRS(RoadSign rs) {
-        return (getFinishPoint() == null || getFinishPoint() == rs.getLocation()) // it must continue the current path
-                && acceptableHop(rs.getDestination()) // AND its destination must be acceptable
-                && (!pointsToBase(rs) || plansPassingBase());// dest is NOT a base OR agv plans passing base
+        return RoadSignContinuesPath(rs) && acceptableDestination(rs.getDestination());
     }
 
+    /**
+     * Returns whether the given RoadSign is a continuation of the path
+     */
+    public boolean RoadSignContinuesPath(RoadSign rs) {
+        return getFinishPoint() == null || getFinishPoint() == rs.getLocation();
+    }
+
+    // TODO: checken of deze overloading correct is
     /**
      * Returns whether the given destination is acceptable considering the given path.
      */
-    public boolean acceptableHop(RoadSignPoint dest) {
+    public boolean acceptableDestination(RoadSignPoint dest) {
+        return !pathContains(dest);
+    }
 
-        // if dest is an model.user.owner.AGV -> not ok
-        if (dest.getPointType() == RoadSignPoint.PointType.AGV) return false;
+    public boolean acceptableDestination(AGV dest) {
+        return false;
+    }
 
-        // if dest was already passed -> not ok
-        if (pathContains(dest)) return false;
+    public boolean acceptableDestination(ParcelDelivery dest) {
+        return acceptableDestination((RoadSignPoint) dest) && carriesParcel(dest.ID);
+    }
 
-        // if dest is a delivery point, not ok if the pickup wasn't passed
-        if (dest.getPointType() == RoadSignPoint.PointType.PARCEL_DELIVERY
-                && dest.getRoadSignPointOwner() instanceof RoadSignParcel
-                && !hasParcel((RoadSignParcel) dest.getRoadSignPointOwner())) return false;
-
-        // otherwise the destination is ok
-        return true;
+    public boolean acceptableDestination(Base dest) {
+        return acceptableDestination((RoadSignPoint) dest) && agv.plansPassingBase();
     }
 
     /**
-     * Returns whether the given path contains the given RoadSignPoint.
+     * Returns whether the given path contains the given DeprecatedRoadSignPoint.
      */
     public boolean pathContains(RoadSignPoint rsPoint) {
         // iterate over all list pairs
@@ -234,14 +231,6 @@ public class PlannedPath implements Comparable<PlannedPath> {
         return false;
     }
 
-
-    public boolean pointsToBase(RoadSign roadSign) {
-        return roadSign.getDestination().getPointType() == RoadSignPoint.PointType.BASE;
-    }
-
-    public boolean plansPassingBase() {
-        return agv == null || agv.planPassingBase();
-    }
 
     /* INTERFACE Comparable<PlannedPath> */
 

@@ -1,19 +1,19 @@
-package model.user.owner;
+package model.roadSignPoint;
 
 import com.github.rinde.rinsim.core.model.road.MovingRoadUser;
-import com.github.rinde.rinsim.core.model.road.RoadModel;
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
 import heuristic.Heuristic;
-import model.roadSignPoint.PlannedPath;
-import model.user.ant.*;
-import model.roadSignPoint.RoadSignPoint;
+import model.ant.ExplorationAnt;
+import model.ant.IntentionAnt;
+import model.ant.PlannedPath;
+import model.roadSignPoint.parcel.AbstractParcelPoint;
 
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
 
-public class AGV extends AbstractRoadSignPointOwner implements TickListener, MovingRoadUser, RoadSignPointOwner {
+public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRoadUser {
 
     static final double AGV_SPEED = 20400;
 
@@ -22,18 +22,27 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
 
     static long NOW = 0; // current time, updated every tick()
 
+
     /* CONSTRUCTOR */
 
-    public AGV(Point startPosition, Heuristic heuristic) {
-        super(OwnerType.AGV, startPosition, RoadSignPoint.PointType.AGV);
-
+    public AGV(Point position, Heuristic heuristic) {
+        super(position);
         setHeuristic(heuristic);
     }
 
+    public boolean plansPassingBase() {
+        return false; // TODO: mogelijks gebruiken
+    }
 
-    /* PROPERTIES */
+
+    /* SPEED */
 
     private double speed = AGV_SPEED;
+
+    @Override
+    public double getSpeed() {
+        return speed;
+    }
 
     public long distanceToDuration(double distance) {
         return Math.round(distance/speed);
@@ -41,50 +50,6 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
 
     public long distanceToETA(double distance) {
         return NOW + distanceToDuration(distance);
-    }
-
-    /**
-     * Returns whether this AGV is at the given point (on its RoadModel)
-     */
-    public boolean isAtPosition(Point point) {
-        return getRoadModel() != null
-                && getRoadModel().getPosition(this) == point;
-    }
-
-    public Point getPosition() {
-        return getRoadSignPoints()[0].getPosition();
-    }
-
-    public boolean planPassingBase() {
-        return false;
-    }
-
-
-    /* PARCELS */
-
-    private LinkedList<RoadSignParcel> parcels = new LinkedList<>();
-
-    public LinkedList<RoadSignParcel> getParcels() {
-        return parcels;
-    }
-
-    public void addParcel(RoadSignParcel parcel) {
-        parcels.add(parcel);
-    }
-
-    public void removeParcel(RoadSignParcel parcel) {
-        parcels.remove(parcel);
-    }
-
-    public boolean carries(RoadSignParcel parcel) {
-        return parcels.contains(parcel);
-    }
-
-    public void deliverParcel(RoadSignParcel parcel) {
-        if (carries(parcel)) {
-            removeParcel(parcel);
-            // TODO: registreren dat deze parcel is afgeleverd.
-        }
     }
 
 
@@ -98,6 +63,31 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
 
     public void setHeuristic(Heuristic heuristic) {
         this.heuristic = heuristic;
+    }
+
+
+    /* PARCELS */
+
+    private HashSet<Integer> parcelIDs = new HashSet<>();
+
+    public HashSet<Integer> getParcelIDs() {
+        return parcelIDs;
+    }
+
+    public void addParcel(AbstractParcelPoint parcel) {
+        addParcelID(parcel.ID);
+    }
+
+    public void addParcelID(int id) {
+        parcelIDs.add(id);
+    }
+
+    public void removeParcelID(int id) {
+        parcelIDs.remove(id);
+    }
+
+    public boolean carriesParcel(int id) {
+        return parcelIDs.contains(id);
     }
 
 
@@ -123,7 +113,7 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
      * Chooses a new PlannedPath and registers it as the intended path
      */
     private void chooseNewPath(long now) {
-       // System.out.println("[AGV " + getID() + "] chooseNewPath() EXPLORE");
+        // System.out.println("[AGV " + getID() + "] chooseNewPath() EXPLORE");
 
         // explore possible paths
         List<PlannedPath> paths = explorePaths();
@@ -140,16 +130,15 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
      * @return a List<PlannedPath> containing viable paths (can be empty)
      */
     public List<PlannedPath> explorePaths() {
-        return new ExplorationAnt(this).explore(getRoadSignPoints()[0], new PlannedPath(this));
+        return new ExplorationAnt(this).explore();
     }
-
 
     /* INTENDED PATH */
 
-    private PlannedPath intendedPath = new PlannedPath();
+    private PlannedPath intendedPath = new PlannedPath(this);
 
     private PlannedPath getIntendedPath() {
-        if (intendedPath == null) return new PlannedPath();
+        if (intendedPath == null) return new PlannedPath(this);
         else return intendedPath;
     }
 
@@ -176,7 +165,7 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
      * @return whether this AGVs intended PlannedPath is still viable
      */
     public boolean signalIntention(PlannedPath path, long timeNow) {
-        return new IntentionAnt().declareIntention(this, path, timeNow);
+        return new IntentionAnt(this).declareIntention(path, timeNow);
     }
 
 
@@ -195,35 +184,19 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
         if (getIntendedPath().getFirstDest() == null) return;
 
         // move
-        getRoadModel().moveTo(this, getIntendedPath().getFirstDest().getPosition(), tm);
-        //System.out.println("[AGV " + getID() + "] moved to " + getRoadModel().getPosition(this));
-
-        // keep RoadSignPoint position up to date
-        roadSignPoints[0].setPosition(getRoadModel().getPosition(this));
+        try {
+            getRoadModel().moveTo(this, getIntendedPath().getFirstDest().getPosition(), tm);
+        } catch (Exception E) {
+            System.out.println("[" + this + "] couldn't move (" + E.getMessage());
+            tm.consumeAll();
+        }
     }
 
     /**
-     * Acts on the given RoadSignPoint. Does nothing if not at the given RoadSignPoints location.
+     * Acts on the given DeprecatedRoadSignPoint. Does nothing if not at the given RoadSignPoints location.
      */
     public void tryToAct(TimeLapse tm) {
-
-        // if there is no PlannedPath, do nothing
-        if (getIntendedPath() == null) return;
-
-        RoadSignPoint dest = getIntendedPath().getFirstDest();
-
-        // if the AGV has no destination to act on, do nothing
-        if (dest == null) return;
-
-        // if the AGV is not at the position of the destination, do nothing
-        if (!isAtPosition(dest.getPosition())) return;
-
-        // otherwise, act on the destination and remove it from the path
-        System.out.println("[AGV " + getID() + "] At position, try to act");
-        System.out.println(getIntendedPath());
-
-        if (dest.act(this)) getIntendedPath().popFirst();
-        System.out.println(getIntendedPath());
+    // TODO
     }
 
 
@@ -237,12 +210,12 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
         NOW = now;
 
 
-        System.out.println("[AGV " + String.valueOf(getID()) + "]");  // PRINT
+        //System.out.println("[AGV " + String.valueOf(getID()) + "]");  // PRINT
 
         // CONSIDER EXPLORING NEW PATH
 
         if (reconsiderCondition(now)) {
-            System.out.println("[AGV " + String.valueOf(getID()) + "] Explore new path");  // PRINT
+            //System.out.println("[AGV " + String.valueOf(getID()) + "] Explore new path");  // PRINT
             chooseNewPath(now);
         }
 
@@ -261,26 +234,12 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
 
     }
 
-    // MovingRoadUser
-
-    RoadModel roadModel;
-
-    RoadModel getRoadModel() {
-        return roadModel;
+    @Override
+    public void afterTick(TimeLapse timeLapse) {
+        // do nothing
     }
 
-    @Override
-    public void initRoadUser(RoadModel model) {
-        // dit geeft een error 'RoadUser does not exist' : model.getPosition(this);
-        roadModel = model;
-
-        if (getPosition() != null) {
-            model.addObjectAt(this, getPosition());
-        }
-    }
-
-    @Override
-    public double getSpeed() {
-        return speed;
+    public String toString() {
+        return "AGV(" + ID + ")";
     }
 }

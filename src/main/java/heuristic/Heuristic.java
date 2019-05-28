@@ -1,6 +1,6 @@
 package heuristic;
 
-import model.roadSignPoint.PlannedPath;
+import model.ant.PlannedPath;
 
 import java.util.Collections;
 import java.util.List;

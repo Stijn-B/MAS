@@ -1,215 +1,64 @@
 package model.roadSignPoint;
 
-import com.github.rinde.rinsim.core.model.time.TickListener;
-import com.github.rinde.rinsim.core.model.time.TimeLapse;
+import com.github.rinde.rinsim.core.model.road.RoadModel;
+import com.github.rinde.rinsim.core.model.road.RoadUser;
 import com.github.rinde.rinsim.geom.Point;
-import model.roadSignPoint.pheromones.AgingPheromone;
-import model.roadSignPoint.pheromones.IntentionData;
-import model.roadSignPoint.pheromones.RoadSign;
-import model.user.owner.AGV;
-import model.user.owner.RoadSignPointOwner;
+import model.RoadSignPointUser;
+import model.pheromones.IntentionData;
+import model.pheromones.RoadSign;
+import model.RoadSignPointModel;
 
-import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Iterator;
 
-public class RoadSignPoint {
+public interface RoadSignPoint extends RoadSignPointUser, RoadUser {
 
-	/* CONSTRUCTOR */
+    // RoadUser
 
-	public RoadSignPoint(RoadSignPointOwner owner, PointType pointType, Point point) {
-		this.roadSignPointOwner = owner;
-		this.pointType = pointType;
-		setPosition(point);
-	}
+    void initRoadUser(RoadModel model);
 
-	public RoadSignPoint(RoadSignPointOwner owner, PointType pointType, double pX, double pY) {
-		this(owner, pointType, new Point(pX, pY));
-	}
+    boolean hasRoadModel();
+
+    RoadModel getRoadModel();
 
 
-	/* ROADSIGNPOINT OWNER */
+    // RoadSignPointUser
 
-	private final RoadSignPointOwner roadSignPointOwner;
+    void injectRoadSignPointModel(RoadSignPointModel model);
 
-	public RoadSignPointOwner getRoadSignPointOwner() {
-		return roadSignPointOwner;
-	}
+    boolean hasRoadSignPointModel();
 
-	public boolean act(AGV agv) {
-		return getRoadSignPointOwner().act(agv, this);
-	}
+    RoadSignPointModel getRoadSignPointModel();
 
+    // Pheromones
 
-	/* ROADSIGNPOINT POSITION */
+    /**
+     * Ages the RoadSigns at this point.
+     */
+    void age(long ms);
 
-	private Point pos;
+    // RoadSigns
 
-	public Point getPosition() {
-		return pos;
-	}
+    /**
+     * Adds a new RoadSing pointing to the given destination with given distance.
+     * @param destination destination of the RoadSign
+     * @param dist distance to the given destination
+     */
+    void addRoadSign(RoadSignPoint destination, double dist);
 
-	public void setPosition(Point pos) {
-		this.pos = pos;
-	}
+    Iterator<RoadSign> getRoadSignsIterator();
 
-	/* TYPES */
+    // Intentions
 
-	public enum PointType { PARCEL_PICKUP, PARCEL_DELIVERY, AGV, BASE }
-	private final PointType pointType;
-	public PointType getPointType() {
-		return pointType;
-	}
+    void addIntention(AGV agv, long ETA);
 
+    Iterator<IntentionData> getIntentionIterator();
 
-	/* ROADSIGNS */
+    boolean wouldAgvArriveInTime(AGV agv, long ETA);
 
-	/**
-	 * The RoadSigns are saved in a SortedSet keeping them sorted by distance to destination (ascending order)
-	 */
-	SortedSet<RoadSign> roadSigns = new TreeSet<>();
+    // Position
 
-	/**
-	 * Returns whether this RoadSignPoint holds the given RoadSign.
-	 */
-	public boolean holds(RoadSign rs) {
-		return roadSigns.contains(rs);
-	}
-
-	/**
-	 * Adds a new RoadSing pointing to the given destination with given distance.
-	 * @param destination destination of the RoadSign
-	 * @param dist distance to the given destination
-	 */
-	public void addRoadSign(RoadSignPoint destination, double dist) {
-		addRoadSign(new RoadSign(this, destination, dist));
-	}
-
-	/**
-	 * Adds the given RoadSign to this RoadSignPoint
-	 * @param newSign the RoadSign to add
-	 */
-	public void addRoadSign(RoadSign newSign) {
-
-		// if a RoadSign equal to the given one is already contained, remove it (so it gets replaced)
-		if (roadSigns.contains(newSign)) roadSigns.remove(newSign);
-
-		roadSigns.add(newSign);
-	}
-
-	/**
-	 * Get an Iterator of all the RoadSigns this RoadSignPoint contains.
-	 * @return an Iterator of all the RoadSigns this RoadSignPoint contains
-	 */
-	public Iterator<RoadSign> getRoadSignsIterator() {
-		return roadSigns.iterator();
-	}
-
-	/**
-	 * Returns the first n RoadSigns (pointing the n closest destinations)
-	 * If there are less than n RoadSigns, less RoadSigns will be returned.
-	 * @param n the amount of RoadSigns to return
-	 * @return the first n RoadSigns, if there are less than n RoadSigns, less RoadSigns will be returned
-	 */
-	public List<RoadSign> getNRoadSigns(int n) {
-		Iterator<RoadSign> iter = roadSigns.iterator();
-		List<RoadSign> result = new ArrayList<>();
-
-		// add the first n elements to the result
-		for(int i = 0; i < n; i ++) {
-			try {
-				result.add(iter.next());
-			} catch (NoSuchElementException e) { // no elements left
-				return result;
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Get the amount of RoadSign objects this RoadSignPoint has
-	 * @return the amount of RoadSign objects this RoadSignPoint has
-	 */
-	public int getRoadSignCount() {
-		return roadSigns.size();
-	}
-
-
-	/* INTENTIONS */
-
-	Set<IntentionData> intentions = new HashSet<>();
-
-	public Iterator<IntentionData> getIntentionIterator() {
-		return intentions.iterator();
-	}
-
-	/**
-	 * Registers an intention for the given AGV who will arrive at the given time.
-	 */
-	public void registerIntention(IntentionData intention) {
-		intentions.add(intention);
-	}
-
-	public void registerIntention(AGV agv, long ETA) {
-		registerIntention(new IntentionData(agv, ETA));
-	}
-
-	/**
-	 * Returns whether the given AGV would arrive first at this RoadSignPoint if it would arrive at the given ETA.
-	 */
-	public boolean wouldAgvArriveInTime(AGV agv, long ETA) {
-		// if it's not a PARCEL, ETA doesn't matter
-		if (getRoadSignPointOwner().getRoadSignPointOwnerType() != RoadSignPointOwner.OwnerType.PARCEL) return true;
-
-		// if it is a PARCEL, check whether agv would be first
-		Iterator<IntentionData> iter = getIntentionIterator();
-		while (iter.hasNext()) {
-			IntentionData curr = iter.next();
-			if (curr.getETA() < ETA && curr.getAgv() != agv) return false;
-		}
-		return true;
-	}
-
-
-	/* AGING */
-
-	/**
-	 * Ages all the RoadSigns that this RoadSignPoint holds
-	 * @param ms
-	 */
-	public void age(long ms) {
-		age(roadSigns, ms);
-		age(intentions, ms);
-	}
-
-	/**
-	 * Ages all AgingPheromone in the given agingSet, removes AgingPheromone from the set if they are expired.
-	 */
-	public void age(Set<? extends AgingPheromone> agingSet, long ms) {
-		// Iterate over all AgingPheromones and age them
-		Iterator<? extends AgingPheromone> iter = agingSet.iterator();
-		while(iter.hasNext()) {
-			// if the next RoadSign doesn't survive the aging, remove it
-			if (!iter.next().age(ms)) {
-				iter.remove(); // removes the last item given by iter.next() from the underlying collection
-			}
-		}
-	}
-
-
-	/* OTHER */
-
-	@Override
-	public boolean equals(@Nullable Object other) {
-		return other != null && other instanceof RoadSignPoint
-				&& this.getRoadSignPointOwner() == ((RoadSignPoint) other).getRoadSignPointOwner()
-				&& this.getPointType() == ((RoadSignPoint) other).getPointType()
-				&& this.getPosition() == ((RoadSignPoint) other).getPosition();
-	}
-
-	@Override
-	public String toString() {
-		return getPointType().toString() + "(" + getRoadSignPointOwner().getID() + ")";
-	}
+    default Point getPosition() {
+        if (!hasRoadSignPointModel()) return null;
+        else return getRoadModel().getPosition(this);
+    }
 }
-
-// vim: noexpandtab:

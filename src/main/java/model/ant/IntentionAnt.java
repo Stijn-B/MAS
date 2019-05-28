@@ -1,8 +1,7 @@
-package model.user.ant;
+package model.ant;
 
-import model.roadSignPoint.PlannedPath;
-import model.roadSignPoint.pheromones.RoadSign;
-import model.user.owner.AGV;
+import model.pheromones.RoadSign;
+import model.roadSignPoint.AGV;
 
 import java.util.Iterator;
 
@@ -11,11 +10,24 @@ import java.util.Iterator;
  */
 public class IntentionAnt extends Ant {
 
+    public IntentionAnt(AGV agv) throws NullPointerException {
+        if (agv == null) throw new NullPointerException("given agv can't be nullpointer");
+        this.agv = agv;
+    }
+
+
+    /* AGV */
+
+    public final AGV agv;
+
+
+    /* INTENTION */
+
     /**
      * Declares the intention of the given AGV over the given path. Returns whether the path is still valid. A path is
      * invalid if it contains 1 or more RoadSigns that are invalid (see RoadSign.isValid())
      */
-    public boolean declareIntention(AGV agv, PlannedPath path, long now) {
+    public boolean declareIntention(PlannedPath path, long now) {
 
         if (path == null || path.isEmpty()) return true;
 
@@ -31,10 +43,10 @@ public class IntentionAnt extends Ant {
 
             totalDist += curr.getDistance();
 
-            // revitalize roadSignPoint and register intention at its destination
+            // revitalize model.roadSignPoint and register intention at its destination
             curr.revitalize(5000);
             long ETA = now + agv.distanceToDuration(totalDist);
-            curr.getDestination().registerIntention(agv, ETA);
+            curr.getDestination().addIntention(agv, ETA);
         }
         return true;
     }

@@ -1,7 +1,7 @@
-package model.user.ant;
+package model.ant;
 
+import model.RoadSignPointUser;
 import model.RoadSignPointModel;
-import model.user.RoadSignPointUser;
 
 public abstract class Ant implements RoadSignPointUser {
 

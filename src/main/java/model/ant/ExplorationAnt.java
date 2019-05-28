@@ -1,9 +1,8 @@
-package model.user.ant;
+package model.ant;
 
-import model.roadSignPoint.PlannedPath;
-import model.roadSignPoint.pheromones.RoadSign;
+import model.pheromones.RoadSign;
+import model.roadSignPoint.AGV;
 import model.roadSignPoint.RoadSignPoint;
-import model.user.owner.AGV;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,7 +22,8 @@ public class ExplorationAnt extends Ant {
 	 * @param hopCountLimit The amount of hops a planned out route should be
 	 * @param branchLimit The amount of ExplorationAnt that should be created at each point
 	 */
-	public ExplorationAnt(AGV agv, int hopCountLimit, int branchLimit) {
+	public ExplorationAnt(AGV agv, int hopCountLimit, int branchLimit) throws NullPointerException {
+		if (agv == null) throw new NullPointerException("given agv can't be nullpointer");
 		this.agv = agv;
 		hopAmount = hopCountLimit;
 		branchAmount = branchLimit;
@@ -37,13 +37,10 @@ public class ExplorationAnt extends Ant {
 		this(agv, DEFAULT_HOP_COUNT_LIMIT);
 	}
 
+
 	/* AGV */
 
-	private final AGV agv;
-
-	public AGV getAgv() {
-		return this.agv;
-	}
+	public final AGV agv;
 
 
 	/* HOP AND BRANCH COUNT */
@@ -61,23 +58,17 @@ public class ExplorationAnt extends Ant {
 
 	/* RECURSIVE EXPLORATION */
 
-	/**
-	 * Returns a list of explored PlannedPaths starting from the given RoadSignPoint.
-	 * @param point The starting RoadSignPoint
-	 * @return a list of explored PlannedPaths starting from the given RoadSignPoint
-	 */
-	public List<PlannedPath> explore(RoadSignPoint point) {
-		return explore(point, new PlannedPath());
+	public List<PlannedPath> explore() {
+		return explore(agv);
 	}
 
-	/**
-	 * Returns a List of paths
-	 * A path is a list of Pair<RoadSignPoint,Double distance>
-	 */
-	public List<PlannedPath> explore(RoadSignPoint point, PlannedPath path) {
 
-		// if no path given, execute method withouth path argument
-		if (path == null) return explore(point);
+	public List<PlannedPath> explore(RoadSignPoint point) {
+		return explore(point, new PlannedPath(agv));
+	}
+
+	public List<PlannedPath> explore(RoadSignPoint point, PlannedPath path) throws NullPointerException {
+		if (path == null) throw new NullPointerException("given path can't be nullpointer");
 
 		//System.out.println("[ExplorationAnt.explore()] " + whiteSpace(getHopAmount())
 		//		+ "hopCount: " + getHopAmount() + " - branch: " + getBranchAmount()
@@ -86,7 +77,6 @@ public class ExplorationAnt extends Ant {
 
 		// create an ArrayList for the resulting AntPaths
 		List<PlannedPath> result = new ArrayList<>();
-
 
 
 		// if there are still hops left, explore
@@ -100,26 +90,25 @@ public class ExplorationAnt extends Ant {
 				RoadSign roadSign = iterator.next();
 
 				//System.out.print("[ExplorationAnt.explore()] " + whiteSpace(getHopAmount())
-				//		+ "("+getHopAmount()+") "+ "iter.next " + roadSign.getDestination() + " -->");
+				//		+ "("+getHopAmount()+") "+ "iter.next " + model.roadSignPoint.getDestination() + " -->");
 
 
 				// check whether the RoadSign destination is suitable
 				if (path.acceptableRS(roadSign)) {
 
 					// extend a copy of the current path with the new destination
-					PlannedPath pathCopy = path.copyPath();
+					PlannedPath pathCopy = path.getCopy();
 					pathCopy.append(roadSign);
 
-					// calculate ETA to roadSign destination
-					long ETA = getAgv().distanceToETA(pathCopy.getTotalPathLength());
+					// calculate ETA to model.roadSignPoint destination
+					long ETA = agv.distanceToETA(pathCopy.getTotalPathLength());
 
 					// if AGV would be first, send an ant (with hopCount - 1) to this destination
-					if (roadSign.getDestination().wouldAgvArriveInTime(getAgv(), ETA)
-							|| (roadSign.getDestination().getPointType() == RoadSignPoint.PointType.BASE && getAgv().planPassingBase())) { // not a base OR plan passing base
+					if (roadSign.getDestination().wouldAgvArriveInTime(agv, ETA)) {
 						//System.out.println(" YES");
 
 						// send an ant (with hopCount - 1) to this destination
-						ExplorationAnt newAnt = new ExplorationAnt(getAgv(), getHopAmount() - 1, getBranchAmount());
+						ExplorationAnt newAnt = new ExplorationAnt(agv, getHopAmount() - 1, getBranchAmount());
 						List<PlannedPath> returnedList = newAnt.explore(roadSign.getDestination(), pathCopy);
 						sentAntCount++;
 

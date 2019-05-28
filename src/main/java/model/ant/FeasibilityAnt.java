@@ -1,16 +1,12 @@
-package model.user.ant;
+package model.ant;
 
-import com.github.rinde.rinsim.core.model.road.GraphRoadModelImpl;
 import com.github.rinde.rinsim.core.model.road.RoadModel;
 import com.github.rinde.rinsim.core.model.road.RoadUser;
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
 import model.roadSignPoint.RoadSignPoint;
-import model.user.owner.RoadSignPointOwner;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,7 +24,7 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 	 * Create a FeasibilityAnt at the given model.user.owner.RoadSignParcel
 	 * @param curr the model.user.owner.RoadSignParcel where to create the new FeasibilityAnt
 	 */
-	public FeasibilityAnt(RoadSignPointOwner curr) {
+	public FeasibilityAnt(RoadSignPoint curr) {
 		currOwner = curr;
 	}
 
@@ -37,9 +33,9 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 
 	/* CURRENT LOCATION */
 
-	private RoadSignPointOwner currOwner;
+	private RoadSignPoint currOwner;
 
-	public RoadSignPointOwner getCurrOwner() {
+	public RoadSignPoint getCurrOwner() {
 		return currOwner;
 	}
 
@@ -47,19 +43,19 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 	/* ROADSIGN METHODS */
 
 	/**
-	 * Explores to another random RoadSignPointOwner
+	 * Explores to another random RoadSignPoint
 	 */
 	private void exploreNextOwner() {
-		exploreNextOwner(getRoadSignPointModel().getRandomOwnerOtherThan(getCurrOwner()));
+		exploreNextOwner(getRoadSignPointModel().getRandomPointOtherThan(getCurrOwner()));
 	}
 
 	/**
-	 * Takes the RoadSignPoints of the current and next RoadSignPointOwner and creates RoadSigns between all of them.
+	 * Takes the RoadSignPoints of the current and next RoadSignPoint and creates RoadSigns between all of them.
 	 */
-	private void exploreNextOwner(RoadSignPointOwner nextOwner) {
+	private void exploreNextOwner(RoadSignPoint nextOwner) {
 
-		// create RoadSigns between the current and the next RoadSignPointOwner.
-		createRoadSigns(currOwner, nextOwner);
+		// create RoadSigns between the current and the next RoadSignPoint.
+		createRoadSignsBetween(currOwner, nextOwner);
 
 		// 'move' to next owner
 		currOwner = nextOwner;
@@ -68,48 +64,16 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 	/**
 	 * Creates RoadSigns in both directions between all points owned by the given owners.
 	 */
-	private void createRoadSigns(RoadSignPointOwner ownerA, RoadSignPointOwner ownerB) {
-		// get all points
-		List<RoadSignPoint> points = new ArrayList<>();
-		points.addAll(Arrays.asList(ownerA.getRoadSignPoints()));
-		points.addAll(Arrays.asList(ownerB.getRoadSignPoints()));
-
-		// create roadsigns
-		createRoadSigns(points);
+	private void createRoadSignsBetween(RoadSignPoint a, RoadSignPoint b) {
+		createRoadSignFromTo(a, b);
+		createRoadSignFromTo(b, a);
 	}
 
-	/**
-	 * Creates RoadSigns in both directions between all the given points.
-	 */
-	private void createRoadSigns(List<RoadSignPoint> points) {
-
-		int size = points.size();
-
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				if (i != j) {
-					boolean success = createRoadSign(points.get(i), points.get(j));
-					if (!success) System.out.println("Failed to create RoadSign from " + points.get(i) + " to " + points.get(j));
-				}
-			}
-		}
+	private void createRoadSignFromTo(RoadSignPoint from, RoadSignPoint to) {
+		List<Point> shortestPath = getRoadModel().getShortestPathTo(from.getPosition(), to.getPosition()); // shortest path
+		double distance = getPathLength(shortestPath);
+		from.addRoadSign(to, distance);
 	}
-
-	/**
-	 * Create a RoadSign from one RoadSignPoint to another RoadSignPoint. Returns whether the creating succeeded
-	 */
-	private boolean createRoadSign(RoadSignPoint from, RoadSignPoint to) {
-		try {
-			List<Point> shortestPath = getRoadModel().getShortestPathTo(from.getPosition(), to.getPosition()); // shortest path
-			// double distance = getRoadModel().getDistanceOfPath(shortestPath).getValue(); WERKTE NIET ALTIJD, NIEUWE METHODE +- GOED GENOEG
-			double distance = getPathLength(shortestPath);
-			from.addRoadSign(to, distance);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
 
 	/* PATH LENGTH */
 

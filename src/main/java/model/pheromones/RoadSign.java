@@ -1,4 +1,4 @@
-package model.roadSignPoint.pheromones;
+package model.pheromones;
 
 import model.roadSignPoint.RoadSignPoint;
 import org.jetbrains.annotations.NotNull;
@@ -68,11 +68,8 @@ public class RoadSign extends AgingPheromone implements Comparable<RoadSign> {
 	 * @return
 	 */
 	public boolean isValid() {
-		return getLocation().getRoadSignPointOwner().hasRoadSignPointModel() && getDestination().getRoadSignPointOwner().hasRoadSignPointModel();
+		return getLocation().hasRoadSignPointModel() && getDestination().hasRoadSignPointModel();
 	}
-
-	/* AGE */
-
 
 
 	/* OVERRIDDEN METHODS */

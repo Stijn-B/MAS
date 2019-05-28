@@ -1,7 +1,6 @@
 package heuristic;
 
-import heuristic.Heuristic;
-import model.roadSignPoint.PlannedPath;
+import model.ant.PlannedPath;
 
 public class DeliveredPerDistanceHeuristic extends Heuristic {
 

@@ -1,7 +1,6 @@
-package model.roadSignPoint.pheromones;
+package model.pheromones;
 
-import model.user.owner.AGV;
-import org.jetbrains.annotations.NotNull;
+import model.roadSignPoint.AGV;
 
 public class IntentionData extends AgingPheromone {
 

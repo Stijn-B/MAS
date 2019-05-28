@@ -1,6 +1,6 @@
 package heuristic;
 
-import model.roadSignPoint.PlannedPath;
+import model.ant.PlannedPath;
 public class LocalizedCircleDistanceHeuristic extends LocalizedCircleHeuristic {
 
 	@Override

@@ -1,4 +1,4 @@
-package model.roadSignPoint.pheromones;
+package model.pheromones;
 
 public abstract class AgingPheromone {
 

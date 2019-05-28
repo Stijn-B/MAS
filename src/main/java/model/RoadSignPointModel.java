@@ -4,10 +4,7 @@ import com.github.rinde.rinsim.core.model.DependencyProvider;
 import com.github.rinde.rinsim.core.model.Model;
 import com.github.rinde.rinsim.core.model.ModelBuilder;
 import com.github.rinde.rinsim.core.model.road.RoadModel;
-import com.github.rinde.rinsim.geom.Point;
 import model.roadSignPoint.RoadSignPoint;
-import model.user.RoadSignPointUser;
-import model.user.owner.RoadSignPointOwner;
 
 import java.util.*;
 
@@ -34,72 +31,49 @@ public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 
 	/* ROADSIGNPOINT OWNER LIST */
 
-	private HashSet<RoadSignPointOwner> ownerList = new HashSet<>();
+	private HashSet<RoadSignPoint> pointList = new HashSet<>();
 
-	/**
-	 * Adds the RoadSignPointOwner if it is not already present. If this Model already contains the RoadSignPointOwner,
-	 * the call leaves the Model unchanged and returns false.
-	 * @param owner The RoadSignPointOwner to add
-	 * @return whether the RoadSignPointOwner was added
-	 */
-	public boolean addOwner(RoadSignPointOwner owner) {
-		return ownerList.add(owner);
+	public boolean addPoint(RoadSignPoint owner) {
+		return pointList.add(owner);
 	}
 
-	/**
-	 * Removes the given RoadSignPointOwner from the Model
-	 * Returns true if this Model contained the RoadSignPointOwner (or equivalently, if this Model changed as a result of the call).
-	 * @param owner The RoadSignPointOwner to remove from the Model
-	 * @returns Whether the Model was changed.
-	 */
-	public boolean removeOwner(RoadSignPointOwner owner) {
-		return ownerList.remove(owner);
+	public boolean removePoint(RoadSignPoint owner) {
+		return pointList.remove(owner);
 	}
 
-	public boolean containsOwner(RoadSignPointOwner owner) {
-		return ownerList.contains(owner);
+	public boolean containsPoint(RoadSignPoint owner) {
+		return pointList.contains(owner);
 	}
 
-	public int ownerCount() {
-		return ownerList.size();
+	public int pointCount() {
+		return pointList.size();
 	}
 
-	/**
-	 * Returns whether there is atleast 1 other RoadSignPointOwner other than the given one registered to this Model.
-	 */
-	public boolean containsOwnerOtherThan(RoadSignPointOwner owner) {
+	public boolean containsPointOtherThan(RoadSignPoint point) {
 		// if the Model contains no owners at all OR only contains the given owner, return false
-		return ! (ownerCount() == 0 || (ownerCount() == 1 && containsOwner(owner)));
+		return ! (pointCount() == 0 || (pointCount() == 1 && containsPoint(point)));
 	}
 
 
 	/* RANDOM OWNER */
 
-	private LinkedList<RoadSignPointOwner> randomQueue = new LinkedList<>();
+	private LinkedList<RoadSignPoint> randomQueue = new LinkedList<>();
 
 	public void refreshRandomQueue() {
 		randomQueue.clear();
-		randomQueue.addAll(ownerList);
+		randomQueue.addAll(pointList);
 		Collections.shuffle(randomQueue);
 	}
 
-	/**
-	 * Returns the next owner form the random owner queue. Returns null if there are no registered owners.
-	 * @return the next owner form the random owner queue
-	 */
-	public RoadSignPointOwner getNextRandomOwner() {
-		if (ownerList.isEmpty()) return null; // if no registered owners, return null
+	public RoadSignPoint getNextRandomPoint() {
+		if (pointList.isEmpty()) return null; // if no registered owners, return null
 		if (randomQueue.isEmpty()) refreshRandomQueue(); // if queue empty, refresh it
 		return randomQueue.poll(); // return and remove the head of the randomQueue
 	}
 
-	/**
-	 * Returns a random RoadSignPointOwner that is registered to this Model and not equal to the
-	 * given owner. Returns null if there is no other RoadSignPointOwner registered to this Model.
-	 */
-	public RoadSignPointOwner getRandomOwnerOtherThan(RoadSignPointOwner owner) {
-		while (containsOwnerOtherThan(owner)) {
-			RoadSignPointOwner curr = getNextRandomOwner();
+	public RoadSignPoint getRandomPointOtherThan(RoadSignPoint owner) {
+		while (containsPointOtherThan(owner)) {
+			RoadSignPoint curr = getNextRandomPoint();
 			if (curr != owner) return curr;
 		}
 		return null;
@@ -108,32 +82,19 @@ public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 
 	/* DEPENDENCY INJECTION */
 
-	/**
-	 * Register element in a user.
-	 * @param element the <code>! null</code> should be imposed
-	 * @return true if the object was successfully registered
-	 */
 	@Override
 	public boolean register(RoadSignPointUser element) {
 		element.injectRoadSignPointModel(this);
-		if (element instanceof RoadSignPointOwner) {
-			addOwner((RoadSignPointOwner) element);
-		}
+		if (element instanceof RoadSignPoint)
+			addPoint((RoadSignPoint) element);
 		return true;
 	}
 
-	/**
-	 * Unregister element from a user.
-	 * @param element the <code>! null</code> should be imposed
-	 * @return true if the unregistration changed the user (element was part of
-	 *		 the user and it was successfully removed)
-	 */
 	@Override
 	public boolean unregister(RoadSignPointUser element) {
-		element.removeRoadSignPointModel();
-		if (element instanceof RoadSignPointOwner) {
-			removeOwner((RoadSignPointOwner) element);
-		}
+		element.injectRoadSignPointModel(null);
+		if (element instanceof RoadSignPoint)
+			removePoint((RoadSignPoint) element);
 		return true;
 	}
 

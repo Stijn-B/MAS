@@ -1,12 +1,10 @@
 import com.github.rinde.rinsim.core.Simulator;
 import com.github.rinde.rinsim.core.model.pdp.*;
-import com.github.rinde.rinsim.core.model.road.GraphRoadModelImpl;
 import com.github.rinde.rinsim.core.model.road.RoadModel;
 import com.github.rinde.rinsim.core.model.road.RoadModelBuilders;
 import com.github.rinde.rinsim.core.model.road.RoadUser;
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
-import com.github.rinde.rinsim.examples.taxi.TaxiRenderer;
 import com.github.rinde.rinsim.geom.Graph;
 import com.github.rinde.rinsim.geom.MultiAttributeData;
 import com.github.rinde.rinsim.geom.io.DotGraphIO;
@@ -15,24 +13,23 @@ import com.github.rinde.rinsim.ui.View;
 import com.github.rinde.rinsim.ui.renderers.GraphRoadModelRenderer;
 import com.github.rinde.rinsim.ui.renderers.RoadUserRenderer;
 import heuristic.DeliveredPerDistanceHeuristic;
-import model.user.owner.AGV;
-import model.user.owner.Base;
+import model.roadSignPoint.Base;
+import model.roadSignPoint.AGV;
+import model.roadSignPoint.parcel.ParcelPickup;
+import model.roadSignPoint.parcel.AbstractParcelPoint;
 import org.apache.commons.math3.random.RandomGenerator;
 
 import model.RoadSignPointModel;
-import model.user.owner.RoadSignParcel;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Set;
 
 
 public class Simulation {
 
 	private static final int AGV_COUNT = 5;
 
-	private static final double PARCEL_SPAWN_CHANCE = 0.1;
+	private static final double PARCEL_SPAWN_CHANCE = 0.05;
 
 	public static void main(String[] args) {
 		run();
@@ -69,7 +66,7 @@ public class Simulation {
 		/* * REGISTER ENTITIES * */
 
 		// register Base
-		simulator.register(new Base(simulator, roadModel.getRandomPosition(rng)));
+		simulator.register(new Base(roadModel.getRandomPosition(rng), simulator));
 
 		// register AGVs
 		for (int i = 0; i < AGV_COUNT; i++) {
@@ -82,8 +79,7 @@ public class Simulation {
 			public void tick(TimeLapse time) {
 				// if chance hit, register new RoadSignParcel
 				if (rng.nextDouble() < PARCEL_SPAWN_CHANCE) {
-					ParcelDTO dto = Parcel.builder(roadModel.getRandomPosition(rng),roadModel.getRandomPosition(rng)).buildDTO();
-					simulator.register(new RoadSignParcel(dto));
+					AbstractParcelPoint.ParcelCreator.registerNewParcel(simulator);
 				}
 			}
 
@@ -92,8 +88,8 @@ public class Simulation {
 		});
 
 		// register 1 parcel
-        ParcelDTO dto = Parcel.builder(roadModel.getRandomPosition(rng),roadModel.getRandomPosition(rng)).buildDTO();
-        simulator.register(new RoadSignParcel(dto));
+		AbstractParcelPoint.ParcelCreator.registerNewParcel(simulator);
+
 
 		System.out.println();
 		System.out.println("INFO");
@@ -101,9 +97,9 @@ public class Simulation {
 		System.out.println(roadModel.getObjectsOfType(RoadUser.class).size());
         System.out.print("  AGV Count ");
 		System.out.println(roadModel.getObjectsOfType(AGV.class).size());
-        System.out.print("  Parcel Count ");
-        System.out.println(roadModel.getObjectsOfType(RoadSignParcel.class).size());
-        System.out.print("  Base Count ");
+        System.out.print("  AbstractParcelPoint Count ");
+        System.out.println(roadModel.getObjectsOfType(AbstractParcelPoint.class).size());
+        System.out.print("    Base Count ");
         System.out.println(roadModel.getObjectsOfType(Base.class).size());
 		System.out.println();
 
@@ -124,13 +120,11 @@ public class Simulation {
 			.with(GraphRoadModelRenderer.builder())
 			.with(RoadUserRenderer.builder()
 					.withImageAssociation(
-							Depot.class, "/graphics/perspective/tall-building-64.png")
-					.withImageAssociation(
 							Base.class, "/images/saturnus.png")
 					.withImageAssociation(
 							AGV.class, "/images/ufo.png")
 					.withImageAssociation(
-							RoadSignParcel.class, "/images/parcel.png"))
+							ParcelPickup.class, "/images/parcel.png"))
 			.withTitleAppendix("MAS");
 
 		return view;

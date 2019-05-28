@@ -1,38 +1,31 @@
-package model.user.owner;
+package model.roadSignPoint;
 
 import com.github.rinde.rinsim.core.Simulator;
-import com.github.rinde.rinsim.core.model.road.RoadModel;
-import com.github.rinde.rinsim.core.model.road.RoadUser;
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
-import com.sun.jmx.remote.internal.ArrayQueue;
-import model.roadSignPoint.RoadSignPoint;
-import model.roadSignPoint.pheromones.RoadSign;
-import model.user.ant.FeasibilityAnt;
+import model.ant.FeasibilityAnt;
+import model.pheromones.RoadSign;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
-public class Base extends AbstractRoadSignPointOwner implements RoadUser, TickListener {
+public class Base extends AbstractRoadSignPoint implements TickListener {
 
-    public Base(Simulator simulator, Point position) {
-        super(OwnerType.BASE, position, RoadSignPoint.PointType.BASE);
+    public Base(Point position, Simulator simulator) {
+        super(position);
         this.simulator = simulator;
     }
 
-    private RoadModel roadModel;
 
-    public Point getPosition() {
-        return getRoadSignPoints()[0].getPosition();
-    }
+    /* SIMULATOR */
 
     private final Simulator simulator;
 
     public Simulator getSimulator() {
         return simulator;
     }
+
 
     /* FEASIBILITY ANTS */
 
@@ -125,19 +118,17 @@ public class Base extends AbstractRoadSignPointOwner implements RoadUser, TickLi
     // edge count
 
     /**
-     * Returns the amount of possible edges in the RoadSignPointOwner graph.
+     * Returns the amount of possible edges in the RoadSignPoint graph.
      * In a complete graph, every pair of vertices is connected by an edge.
      * So the number of edges is just the number of pairs of vertices. That's (1/2)n(n−1)
      */
     public int getMaxEdgeCount() {
-        int n = getRoadSignPointModel().ownerCount();
+        int n = getRoadSignPointModel().pointCount();
         return (n*(n-1))/2;
     }
 
 
-    /* INTERFACE */
-
-    // TickListener
+    /* TickListener INTERFACE */
 
     @Override
     public void tick(TimeLapse timeLapse) {
@@ -149,21 +140,11 @@ public class Base extends AbstractRoadSignPointOwner implements RoadUser, TickLi
      */
     @Override
     public void afterTick(TimeLapse timeLapse) {
-        super.afterTick(timeLapse);
+        age(timeLapse.getTickLength());
+
         int n = balanceFeasibilityAntCount();
         //System.out.println("[Base.afterTick()] getMaxEdgeCount(): " + String.valueOf(getMaxEdgeCount()));
         //System.out.println("[Base.afterTick()] feasibility ant count: " + String.valueOf(n));
     }
-
-    /* DEPENDENCY INJECTION */
-
-    @Override
-    public void initRoadUser(RoadModel model) {
-        roadModel = model;
-        if (getPosition() != null) {
-            model.addObjectAt(this, getPosition());
-        }
-    }
-
 
 }
