@@ -43,6 +43,8 @@ public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 	 * @return whether the RoadSignPointOwner was added
 	 */
 	public boolean addOwner(RoadSignPointOwner owner) {
+		//TODO: remove print
+		System.out.println("adding owner");
 		return ownerList.add(owner);
 	}
 
