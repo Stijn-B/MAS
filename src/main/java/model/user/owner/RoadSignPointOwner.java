@@ -1,9 +1,11 @@
 package model.user.owner;
 
+import com.github.rinde.rinsim.core.model.time.TickListener;
+import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import model.roadSignPoint.RoadSignPoint;
 import model.user.RoadSignPointUser;
 
-public interface RoadSignPointOwner extends RoadSignPointUser {
+public interface RoadSignPointOwner extends RoadSignPointUser, TickListener {
 
 	// ID of the RoadSignPointOwner
 	int getID();
@@ -25,6 +27,18 @@ public interface RoadSignPointOwner extends RoadSignPointUser {
 
 	@Override
 	boolean equals(Object other);
+
+	@Override
+	default void tick(TimeLapse timeLapse) {
+		// do nothing
+	}
+
+	@Override
+	default void afterTick(TimeLapse timeLapse) {
+		for (RoadSignPoint rsp : getRoadSignPoints()) {
+			rsp.age(timeLapse.getTickLength());
+		}
+	}
 
 }
 

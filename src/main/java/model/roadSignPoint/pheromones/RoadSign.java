@@ -7,6 +7,10 @@ import javax.annotation.Nullable;
 
 public class RoadSign extends AgingPheromone implements Comparable<RoadSign> {
 
+	/* STATIC CONST */
+
+	public static final int DEFAULT_LIFETIME = 10000;
+
 	/* CONSTRUCTORS */
 
 	/**
@@ -28,7 +32,7 @@ public class RoadSign extends AgingPheromone implements Comparable<RoadSign> {
 	 * @param distance the distance between the start- and endpoints
 	 */
 	public RoadSign(RoadSignPoint location, RoadSignPoint destination, double distance) {
-		this(location, destination, distance, 10000);
+		this(location, destination, distance, DEFAULT_LIFETIME);
 	}
 
 
@@ -75,22 +79,30 @@ public class RoadSign extends AgingPheromone implements Comparable<RoadSign> {
 
 	@Override
 	public String toString() {
-		return "RoadSign to " + getDestination().toString() + ", distance: " + String.valueOf(getDistance()) + ", remaining lifetime: " + String.valueOf(getRemainingLifeTime());
+		return "RoadSign from " + getLocation() + " to " + getDestination().toString() + " with distance: "
+				+ getDistance() + " (remaining lifetime: " + getRemainingLifeTime() + ")";
 	}
 
 	@Override
 	public int compareTo(@NotNull RoadSign o) throws NullPointerException {
 		if (o == null) throw new NullPointerException("compareTo argument can't be null");
 
-		// misschien niet de efficientste methode
-		if (this.getDistance() > o.getDistance()) {
-			return 1;
-		} else if (this.getDistance() == o.getDistance()) {
+		if (this.equals(o) || this.getDistance() == o.getDistance()) {
 			return 0;
+		} else if (this.getDistance() > o.getDistance()) {
+			return 1;
 		} else {
 			return -1;
 		}
+	}
 
+
+	public boolean equals(@Nullable RoadSign other) {
+		if (other == null) {
+			return false;
+		} else {
+			return this.getDestination() == other.getDestination() && this.getLocation() == other.getLocation();
+		}
 	}
 
 	/**
@@ -103,8 +115,7 @@ public class RoadSign extends AgingPheromone implements Comparable<RoadSign> {
 		if (other == null || !(other instanceof RoadSign)) {
 			return false;
 		} else {
-			RoadSign p = (RoadSign) other;
-			return this.getDestination() == p.getDestination() && this.getDistance() == p.getDistance() && this.getLocation() == p.getLocation();
+			return this.equals((RoadSign) other);
 		}
 	}
 }

@@ -15,7 +15,7 @@ import java.util.List;
 
 public class AGV extends AbstractRoadSignPointOwner implements TickListener, MovingRoadUser, RoadSignPointOwner {
 
-    static final double AGV_SPEED = 5.5;
+    static final double AGV_SPEED = 20400;
 
     // default time between reconsidering the committed path
     static final long RECONSIDER_DELAY = 5000;
@@ -53,6 +53,10 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
 
     public Point getPosition() {
         return getRoadSignPoints()[0].getPosition();
+    }
+
+    public boolean planPassingBase() {
+        return false;
     }
 
 
@@ -119,13 +123,16 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
      * Chooses a new PlannedPath and registers it as the intended path
      */
     private void chooseNewPath(long now) {
-        System.out.println("[AGV " + String.valueOf(getID()) + "] chooseNewPath()"); // PRINT
+       // System.out.println("[AGV " + getID() + "] chooseNewPath() EXPLORE");
 
         // explore possible paths
         List<PlannedPath> paths = explorePaths();
 
         // commit to best path
         commit(getHeuristic().getBest(paths), now);
+
+        //System.out.println("[AGV " + getID() + "] chooseNewPath() - explored " + paths.size() +
+        //        " paths, chosen path hop count: " + getIntendedPath().getNbRoadSigns()); // PRINT
     }
 
     /**
@@ -189,6 +196,7 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
 
         // move
         getRoadModel().moveTo(this, getIntendedPath().getFirstDest().getPosition(), tm);
+        //System.out.println("[AGV " + getID() + "] moved to " + getRoadModel().getPosition(this));
 
         // keep RoadSignPoint position up to date
         roadSignPoints[0].setPosition(getRoadModel().getPosition(this));
@@ -211,8 +219,11 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
         if (!isAtPosition(dest.getPosition())) return;
 
         // otherwise, act on the destination and remove it from the path
-        dest.act(this);
-        getIntendedPath().popFirst(dest);
+        System.out.println("[AGV " + getID() + "] At position, try to act");
+        System.out.println(getIntendedPath());
+
+        if (dest.act(this)) getIntendedPath().popFirst();
+        System.out.println(getIntendedPath());
     }
 
 
@@ -222,20 +233,24 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
 
     @Override
     public void tick(TimeLapse timeLapse) {
-        NOW = timeLapse.getTime();
+        long now = timeLapse.getTime();
+        NOW = now;
 
 
-        System.out.println("[AGV " + String.valueOf(getID()) + "] tick()");  // PRINT
+        System.out.println("[AGV " + String.valueOf(getID()) + "]");  // PRINT
 
         // CONSIDER EXPLORING NEW PATH
 
-        if (reconsiderCondition(NOW)) chooseNewPath(NOW);
+        if (reconsiderCondition(now)) {
+            System.out.println("[AGV " + String.valueOf(getID()) + "] Explore new path");  // PRINT
+            chooseNewPath(now);
+        }
 
         // MOVING AND HANDLE
 
         while (hasDestination() && timeLapse.hasTimeLeft()) {
 
-            System.out.println("[AGV " + String.valueOf(getID()) + "] timeLapse.hasTimeLeft() = " + String.valueOf(timeLapse.hasTimeLeft()));
+            //System.out.println("[AGV " + String.valueOf(getID()) + "] timeLapse.hasTimeLeft() = " + String.valueOf(timeLapse.hasTimeLeft()));
 
             // move towards destination
             move(timeLapse);
@@ -244,11 +259,6 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
             tryToAct(timeLapse);
         }
 
-    }
-
-    @Override
-    public void afterTick(TimeLapse timeLapse) {
-        // TODO
     }
 
     // MovingRoadUser

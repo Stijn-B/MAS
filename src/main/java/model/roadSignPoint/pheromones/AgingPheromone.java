@@ -2,7 +2,7 @@ package model.roadSignPoint.pheromones;
 
 public abstract class AgingPheromone {
 
-    public static long DEFAULT_PHEROMONE_LIFETIME_MS = 10000;
+    public static long DEFAULT_LIFETIME = 10000;
 
 
     public AgingPheromone(long lifeTime, long maxLifeTime) {
@@ -15,7 +15,7 @@ public abstract class AgingPheromone {
     }
 
     public AgingPheromone() {
-        this(DEFAULT_PHEROMONE_LIFETIME_MS);
+        this(DEFAULT_LIFETIME);
     }
 
     private long maxLife;

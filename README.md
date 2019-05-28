@@ -3,9 +3,10 @@ Project van het vak Multi-Agent Systems
 RinSim Docu https://rinsim.rinde.nl/design/core/
 
 
-# concrete TODO:
- o Exploration ant rekening laten houden met ETA
+# concrete TODO:notep
  o ergens Feasibility ants spawnen
+    o In a complete graph, every pair of vertices is connected by an edge.
+        So the number of edges is just the number of pairs of vertices. That's (1/2)n(n−1)
  o Simulation fixen
     o AGV.deliverParcel(RoadSignParcel parcel) ergens laten weten dat de parcel delivered is
  o optioneel nog Base implementeren (?)

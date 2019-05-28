@@ -1,6 +1,7 @@
 package model.roadSignPoint.pheromones;
 
 import model.user.owner.AGV;
+import org.jetbrains.annotations.NotNull;
 
 public class IntentionData extends AgingPheromone {
 
@@ -26,4 +27,5 @@ public class IntentionData extends AgingPheromone {
     public long getETA() {
         return ETA;
     }
+
 }

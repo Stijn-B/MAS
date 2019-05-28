@@ -32,7 +32,7 @@ public class Simulation {
 
 	private static final int AGV_COUNT = 5;
 
-	private static final double PARCEL_SPAWN_CHANCE = 0.006;
+	private static final double PARCEL_SPAWN_CHANCE = 0.1;
 
 	public static void main(String[] args) {
 		run();
@@ -69,7 +69,7 @@ public class Simulation {
 		/* * REGISTER ENTITIES * */
 
 		// register Base
-		simulator.register(new Base(roadModel.getRandomPosition(rng)));
+		simulator.register(new Base(simulator, roadModel.getRandomPosition(rng)));
 
 		// register AGVs
 		for (int i = 0; i < AGV_COUNT; i++) {

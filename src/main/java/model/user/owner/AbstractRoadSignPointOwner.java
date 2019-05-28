@@ -1,5 +1,6 @@
 package model.user.owner;
 
+import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
 import model.RoadSignPointModel;
 import model.roadSignPoint.RoadSignPoint;
@@ -91,7 +92,11 @@ public abstract class AbstractRoadSignPointOwner implements RoadSignPointOwner {
 
     @Override
     public boolean hasRoadSignPointModel() {
-        return roadSignPointModel != null;
+        return getRoadSignPointModel() != null;
+    }
+
+    public RoadSignPointModel getRoadSignPointModel() {
+        return roadSignPointModel;
     }
 
     // RoadSignPointOwner

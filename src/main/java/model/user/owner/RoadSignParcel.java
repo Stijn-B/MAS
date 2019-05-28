@@ -3,6 +3,7 @@ package model.user.owner;
 import com.github.rinde.rinsim.core.model.pdp.Parcel;
 import com.github.rinde.rinsim.core.model.pdp.ParcelDTO;
 import com.github.rinde.rinsim.core.model.road.RoadUser;
+import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import model.RoadSignPointModel;
 import model.roadSignPoint.RoadSignPoint;
 
@@ -43,6 +44,7 @@ public class RoadSignParcel extends Parcel implements RoadSignPointOwner, RoadUs
 			isPickedUp = true;
 			carrier = agv;
 			agv.addParcel(this);
+
 			return true;
 		} else {
 			return false;
@@ -81,9 +83,14 @@ public class RoadSignParcel extends Parcel implements RoadSignPointOwner, RoadUs
 	 */
 	@Override
 	public boolean act(AGV agv, RoadSignPoint rsPoint) {
+		System.out.println("[AGV " + agv.getID() + "] trying to act on point " + rsPoint);
 
 		// pickup attempt
-		if (rsPoint == getPickupLocationRoadSignPoint()) return pickUp(agv);
+		if (rsPoint == getPickupLocationRoadSignPoint()) {
+			boolean a = pickUp(agv);
+			System.out.println("pickup result " + a);
+			return a;
+		}
 
 		// delivery attempt
 		if (rsPoint == getDeliveryLocationRoadSignPoint()) return deliver(agv);

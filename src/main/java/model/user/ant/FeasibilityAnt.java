@@ -1,24 +1,25 @@
 package model.user.ant;
 
+import com.github.rinde.rinsim.core.model.road.GraphRoadModelImpl;
 import com.github.rinde.rinsim.core.model.road.RoadModel;
 import com.github.rinde.rinsim.core.model.road.RoadUser;
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
 import model.roadSignPoint.RoadSignPoint;
-import model.user.owner.RoadSignParcel;
 import model.user.owner.RoadSignPointOwner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 
 	/* STATIC VAR */
 
-	public static final double ROADSIGNS_PER_SEC = 20; // amount of RoadSigns the ant creates per seconds
-	public static final long MS_PER_ROADSIGN = Math.round(Math.ceil(1000/ROADSIGNS_PER_SEC)); // amount of ms the ant uses to create a RoadSign
+	public static final double HOPS_PER_SEC = 5; // amount of RoadSigns the ant creates per seconds
+	public static final long MS_PER_HOP = Math.round(Math.ceil(1000/ HOPS_PER_SEC)); // amount of ms the ant uses to create a RoadSign
 
 
 	/* CONSTRUCTOR */
@@ -27,7 +28,7 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 	 * Create a FeasibilityAnt at the given model.user.owner.RoadSignParcel
 	 * @param curr the model.user.owner.RoadSignParcel where to create the new FeasibilityAnt
 	 */
-	FeasibilityAnt(RoadSignPointOwner curr) {
+	public FeasibilityAnt(RoadSignPointOwner curr) {
 		currOwner = curr;
 	}
 
@@ -86,26 +87,52 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
-				if (i != j) createRoadSign(points.get(i), points.get(j));
+				if (i != j) {
+					boolean success = createRoadSign(points.get(i), points.get(j));
+					if (!success) System.out.println("Failed to create RoadSign from " + points.get(i) + " to " + points.get(j));
+				}
 			}
 		}
 	}
 
 	/**
-	 * Create a RoadSign from one RoadSignPoint to another RoadSignPoint. Does nothing if this ant has no RoadModel.
+	 * Create a RoadSign from one RoadSignPoint to another RoadSignPoint. Returns whether the creating succeeded
 	 */
-	private void createRoadSign(RoadSignPoint from, RoadSignPoint to) {
-
-		if (from == to) return; // don't create a RoadSign from a point to itself
-		if (getRoadModel() == null) return; // if no access to RoadModel, do nothing
-
-		List<Point> shortestPath = getRoadModel().getShortestPathTo(from.getPosition(), to.getPosition()); // shortest path
-		double distance = getRoadModel().getDistanceOfPath(shortestPath).getValue(); // distance of shortest path
-
-		from.addRoadSign(to, distance);
+	private boolean createRoadSign(RoadSignPoint from, RoadSignPoint to) {
+		try {
+			List<Point> shortestPath = getRoadModel().getShortestPathTo(from.getPosition(), to.getPosition()); // shortest path
+			// double distance = getRoadModel().getDistanceOfPath(shortestPath).getValue(); WERKTE NIET ALTIJD, NIEUWE METHODE +- GOED GENOEG
+			double distance = getPathLength(shortestPath);
+			from.addRoadSign(to, distance);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 
+	/* PATH LENGTH */
+
+	public double getPathLength(List<Point> path) {
+		// if the path contains less than 2 points, there is no distance
+		if (path.size() < 2) return 0;
+
+		Iterator<Point> iter = path.iterator();
+		Point prev = iter.next();
+		Point cur = null;
+		double distance = 0d;
+		while (iter.hasNext()) {
+			cur = iter.next();
+			distance += distance(prev, cur);
+			prev = cur;
+		}
+
+		return distance;
+	}
+
+	public double distance(Point a, Point b) {
+		return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+	}
 
 
 	/* IMPLEMENTED INTERFACE METHODS */
@@ -117,16 +144,15 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 		timeLapse.consumeAll();
 
 		// create RoadSigns untill there is no time left
-		while (MS_PER_ROADSIGN <= time) {
+		while (MS_PER_HOP <= time) {
 			exploreNextOwner();
-			time -= MS_PER_ROADSIGN;
+			time -= MS_PER_HOP;
 		}
 	}
 
 	@Override
 	public void afterTick(TimeLapse timeLapse) {
-		// TODO: hier evt de ant laten 'sterven' indien nodig
-		// TODO: Sander: I do not think feasibility ants should die
+		// do nothing
 	}
 
 

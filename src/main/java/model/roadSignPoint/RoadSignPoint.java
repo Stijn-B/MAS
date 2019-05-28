@@ -12,7 +12,7 @@ import model.user.owner.RoadSignPointOwner;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class RoadSignPoint implements TickListener {
+public class RoadSignPoint {
 
 	/* CONSTRUCTOR */
 
@@ -89,6 +89,10 @@ public class RoadSignPoint implements TickListener {
 	 * @param newSign the RoadSign to add
 	 */
 	public void addRoadSign(RoadSign newSign) {
+
+		// if a RoadSign equal to the given one is already contained, remove it (so it gets replaced)
+		if (roadSigns.contains(newSign)) roadSigns.remove(newSign);
+
 		roadSigns.add(newSign);
 	}
 
@@ -132,7 +136,7 @@ public class RoadSignPoint implements TickListener {
 
 	/* INTENTIONS */
 
-	SortedSet<IntentionData> intentions = new TreeSet<>();
+	Set<IntentionData> intentions = new HashSet<>();
 
 	public Iterator<IntentionData> getIntentionIterator() {
 		return intentions.iterator();
@@ -152,7 +156,11 @@ public class RoadSignPoint implements TickListener {
 	/**
 	 * Returns whether the given AGV would arrive first at this RoadSignPoint if it would arrive at the given ETA.
 	 */
-	public boolean isFirst(AGV agv, long ETA) {
+	public boolean wouldAgvArriveInTime(AGV agv, long ETA) {
+		// if it's not a PARCEL, ETA doesn't matter
+		if (getRoadSignPointOwner().getRoadSignPointOwnerType() != RoadSignPointOwner.OwnerType.PARCEL) return true;
+
+		// if it is a PARCEL, check whether agv would be first
 		Iterator<IntentionData> iter = getIntentionIterator();
 		while (iter.hasNext()) {
 			IntentionData curr = iter.next();
@@ -188,20 +196,6 @@ public class RoadSignPoint implements TickListener {
 	}
 
 
-	/* INTERFACE TickListener */
-
-	@Override
-	public void tick(TimeLapse timeLapse) {
-		age(timeLapse.getTime());
-		timeLapse.consumeAll();
-	}
-
-	@Override
-	public void afterTick(TimeLapse timeLapse) {
-		// do nothing
-	}
-
-
 	/* OTHER */
 
 	@Override
@@ -212,6 +206,10 @@ public class RoadSignPoint implements TickListener {
 				&& this.getPosition() == ((RoadSignPoint) other).getPosition();
 	}
 
+	@Override
+	public String toString() {
+		return getPointType().toString() + "(" + getRoadSignPointOwner().getID() + ")";
+	}
 }
 
 // vim: noexpandtab:
