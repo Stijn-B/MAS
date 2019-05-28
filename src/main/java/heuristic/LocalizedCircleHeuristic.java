@@ -5,14 +5,14 @@ import com.github.rinde.rinsim.geom.Point;
 import java.lang.Iterable;
 import java.util.Iterator;
 import java.lang.Math;
-/*
+
 public class LocalizedCircleHeuristic extends LocalizedDeliveryHeuristic {
 
 	@Override
 	public double circumscribedArea(Iterable<Point> points) {
 		Point centroid = Point.centroid(points);
 		double radius = 0;
-		Iterator<Point> = points.iterator();
+		Iterator<Point> iterator = points.iterator();
 		while (iterator.hasNext()) {
 			double diff = Point.distance(iterator.next(), centroid);
 			if (diff > radius) {
@@ -23,5 +23,5 @@ public class LocalizedCircleHeuristic extends LocalizedDeliveryHeuristic {
 	}
 
 }
-*/
+
 // vim: set noexpandtab:
