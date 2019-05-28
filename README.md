@@ -4,16 +4,10 @@ RinSim Docu https://rinsim.rinde.nl/design/core/
 
 
 # concrete TODO:
- o Heuristic implementeren
-    o Rekening houden met hoeveel parcels de AGV al bij heeft
- x AGV
-    x functionaliteit voor het werken met parcels implementeren (pickup, isCarrying, etc.)
-    x onTick verder implementeren
- x ExplorationAnt
-    x rekening laten houden met welke parcels de AGV al bij heeft
+ o Exploration ant rekening laten houden met ETA
+ o ergens Feasibility ants spawnen
  o Simulation fixen
     o AGV.deliverParcel(RoadSignParcel parcel) ergens laten weten dat de parcel delivered is
-    o AGVs etc worden niet getoond op kaart
  o optioneel nog Base implementeren (?)
 
 

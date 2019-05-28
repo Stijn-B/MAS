@@ -11,11 +11,17 @@ public class Base extends AbstractRoadSignPointOwner implements RoadUser {
         super(OwnerType.BASE, position, RoadSignPoint.PointType.BASE);
     }
 
-
     private RoadModel roadModel;
+
+    public Point getPosition() {
+        return getRoadSignPoints()[0].getPosition();
+    }
 
     @Override
     public void initRoadUser(RoadModel model) {
         roadModel = model;
+        if (getPosition() != null) {
+            model.addObjectAt(this, getPosition());
+        }
     }
 }

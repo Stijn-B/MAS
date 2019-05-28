@@ -20,6 +20,8 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
     // default time between reconsidering the committed path
     static final long RECONSIDER_DELAY = 5000;
 
+    static long NOW = 0; // current time, updated every tick()
+
     /* CONSTRUCTOR */
 
     public AGV(Point startPosition, Heuristic heuristic) {
@@ -37,12 +39,20 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
         return Math.round(distance/speed);
     }
 
+    public long distanceToETA(double distance) {
+        return NOW + distanceToDuration(distance);
+    }
+
     /**
      * Returns whether this AGV is at the given point (on its RoadModel)
      */
     public boolean isAtPosition(Point point) {
         return getRoadModel() != null
                 && getRoadModel().getPosition(this) == point;
+    }
+
+    public Point getPosition() {
+        return getRoadSignPoints()[0].getPosition();
     }
 
 
@@ -123,7 +133,7 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
      * @return a List<PlannedPath> containing viable paths (can be empty)
      */
     public List<PlannedPath> explorePaths() {
-        return new ExplorationAnt().explore(getRoadSignPoints()[0], new PlannedPath(this));
+        return new ExplorationAnt(this).explore(getRoadSignPoints()[0], new PlannedPath(this));
     }
 
 
@@ -212,14 +222,14 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
 
     @Override
     public void tick(TimeLapse timeLapse) {
-        long now = timeLapse.getTime();
+        NOW = timeLapse.getTime();
 
 
         System.out.println("[AGV " + String.valueOf(getID()) + "] tick()");  // PRINT
 
         // CONSIDER EXPLORING NEW PATH
 
-        if (reconsiderCondition(now)) chooseNewPath(now);
+        if (reconsiderCondition(NOW)) chooseNewPath(NOW);
 
         // MOVING AND HANDLE
 
@@ -251,10 +261,12 @@ public class AGV extends AbstractRoadSignPointOwner implements TickListener, Mov
 
     @Override
     public void initRoadUser(RoadModel model) {
-        System.out.println("[AGV] initRoadUser(RoadModel) -> RoadModel registered");
-        System.out.println(model.getClass());
         // dit geeft een error 'RoadUser does not exist' : model.getPosition(this);
         roadModel = model;
+
+        if (getPosition() != null) {
+            model.addObjectAt(this, getPosition());
+        }
     }
 
     @Override

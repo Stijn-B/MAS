@@ -3,6 +3,7 @@ package model.user.ant;
 import model.roadSignPoint.PlannedPath;
 import model.roadSignPoint.pheromones.RoadSign;
 import model.roadSignPoint.RoadSignPoint;
+import model.user.owner.AGV;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,17 +23,26 @@ public class ExplorationAnt extends Ant {
 	 * @param hopCountLimit The amount of hops a planned out route should be
 	 * @param branchLimit The amount of ExplorationAnt that should be created at each point
 	 */
-	public ExplorationAnt(int hopCountLimit, int branchLimit) {
+	public ExplorationAnt(AGV agv, int hopCountLimit, int branchLimit) {
+		this.agv = agv;
 		hopAmount = hopCountLimit;
 		branchAmount = branchLimit;
 	}
 
-	public ExplorationAnt(int hopCountLimit) {
-		this(hopCountLimit, DEFAULT_BRANCH_AMOUNT);
+	public ExplorationAnt(AGV agv, int hopCountLimit) {
+		this(agv, hopCountLimit, DEFAULT_BRANCH_AMOUNT);
 	}
 
-	public ExplorationAnt() {
-		this(DEFAULT_HOP_COUNT_LIMIT);
+	public ExplorationAnt(AGV agv) {
+		this(agv, DEFAULT_HOP_COUNT_LIMIT);
+	}
+
+	/* AGV */
+
+	private final AGV agv;
+
+	public AGV getAgv() {
+		return this.agv;
 	}
 
 
@@ -82,20 +92,25 @@ public class ExplorationAnt extends Ant {
 
 				RoadSign roadSign = iterator.next();
 
-				// if the RoadSign destination is suitable, send a new explorer ant to explore it
+				// check whether the RoadSign destination is suitable
 				if (path.acceptableRS(roadSign)) {
 
 					// extend a copy of the current path with the new destination
 					PlannedPath pathCopy = path.copy();
 					pathCopy.append(roadSign);
 
-					// send an ant (with hopCount - 1) to this destination
-					ExplorationAnt newAnt = new ExplorationAnt(getHopAmount()-1);
-					List<PlannedPath> returnedList = newAnt.explore(roadSign.getDestination(), pathCopy);
-					sentAntCount++;
+					// calculate ETA to roadSign destination
+					long ETA = getAgv().distanceToETA(pathCopy.getTotalPathLength());
 
-					// add the returned list of AntPaths to the result
-					result.addAll(returnedList);
+					// if AGV would be first, send an ant (with hopCount - 1) to this destination
+					if (roadSign.getDestination().isFirst(getAgv(), ETA)) {
+						ExplorationAnt newAnt = new ExplorationAnt(getAgv(), getHopAmount() - 1, getBranchAmount());
+						List<PlannedPath> returnedList = newAnt.explore(roadSign.getDestination(), pathCopy);
+						sentAntCount++;
+
+						// add the returned list of AntPaths to the result
+						result.addAll(returnedList);
+					}
 				}
 			}
 

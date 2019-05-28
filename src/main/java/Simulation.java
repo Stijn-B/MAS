@@ -53,7 +53,7 @@ public class Simulation {
 		// create simulator and add models
 		final Simulator simulator = Simulator.builder()
 			.addModel(RoadModelBuilders.staticGraph(loadGraph(MAP_FILE))) // add map of Leuven
-			.addModel(DefaultPDPModel.builder()) // doet niets ?
+			//.addModel(DefaultPDPModel.builder()) // doet niets ?
 			.addModel(RoadSignPointModel.builder())
 			.addModel(view)
 			.build();
@@ -65,25 +65,16 @@ public class Simulation {
 		final RoadModel roadModel = simulator.getModelProvider().getModel(RoadModel.class);
 		// -> is of type GraphRoadModelImpl
 
-		final RoadSignPointModel rspModel = simulator.getModelProvider().getModel(RoadSignPointModel.class);
-
 
 		/* * REGISTER ENTITIES * */
-		System.out.println("/* * REGISTER ENTITIES * */");
-		System.out.println();
-
 
 		// register Base
 		simulator.register(new Base(roadModel.getRandomPosition(rng)));
-
-		System.out.println("Base registered");
 
 		// register AGVs
 		for (int i = 0; i < AGV_COUNT; i++) {
 			simulator.register(new AGV(roadModel.getRandomPosition(rng), new DeliveredPerDistanceHeuristic()));
 		}
-		System.out.println("AGVs registered");
-
 
 		// register RoadSignParcel random generation
 		simulator.addTickListener(new TickListener() {
@@ -100,24 +91,21 @@ public class Simulation {
 			public void afterTick(TimeLapse timeLapse) {}
 		});
 
+		// register 1 parcel
+        ParcelDTO dto = Parcel.builder(roadModel.getRandomPosition(rng),roadModel.getRandomPosition(rng)).buildDTO();
+        simulator.register(new RoadSignParcel(dto));
+
 		System.out.println();
 		System.out.println("INFO");
-		System.out.println(rspModel.ownerCount());
-		System.out.println(roadModel.getObjects().size());
+        System.out.print("RoadUser Count ");
 		System.out.println(roadModel.getObjectsOfType(RoadUser.class).size());
+        System.out.print("  AGV Count ");
 		System.out.println(roadModel.getObjectsOfType(AGV.class).size());
+        System.out.print("  Parcel Count ");
+        System.out.println(roadModel.getObjectsOfType(RoadSignParcel.class).size());
+        System.out.print("  Base Count ");
+        System.out.println(roadModel.getObjectsOfType(Base.class).size());
 		System.out.println();
-
-		// register depot (TaxiExample versie van Base, extends PDPObjectImpl)
-		simulator.register(new Depot(roadModel.getRandomPosition(rng)));
-
-		System.out.println(roadModel.getObjects().size());
-		System.out.println(roadModel.getObjectsOfType(RoadUser.class).size());
-		System.out.println(roadModel.getObjectsOfType(AGV.class).size());
-		System.out.println();
-		for (RoadUser user : roadModel.getObjects()) {
-			System.out.println(user);
-		}
 
 
 		/* * START * */
