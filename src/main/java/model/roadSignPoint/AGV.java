@@ -246,6 +246,14 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
 
         System.out.println("_ _ _ _" + this + " tick()_ _ _ _");  // PRINT
 
+        if (!parcelIDs.isEmpty()) {
+            System.out.print("[" + this + "] Carries parcels with ID " );
+            for (int ID : parcelIDs) {
+                System.out.print(ID + " ");
+            }
+            System.out.println();
+        }
+
         // INTENTION
 
         if (hasDestination()) {
@@ -267,7 +275,7 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
         // CONSIDER EXPLORING NEW PATH
 
         if (reconsiderCondition(now)) {
-            System.out.println("[" + this + "] Explore new path (prev path: " + getIntendedPath() + " )");  // PRINT
+            System.out.println("[" + this + "] Explore new path");  // PRINT
             chooseNewPath(now);
         }
 
