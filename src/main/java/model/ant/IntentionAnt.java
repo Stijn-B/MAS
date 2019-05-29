@@ -25,9 +25,11 @@ public class IntentionAnt extends Ant {
 
     /**
      * Declares the intention of the given AGV over the given path. Returns whether the path is still valid. A path is
-     * invalid if it contains 1 or more RoadSigns that are invalid (see RoadSign.isValid())
+     * invalid if it contains 1 or more RoadSigns that are invalid (see RoadSign.isValid()) or another agv would be first
      */
     public boolean declareIntention(PlannedPath path, long now) {
+
+        System.out.println("[INTENTION ANT] ");  // PRINT
 
         if (path == null || path.isEmpty()) return true;
 
@@ -38,16 +40,29 @@ public class IntentionAnt extends Ant {
         while (iter.hasNext()) {
             RoadSign curr = iter.next();
 
+            System.out.println(curr.getDestination());  // PRINT
+
             // if the current RoadSign is not valid, return false
-            if (!curr.isValid()) return false;
+            if (!curr.isValid()) {
+                System.out.println(" NOT VALID");  // PRINT
+                return false;
+            }
 
             totalDist += curr.getDistance();
 
-            // revitalize model.roadSignPoint and register intention at its destination
+            // revitalize RoadSign
             curr.revitalize(5000);
+
+            // Calculate and check ETA
             long ETA = now + agv.distanceToDuration(totalDist);
+            if (!curr.getDestination().wouldAgvArriveInTime(agv, ETA)) {
+                System.out.println(" NOT FIRST");  // PRINT
+                return false;
+            }
+
             curr.getDestination().addIntention(agv, ETA);
         }
+        System.out.println(" -> OK");
         return true;
     }
 

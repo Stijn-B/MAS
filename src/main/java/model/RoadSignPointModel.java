@@ -1,5 +1,6 @@
 package model;
 
+import com.github.rinde.rinsim.core.Simulator;
 import com.github.rinde.rinsim.core.model.DependencyProvider;
 import com.github.rinde.rinsim.core.model.Model;
 import com.github.rinde.rinsim.core.model.ModelBuilder;
@@ -79,6 +80,10 @@ public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 		return null;
 	}
 
+	private Simulator simulator;
+	public void setSimulator(Simulator sim) {
+		simulator = sim;
+	}
 
 	/* DEPENDENCY INJECTION */
 
@@ -95,6 +100,7 @@ public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 		element.injectRoadSignPointModel(null);
 		if (element instanceof RoadSignPoint)
 			removePoint((RoadSignPoint) element);
+		simulator.unregister(element);
 		return true;
 	}
 
@@ -117,7 +123,6 @@ public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 			return new RoadSignPointModel(rm);
 		}
 	}
-
 }
 
 // vim: set noexpandtab:

@@ -76,8 +76,8 @@ public class RoadSign extends AgingPheromone implements Comparable<RoadSign> {
 
 	@Override
 	public String toString() {
-		return "RoadSign from " + getLocation() + " to " + getDestination().toString() + " with distance: "
-				+ getDistance() + " (remaining lifetime: " + getRemainingLifeTime() + ")";
+		return "RS[" + getLocation() + " to " + getDestination().toString() + " | dist("
+				+ Math.round(getDistance()) + " )";
 	}
 
 	@Override

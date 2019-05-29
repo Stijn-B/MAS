@@ -2,6 +2,8 @@ package model.roadSignPoint;
 
 import com.github.rinde.rinsim.core.model.road.RoadModel;
 import com.github.rinde.rinsim.core.model.road.RoadUser;
+import com.github.rinde.rinsim.core.model.time.TickListener;
+import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
 import model.pheromones.AgingPheromone;
 import model.pheromones.IntentionData;
@@ -10,11 +12,11 @@ import model.RoadSignPointModel;
 
 import java.util.*;
 
-public abstract class AbstractRoadSignPoint implements RoadSignPoint, RoadUser {
+public abstract class AbstractRoadSignPoint implements RoadSignPoint, RoadUser, TickListener {
 
     public static long ID_COUNTER = 0;
 
-    public static long getID() {
+    public static long getNewID() {
         long d = ID_COUNTER;
         ID_COUNTER = loopAroundIncrement(ID_COUNTER);
         return d;
@@ -30,12 +32,37 @@ public abstract class AbstractRoadSignPoint implements RoadSignPoint, RoadUser {
     public AbstractRoadSignPoint(Point position) throws NullPointerException {
         if (position == null) throw new NullPointerException("given position can't be nullpointer");
         pos = position;
-        this.ID = getID();
+        this.ID = getNewID();
     }
 
     public final long ID;
 
+    public long getID() {
+        return this.ID;
+    }
+
     private Point pos;
+
+
+    public boolean act(AGV agv) {
+        return true;
+    }
+
+    /* REGISTRATION */
+
+    public boolean isRegistered() {
+        return hasRoadModel() && hasRoadSignPointModel();
+    }
+
+    public void unregister() {
+        // unregister from both models
+        getRoadModel().unregister(this);
+        getRoadSignPointModel().unregister(this);
+
+        // set the to null just to be sure
+        injectRoadSignPointModel(null);
+        initRoadUser(null);
+    }
 
     /* ROADSIGNS */
 
@@ -82,6 +109,10 @@ public abstract class AbstractRoadSignPoint implements RoadSignPoint, RoadUser {
         return roadSigns.iterator();
     }
 
+    public SortedSet<RoadSign> getRoadSigns() {
+        return roadSigns;
+    }
+
     /**
      * Returns the first n RoadSigns (pointing the n closest destinations)
      * If there are less than n RoadSigns, less RoadSigns will be returned.
@@ -114,7 +145,11 @@ public abstract class AbstractRoadSignPoint implements RoadSignPoint, RoadUser {
 
     /* INTENTIONS */
 
-    Set<IntentionData> intentions = new HashSet<>();
+    private SortedSet<IntentionData> intentions = new TreeSet<>();
+
+    public SortedSet<IntentionData> getIntentions() {
+        return intentions;
+    }
 
     /**
      * Registers an intention for the given AGV who will arrive at the given time.
@@ -135,15 +170,37 @@ public abstract class AbstractRoadSignPoint implements RoadSignPoint, RoadUser {
         return true;
     }
 
+
     /* AGING */
 
+    @Override
+    public void tick(TimeLapse timeLapse) {
+        // do nothing
+    }
+
+    @Override
+    public void afterTick(TimeLapse timeLapse) {
+        age(timeLapse.getTickLength());
+        System.out.println("/| /| /| [" + this + "]");  // PRINT
+        if (!isRegistered()) System.out.println("THIS BITCH IS NOT REGISTERED");  // PRINT
+
+
+
+        System.out.print("RoadSigns to: ");
+        for (RoadSign rs : getRoadSigns()) {
+            System.out.print(rs.getDestination() + " " + rs.getRemainingLifeTime() + " | ");
+        }
+        System.out.println();
+    }
+
     /**
-     * Ages all the RoadSigns that this DeprecatedRoadSignPoint holds
+     * Ages all the RoadSigns that this RoadSignPoint holds
      * @param ms
      */
     @Override
     public void age(long ms) {
         age(roadSigns, ms);
+        age(intentions, ms);
     }
 
     /**
@@ -188,7 +245,7 @@ public abstract class AbstractRoadSignPoint implements RoadSignPoint, RoadUser {
     @Override
     public void initRoadUser(RoadModel model) {
         roadModel = model;
-        model.addObjectAt(this, pos);
+        if (model != null) model.addObjectAt(this, pos);
     }
 
     @Override
@@ -199,5 +256,15 @@ public abstract class AbstractRoadSignPoint implements RoadSignPoint, RoadUser {
     @Override
     public boolean hasRoadModel() {
         return roadModel != null;
+    }
+
+    /* NAME */
+
+    public String getName() {
+        return "RSP";
+    }
+
+    public String toString() {
+        return getName() + "(" + getID() + ")";
     }
 }

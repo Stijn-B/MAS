@@ -170,7 +170,7 @@ public class PlannedPath implements Comparable<PlannedPath> {
     }
 
     public void addParcel(ParcelPickup parcel) {
-        addParcelID(parcel.ID);
+        addParcelID(parcel.getParcelID());
     }
 
     public void addParcelID(int id) {
@@ -199,12 +199,15 @@ public class PlannedPath implements Comparable<PlannedPath> {
         return getFinishPoint() == null || getFinishPoint() == rs.getLocation();
     }
 
-    // TODO: checken of deze overloading correct is
     /**
      * Returns whether the given destination is acceptable considering the given path.
      */
     public boolean acceptableDestination(RoadSignPoint dest) {
-        return !pathContains(dest);
+        boolean b = true;
+        if (dest instanceof AGV) b = acceptableDestination((AGV) dest);
+        else if (dest instanceof ParcelDelivery) b = acceptableDestination((ParcelDelivery) dest);
+        else if (dest instanceof Base) b = acceptableDestination((Base) dest);
+        return !pathContains(dest) && b;
     }
 
     public boolean acceptableDestination(AGV dest) {
@@ -212,11 +215,11 @@ public class PlannedPath implements Comparable<PlannedPath> {
     }
 
     public boolean acceptableDestination(ParcelDelivery dest) {
-        return acceptableDestination((RoadSignPoint) dest) && carriesParcel(dest.ID);
+        return carriesParcel(dest.getParcelID());
     }
 
     public boolean acceptableDestination(Base dest) {
-        return acceptableDestination((RoadSignPoint) dest) && agv.plansPassingBase();
+        return agv.plansPassingBase();
     }
 
     /**

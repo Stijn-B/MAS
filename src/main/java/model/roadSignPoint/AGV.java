@@ -8,6 +8,7 @@ import heuristic.Heuristic;
 import model.ant.ExplorationAnt;
 import model.ant.IntentionAnt;
 import model.ant.PlannedPath;
+import model.pheromones.RoadSign;
 import model.roadSignPoint.parcel.AbstractParcelPoint;
 
 import java.util.HashSet;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRoadUser {
 
-    static final double AGV_SPEED = 20400;
+    static final double AGV_SPEED = 20400d;
 
     // default time between reconsidering the committed path
     static final long RECONSIDER_DELAY = 5000;
@@ -38,18 +39,19 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
     /* SPEED */
 
     private double speed = AGV_SPEED;
-
+    
     @Override
     public double getSpeed() {
         return speed;
     }
 
-    public long distanceToDuration(double distance) {
-        return Math.round(distance/speed);
+    public long distanceToDurationMS(double distance) {
+        getRoadModel().
+        return Math.round(1000*distance/speed);
     }
 
     public long distanceToETA(double distance) {
-        return NOW + distanceToDuration(distance);
+        return NOW + distanceToDurationMS(distance);
     }
 
 
@@ -75,7 +77,7 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
     }
 
     public void addParcel(AbstractParcelPoint parcel) {
-        addParcelID(parcel.ID);
+        addParcelID(parcel.getParcelID());
     }
 
     public void addParcelID(int id) {
@@ -99,14 +101,16 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
      * Returns whether the AGV should explore
      */
     private boolean reconsiderCondition(long now) {
-        if (now - lastReconsiderTime >= RECONSIDER_DELAY
-                || getIntendedPath() == null
-                || getIntendedPath().isEmpty()) {
+        return !hasDestination();
+        /*
+        // reconsider if: RECONSIDER_DELAY ms have passed since last reconsider OR agv has no destination
+        if (now - lastReconsiderTime >= RECONSIDER_DELAY || !hasDestination()) {
             lastReconsiderTime = now;
             return true;
         } else {
             return false;
         }
+        */
     }
 
     /**
@@ -138,16 +142,34 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
     private PlannedPath intendedPath = new PlannedPath(this);
 
     private PlannedPath getIntendedPath() {
-        if (intendedPath == null) return new PlannedPath(this);
-        else return intendedPath;
+        if (intendedPath == null)
+            setIntendedPath(new PlannedPath(this));
+        return intendedPath;
     }
 
     private void setIntendedPath(PlannedPath intendedPath) {
+        if (intendedPath == null)
+            intendedPath = new PlannedPath(this);
         this.intendedPath = intendedPath;
     }
 
     public boolean hasDestination() {
         return !getIntendedPath().isEmpty();
+    }
+
+    public RoadSignPoint getDestination() {
+        if (hasDestination())
+            return getIntendedPath().getFirstDest();
+        else
+            return null;
+    }
+
+    public boolean isAtDestination() {
+        return hasDestination() && isAtPosition(getIntendedPath().getFirstDest().getPosition());
+    }
+
+    public boolean isAtPosition(Point point) {
+        return getRoadModel().getPosition(this).equals(point);
     }
 
     /* COMMITTING */
@@ -156,6 +178,10 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
      * Commits the AGV to the given PlannedPath
      */
     public void commit(PlannedPath path, long timeNow) {
+        // if path is empty, do nothing
+        if (path.isEmpty()) return;
+
+        // set and signal intention
         setIntendedPath(path);
         signalIntention(path, timeNow);
     }
@@ -166,6 +192,10 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
      */
     public boolean signalIntention(PlannedPath path, long timeNow) {
         return new IntentionAnt(this).declareIntention(path, timeNow);
+    }
+
+    public void resetIntention() {
+        setIntendedPath(new PlannedPath(this));
     }
 
 
@@ -186,8 +216,9 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
         // move
         try {
             getRoadModel().moveTo(this, getIntendedPath().getFirstDest().getPosition(), tm);
+            System.out.println("[AGV " + String.valueOf(getID()) + "] Moved");  // PRINT
         } catch (Exception E) {
-            System.out.println("[" + this + "] couldn't move (" + E.getMessage());
+            System.out.println("[AGV " + String.valueOf(getID()) + "] Couldn't move");  // PRINT
             tm.consumeAll();
         }
     }
@@ -196,7 +227,10 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
      * Acts on the given DeprecatedRoadSignPoint. Does nothing if not at the given RoadSignPoints location.
      */
     public void tryToAct(TimeLapse tm) {
-    // TODO
+        if (isAtDestination() && getDestination().act(this)) {
+            System.out.println("[AGV " + String.valueOf(getID()) + "] Acted on " + getDestination());  // PRINT
+            getIntendedPath().popFirst();
+        }
     }
 
 
@@ -210,14 +244,32 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
         NOW = now;
 
 
-        //System.out.println("[AGV " + String.valueOf(getID()) + "]");  // PRINT
+        System.out.println("_ _ _ _[" + this + "]_ _ _ _");  // PRINT
+
+        // INTENTION
+
+        if (hasDestination()) {
+
+            System.out.println("[AGV " + getID() + "] Signal intention");  // PRINT
+
+            // signal intention
+            boolean viable = signalIntention(getIntendedPath(), now);
+
+            // if intention not viable, reset
+            if (! viable) {
+                System.out.println("[AGV " + getID() + "] Reset intention");  // PRINT
+                resetIntention();
+            }
+        }
 
         // CONSIDER EXPLORING NEW PATH
 
         if (reconsiderCondition(now)) {
-            //System.out.println("[AGV " + String.valueOf(getID()) + "] Explore new path");  // PRINT
+            System.out.println("[AGV " + getID() + "] Explore new path, prev path: " + getIntendedPath());  // PRINT
             chooseNewPath(now);
         }
+
+        System.out.println("[" + this + "] Intended Path: " + getIntendedPath());  // PRINT
 
         // MOVING AND HANDLE
 
@@ -234,12 +286,10 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
 
     }
 
-    @Override
-    public void afterTick(TimeLapse timeLapse) {
-        // do nothing
-    }
+    /* NAME */
 
-    public String toString() {
-        return "AGV(" + ID + ")";
+    @Override
+    public String getName() {
+        return "AGV";
     }
 }

@@ -12,6 +12,16 @@ import java.util.Iterator;
 
 public interface RoadSignPoint extends RoadSignPointUser, RoadUser {
 
+    // Act
+
+    boolean act(AGV agv);
+
+    // Registration
+
+    boolean isRegistered();
+
+    void unregister();
+
     // RoadUser
 
     void initRoadUser(RoadModel model);

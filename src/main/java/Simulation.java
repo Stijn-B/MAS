@@ -15,6 +15,7 @@ import com.github.rinde.rinsim.ui.renderers.RoadUserRenderer;
 import heuristic.DeliveredPerDistanceHeuristic;
 import model.roadSignPoint.Base;
 import model.roadSignPoint.AGV;
+import model.roadSignPoint.parcel.ParcelDelivery;
 import model.roadSignPoint.parcel.ParcelPickup;
 import model.roadSignPoint.parcel.AbstractParcelPoint;
 import org.apache.commons.math3.random.RandomGenerator;
@@ -62,6 +63,8 @@ public class Simulation {
 		final RoadModel roadModel = simulator.getModelProvider().getModel(RoadModel.class);
 		// -> is of type GraphRoadModelImpl
 
+		final RoadSignPointModel rspModel = simulator.getModelProvider().getModel(RoadSignPointModel.class);
+		rspModel.setSimulator(simulator);
 
 		/* * REGISTER ENTITIES * */
 
@@ -124,7 +127,9 @@ public class Simulation {
 					.withImageAssociation(
 							AGV.class, "/images/ufo.png")
 					.withImageAssociation(
-							ParcelPickup.class, "/images/parcel.png"))
+							ParcelPickup.class, "/images/gele_vlag.png")
+					.withImageAssociation(
+							ParcelDelivery.class, "/images/paarse_vlag.png"))
 			.withTitleAppendix("MAS");
 
 		return view;

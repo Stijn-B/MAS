@@ -22,10 +22,10 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 
 	/**
 	 * Create a FeasibilityAnt at the given model.user.owner.RoadSignParcel
-	 * @param curr the model.user.owner.RoadSignParcel where to create the new FeasibilityAnt
+	 * @param startingPoint the RoadSignPoint where to create the new FeasibilityAnt
 	 */
-	public FeasibilityAnt(RoadSignPoint curr) {
-		currOwner = curr;
+	public FeasibilityAnt(RoadSignPoint startingPoint) {
+		setCurrPoint(startingPoint);
 	}
 
 	private long time = 0;
@@ -33,10 +33,14 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 
 	/* CURRENT LOCATION */
 
-	private RoadSignPoint currOwner;
+	private RoadSignPoint currPoint;
 
-	public RoadSignPoint getCurrOwner() {
-		return currOwner;
+	public RoadSignPoint getCurrPoint() {
+		return currPoint;
+	}
+
+	public void setCurrPoint(RoadSignPoint newPoint) {
+		this.currPoint = newPoint;
 	}
 
 
@@ -46,19 +50,21 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 	 * Explores to another random RoadSignPoint
 	 */
 	private void exploreNextOwner() {
-		exploreNextOwner(getRoadSignPointModel().getRandomPointOtherThan(getCurrOwner()));
+		exploreNextOwner(getRoadSignPointModel().getRandomPointOtherThan(getCurrPoint()));
 	}
 
 	/**
 	 * Takes the RoadSignPoints of the current and next RoadSignPoint and creates RoadSigns between all of them.
 	 */
-	private void exploreNextOwner(RoadSignPoint nextOwner) {
+	private void exploreNextOwner(RoadSignPoint nextPoint) {
+		// if next point is not registered, do nothing
+		if (!nextPoint.isRegistered()) return;
 
 		// create RoadSigns between the current and the next RoadSignPoint.
-		createRoadSignsBetween(currOwner, nextOwner);
+		createRoadSignsBetween(getCurrPoint(), nextPoint);
 
 		// 'move' to next owner
-		currOwner = nextOwner;
+		setCurrPoint(nextPoint);
 	}
 
 	/**
@@ -70,6 +76,9 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 	}
 
 	private void createRoadSignFromTo(RoadSignPoint from, RoadSignPoint to) {
+		// if one of the points is not registered, do nothing
+		if (!from.isRegistered() || !to.isRegistered()) return;
+
 		List<Point> shortestPath = getRoadModel().getShortestPathTo(from.getPosition(), to.getPosition()); // shortest path
 		double distance = getPathLength(shortestPath);
 		from.addRoadSign(to, distance);

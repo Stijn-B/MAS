@@ -11,27 +11,49 @@ import java.util.Iterator;
 
 public abstract class AbstractParcelPoint extends AbstractRoadSignPoint {
 
-    AbstractParcelPoint(Point position, int ID) {
+    AbstractParcelPoint(Point position, int parcelID) {
         super(position);
-        this.ID = ID;
+        this.parcelID = parcelID;
     }
 
-    public final int ID;
+
+
+    public final int parcelID;
+
+    public int getParcelID() {
+        return parcelID;
+    }
 
     public boolean belongToSameParcel(AbstractParcelPoint point) {
-        return point.ID == this.ID;
+        return point.getParcelID() == this.getParcelID();
+    }
+
+
+    public abstract boolean canAct(AGV agv);
+
+    @Override
+    public boolean act(AGV agv) {
+        if (canAct(agv)) {
+            unregister();
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
     @Override
     public boolean wouldAgvArriveInTime(AGV agv, long ETA) {
-        // check whether agv would be first
-        Iterator<IntentionData> iter = getIntentionIterator();
-        while (iter.hasNext()) {
-            IntentionData curr = iter.next();
-            if (curr.getETA() < ETA && curr.getAgv() != agv) return false;
-        }
-        return true;
+        return wouldAgvArriveFirst(agv, ETA);
+    }
+
+    public boolean wouldAgvArriveFirst(AGV agv, long ETA) {
+        // if there are no intentions yet, this agv would certainly be first
+        if (getIntentions().isEmpty()) return true;
+
+        // compare to the first intention (they are sorted by ascending ETA)
+        IntentionData first = getIntentions().first();
+        return ETA < first.getETA() || agv == first.getAgv();
     }
 
 
