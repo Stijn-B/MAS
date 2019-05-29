@@ -40,8 +40,9 @@ public class IntentionAnt extends Ant {
 
 
             // if the current RoadSign is not valid, return false
-            if (!curr.isValid())
+            if (!curr.isValid()) {
                 return false;
+            }
 
             // refresh the roadSign
             //curr.refresh();
@@ -53,11 +54,12 @@ public class IntentionAnt extends Ant {
 
             // Calculate and check ETA
             long ETA = now + agv.calculateTravelTime(totalDist);
-            if (!curr.getDestination().wouldAgvArriveInTime(agv, ETA))
+            if (!curr.getDestination().wouldAgvArriveInTime(agv, ETA)) {
                 return false;
+            }
 
             curr.getDestination().addIntention(agv, ETA);
-            System.out.println("[" + agv + "] registered intention " + curr.getDestination() + " now:" + now + ", ETA:" + ETA + " distance:" + totalDist);  // 192 - 2
+            //System.out.println("[" + agv + "] registered intention " + curr.getDestination() + " now:" + now + ", ETA:" + ETA + " distance:" + totalDist);  // 192 - 2
         }
         return true;
     }

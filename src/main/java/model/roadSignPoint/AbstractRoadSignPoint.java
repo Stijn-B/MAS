@@ -55,6 +55,7 @@ public abstract class AbstractRoadSignPoint implements RoadSignPoint, RoadUser, 
     }
 
     public void unregister() {
+
         // unregister from both models
         getRoadModel().unregister(this);
         getRoadSignPointModel().unregister(this);
@@ -72,33 +73,44 @@ public abstract class AbstractRoadSignPoint implements RoadSignPoint, RoadUser, 
     SortedSet<RoadSign> roadSigns = new TreeSet<>();
 
     /**
-     * Returns whether this DeprecatedRoadSignPoint holds the given RoadSign.
-     */
-    public boolean holds(RoadSign rs) {
-        return roadSigns.contains(rs);
-    }
-
-    /**
      * Adds a new RoadSing pointing to the given destination with given distance.
      * @param destination destination of the RoadSign
      * @param dist distance to the given destination
      */
     @Override
     public void addRoadSign(RoadSignPoint destination, double dist) {
-        addRoadSign(new RoadSign(this, destination, dist));
+        RoadSign rs = new RoadSign(this, destination, dist);
+
+        if (roadSigns.contains(rs)) {
+            for (RoadSign roadSign : getRoadSigns()) {
+                if (rs.equals(roadSign)) {
+                    rs = roadSign;
+                }
+            }
+            roadSigns.remove(rs);
+            rs.updateDistance(dist);
+        }
+
+        // add the new RoadSign
+        roadSigns.add(rs);
     }
+
 
     /**
      * Adds the given RoadSign to this DeprecatedRoadSignPoint
      * @param newSign the RoadSign to add
      */
+    /*
     public void addRoadSign(RoadSign newSign) {
 
         // if a RoadSign equal to the given one is already contained, remove it (so it gets replaced)
-        if (roadSigns.contains(newSign)) roadSigns.remove(newSign);
+        if (roadSigns.contains(newSign)) {
+            roadSigns.remove(newSign);
+        }
 
         roadSigns.add(newSign);
     }
+    */
 
     /**
      * Get an Iterator of all the RoadSigns this DeprecatedRoadSignPoint contains.

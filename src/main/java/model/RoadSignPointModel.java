@@ -30,6 +30,16 @@ public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 	}
 
 
+	/* DELIVERED PARCELS */
+
+	private HashSet<Integer> deliveredParcelIDs = new HashSet<>();
+
+	public void parcelIsDelivered(int parcelID) {
+		deliveredParcelIDs.add(parcelID);
+		System.out.println("! ! ! ! ! Parcel " + parcelID + " is delivered ! ! ! ! !");
+	}
+
+
 	/* ROADSIGNPOINT OWNER LIST */
 
 	private HashSet<RoadSignPoint> pointList = new HashSet<>();
@@ -38,8 +48,8 @@ public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 		return pointList.add(owner);
 	}
 
-	public boolean removePoint(RoadSignPoint owner) {
-		return pointList.remove(owner);
+	public boolean removePoint(RoadSignPoint point) {
+		return pointList.remove(point);
 	}
 
 	public boolean containsPoint(RoadSignPoint owner) {
@@ -84,6 +94,7 @@ public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 	public void setSimulator(Simulator sim) {
 		simulator = sim;
 	}
+
 
 	/* DEPENDENCY INJECTION */
 

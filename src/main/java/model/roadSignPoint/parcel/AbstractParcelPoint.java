@@ -56,6 +56,10 @@ public abstract class AbstractParcelPoint extends AbstractRoadSignPoint {
         return ETA < first.getETA() || agv == first.getAgv();
     }
 
+    public String toString() {
+        return getName() + "-" + getParcelID() + "";
+    }
+
 
 
 

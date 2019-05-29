@@ -28,9 +28,9 @@ import java.io.IOException;
 
 public class Simulation {
 
-	private static final int AGV_COUNT = 1;
+	private static final int AGV_COUNT = 2;
 
-	private static final double PARCEL_SPAWN_CHANCE = 0.05;
+	private static final double PARCEL_SPAWN_CHANCE = 0.02;
 
 	public static void main(String[] args) {
 		run();

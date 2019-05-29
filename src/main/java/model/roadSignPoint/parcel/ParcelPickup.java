@@ -25,6 +25,6 @@ public class ParcelPickup extends AbstractParcelPoint {
 
     @Override
     public String getName() {
-        return "PICKUP-" + getParcelID();
+        return "PICKUP";
     }
 }

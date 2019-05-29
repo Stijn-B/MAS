@@ -40,7 +40,7 @@ public class RoadSign extends AgingPheromone implements Comparable<RoadSign> {
 
 	private final RoadSignPoint location;
 	private final RoadSignPoint destination;
-	private final double distance;
+	private double distance;
 
 	public RoadSignPoint getLocation() {
 		return location;
@@ -68,7 +68,12 @@ public class RoadSign extends AgingPheromone implements Comparable<RoadSign> {
 	 * @return
 	 */
 	public boolean isValid() {
-		return getLocation().hasRoadSignPointModel() && getDestination().hasRoadSignPointModel();
+		return getDestination().hasRoadSignPointModel();
+	}
+
+	public void updateDistance(double dist) {
+		distance = dist;
+		revitalize();
 	}
 
 

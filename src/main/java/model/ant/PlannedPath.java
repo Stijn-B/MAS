@@ -204,14 +204,19 @@ public class PlannedPath implements Comparable<PlannedPath> {
      */
     public boolean acceptableDestination(RoadSignPoint dest) {
         boolean b = true;
-        if (dest instanceof AGV) b = acceptableDestination((AGV) dest);
+        if (dest instanceof AGV)                 b = acceptableDestination((AGV) dest);
+        else if (dest instanceof ParcelPickup)   b = acceptableDestination((ParcelPickup) dest);
         else if (dest instanceof ParcelDelivery) b = acceptableDestination((ParcelDelivery) dest);
-        else if (dest instanceof Base) b = acceptableDestination((Base) dest);
-        return !pathContains(dest) && b;
+        else if (dest instanceof Base)           b = acceptableDestination((Base) dest);
+        return !pathContains(dest) && dest.isRegistered() && b;
     }
 
     public boolean acceptableDestination(AGV dest) {
         return false;
+    }
+
+    public boolean acceptableDestination(ParcelPickup dest) {
+        return parcelIDs.size() < agv.getMaxParcelCount();
     }
 
     public boolean acceptableDestination(ParcelDelivery dest) {

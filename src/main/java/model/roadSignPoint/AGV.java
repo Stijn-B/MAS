@@ -97,6 +97,14 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
         return parcelIDs.contains(id);
     }
 
+    public void deliveredParcel(int parcelID) {
+        getRoadSignPointModel().parcelIsDelivered(parcelID);
+    }
+
+    public int getMaxParcelCount() {
+        return 5;
+    }
+
 
     /* PATH EXPLORATION */
 
@@ -106,9 +114,6 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
      * Returns whether the AGV should explore
      */
     private boolean reconsiderCondition(long now) {
-        // TODO
-        return !hasDestination();
-        /*
         // reconsider if: RECONSIDER_DELAY ms have passed since last reconsider OR agv has no destination
         if (now - lastReconsiderTime >= RECONSIDER_DELAY || !hasDestination()) {
             lastReconsiderTime = now;
@@ -116,7 +121,6 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
         } else {
             return false;
         }
-        */
     }
 
     /**
@@ -247,11 +251,13 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
 
         System.out.println("_ _ _ _" + this + " tick()_ _ _ _");  // PRINT
 
+        /*
         System.out.print("RoadSigns: ");
         for(RoadSign rs : getRoadSigns()) {
             System.out.print(rs + "  -  ");
         }
         System.out.println();
+        */
 
         if (!parcelIDs.isEmpty()) {
             System.out.print("[" + this + "] Carries parcels with ID " );
@@ -265,7 +271,7 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
 
         if (hasDestination()) {
 
-            System.out.print("[" + this + "] Signal intention: ");  // PRINT
+            System.out.print("[" + this + "] Signal Intended Path " + getIntendedPath());  // PRINT
 
             // signal intention
             boolean viable = signalIntention(getIntendedPath(), now);
@@ -282,11 +288,10 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
         // CONSIDER EXPLORING NEW PATH
 
         if (reconsiderCondition(now)) {
-            System.out.println("[" + this + "] Explore new path");  // PRINT
             chooseNewPath(now);
+            System.out.println("[" + this + "] Explore new path, result: " + getIntendedPath());  // PRINT
         }
 
-        System.out.println("[" + this + "] Intended Path: " + getIntendedPath());  // PRINT
 
         // MOVING AND HANDLE
 

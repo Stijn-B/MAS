@@ -17,8 +17,7 @@ public class ParcelDelivery extends AbstractParcelPoint {
     public boolean act(AGV agv) {
         if (super.act(agv)) {
             agv.removeParcelID(getParcelID());
-            // TODO: this parcel is delivered
-            System.out.println("! ! ! ! ! " + agv + " delivered " + this);
+            agv.deliveredParcel(getParcelID());
             return true;
         } else {
             return false;
@@ -27,7 +26,7 @@ public class ParcelDelivery extends AbstractParcelPoint {
 
     @Override
     public String getName() {
-        return "DELIVER-" + getParcelID();
+        return "DELIVER";
     }
 
 }
