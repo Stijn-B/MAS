@@ -48,7 +48,7 @@ public class IntentionAnt extends Ant {
             curr.revitalize(5000);
 
             // Calculate and check ETA
-            long ETA = now + agv.distanceToDurationMS(totalDist);
+            long ETA = now + agv.calculateTravelTime(totalDist);
             if (!curr.getDestination().wouldAgvArriveInTime(agv, ETA))
                 return false;
 

@@ -8,7 +8,6 @@ import heuristic.Heuristic;
 import model.ant.ExplorationAnt;
 import model.ant.IntentionAnt;
 import model.ant.PlannedPath;
-import model.pheromones.RoadSign;
 import model.roadSignPoint.parcel.AbstractParcelPoint;
 
 import java.util.HashSet;
@@ -45,12 +44,18 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
         return speed;
     }
 
-    public long distanceToDurationMS(double distance) {
+    /**
+     * Returns how long it would take this AGV to travel the given distance
+     * @param distance // TODO: welke units zijn dit?
+     * @return // TODO: welke units zijn dit?
+     */
+    public long calculateTravelTime(double distance) {
+        // TODO
         return Math.round(1000*distance/speed);
     }
 
     public long distanceToETA(double distance) {
-        return NOW + distanceToDurationMS(distance);
+        return NOW + calculateTravelTime(distance);
     }
 
 
