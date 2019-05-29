@@ -28,7 +28,7 @@ import java.io.IOException;
 
 public class Simulation {
 
-	private static final int AGV_COUNT = 5;
+	private static final int AGV_COUNT = 1;
 
 	private static final double PARCEL_SPAWN_CHANCE = 0.05;
 
@@ -127,7 +127,7 @@ public class Simulation {
 					.withImageAssociation(
 							AGV.class, "/images/ufo.png")
 					.withImageAssociation(
-							ParcelPickup.class, "/images/gele_vlag.png")
+							ParcelPickup.class, "/images/mannetje.png")
 					.withImageAssociation(
 							ParcelDelivery.class, "/images/paarse_vlag.png"))
 			.withTitleAppendix("MAS");

@@ -38,9 +38,13 @@ public class IntentionAnt extends Ant {
         while (iter.hasNext()) {
             RoadSign curr = iter.next();
 
+
             // if the current RoadSign is not valid, return false
             if (!curr.isValid())
                 return false;
+
+            // refresh the roadSign
+            //curr.refresh();
 
             totalDist += curr.getDistance();
 
@@ -53,6 +57,7 @@ public class IntentionAnt extends Ant {
                 return false;
 
             curr.getDestination().addIntention(agv, ETA);
+            System.out.println("[" + agv + "] registered intention " + curr.getDestination() + " now:" + now + ", ETA:" + ETA + " distance:" + totalDist);  // 192 - 2
         }
         return true;
     }

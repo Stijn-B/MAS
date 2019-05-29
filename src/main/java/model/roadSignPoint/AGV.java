@@ -8,6 +8,7 @@ import heuristic.Heuristic;
 import model.ant.ExplorationAnt;
 import model.ant.IntentionAnt;
 import model.ant.PlannedPath;
+import model.pheromones.RoadSign;
 import model.roadSignPoint.parcel.AbstractParcelPoint;
 
 import java.util.HashSet;
@@ -245,6 +246,12 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
 
 
         System.out.println("_ _ _ _" + this + " tick()_ _ _ _");  // PRINT
+
+        System.out.print("RoadSigns: ");
+        for(RoadSign rs : getRoadSigns()) {
+            System.out.print(rs + "  -  ");
+        }
+        System.out.println();
 
         if (!parcelIDs.isEmpty()) {
             System.out.print("[" + this + "] Carries parcels with ID " );

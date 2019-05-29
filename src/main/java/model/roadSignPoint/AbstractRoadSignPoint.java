@@ -207,7 +207,7 @@ public abstract class AbstractRoadSignPoint implements RoadSignPoint, RoadUser, 
     /**
      * Ages all AgingPheromone in the given agingSet, removes AgingPheromone from the set if they are expired.
      */
-    public void age(Set<? extends AgingPheromone> agingSet, long ms) {
+    public void age(Iterable<? extends AgingPheromone> agingSet, long ms) {
         // Iterate over all AgingPheromones and age them
         Iterator<? extends AgingPheromone> iter = agingSet.iterator();
         while(iter.hasNext()) {
