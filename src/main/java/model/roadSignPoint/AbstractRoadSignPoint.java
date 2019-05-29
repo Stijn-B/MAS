@@ -181,16 +181,17 @@ public abstract class AbstractRoadSignPoint implements RoadSignPoint, RoadUser, 
     @Override
     public void afterTick(TimeLapse timeLapse) {
         age(timeLapse.getTickLength());
+
+        // print roadsigns of this point
+        /*
         System.out.println("/| /| /| [" + this + "]");  // PRINT
-        if (!isRegistered()) System.out.println("THIS BITCH IS NOT REGISTERED");  // PRINT
-
-
 
         System.out.print("RoadSigns to: ");
         for (RoadSign rs : getRoadSigns()) {
             System.out.print(rs.getDestination() + " " + rs.getRemainingLifeTime() + " | ");
         }
         System.out.println();
+        */
     }
 
     /**

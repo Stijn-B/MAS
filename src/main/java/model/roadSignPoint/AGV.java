@@ -39,14 +39,13 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
     /* SPEED */
 
     private double speed = AGV_SPEED;
-    
+
     @Override
     public double getSpeed() {
         return speed;
     }
 
     public long distanceToDurationMS(double distance) {
-        getRoadModel().
         return Math.round(1000*distance/speed);
     }
 
@@ -101,6 +100,7 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
      * Returns whether the AGV should explore
      */
     private boolean reconsiderCondition(long now) {
+        // TODO
         return !hasDestination();
         /*
         // reconsider if: RECONSIDER_DELAY ms have passed since last reconsider OR agv has no destination
@@ -117,16 +117,11 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
      * Chooses a new PlannedPath and registers it as the intended path
      */
     private void chooseNewPath(long now) {
-        // System.out.println("[AGV " + getID() + "] chooseNewPath() EXPLORE");
-
         // explore possible paths
         List<PlannedPath> paths = explorePaths();
 
         // commit to best path
         commit(getHeuristic().getBest(paths), now);
-
-        //System.out.println("[AGV " + getID() + "] chooseNewPath() - explored " + paths.size() +
-        //        " paths, chosen path hop count: " + getIntendedPath().getNbRoadSigns()); // PRINT
     }
 
     /**
@@ -216,9 +211,9 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
         // move
         try {
             getRoadModel().moveTo(this, getIntendedPath().getFirstDest().getPosition(), tm);
-            System.out.println("[AGV " + String.valueOf(getID()) + "] Moved");  // PRINT
+            System.out.println("[" + this + "] Moved");  // PRINT
         } catch (Exception E) {
-            System.out.println("[AGV " + String.valueOf(getID()) + "] Couldn't move");  // PRINT
+            System.out.println("[" + this + "] Couldn't move");  // PRINT
             tm.consumeAll();
         }
     }
@@ -228,7 +223,7 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
      */
     public void tryToAct(TimeLapse tm) {
         if (isAtDestination() && getDestination().act(this)) {
-            System.out.println("[AGV " + String.valueOf(getID()) + "] Acted on " + getDestination());  // PRINT
+            System.out.println("[" + this + "] Acted on " + getDestination());  // PRINT
             getIntendedPath().popFirst();
         }
     }
@@ -244,28 +239,30 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
         NOW = now;
 
 
-        System.out.println("_ _ _ _[" + this + "]_ _ _ _");  // PRINT
+        System.out.println("_ _ _ _" + this + " tick()_ _ _ _");  // PRINT
 
         // INTENTION
 
         if (hasDestination()) {
 
-            System.out.println("[AGV " + getID() + "] Signal intention");  // PRINT
+            System.out.print("[" + this + "] Signal intention: ");  // PRINT
 
             // signal intention
             boolean viable = signalIntention(getIntendedPath(), now);
 
             // if intention not viable, reset
             if (! viable) {
-                System.out.println("[AGV " + getID() + "] Reset intention");  // PRINT
+                System.out.println("NOT OK -> reset");  // PRINT
                 resetIntention();
+            } else {
+                System.out.println("OK");  // PRINT
             }
         }
 
         // CONSIDER EXPLORING NEW PATH
 
         if (reconsiderCondition(now)) {
-            System.out.println("[AGV " + getID() + "] Explore new path, prev path: " + getIntendedPath());  // PRINT
+            System.out.println("[" + this + "] Explore new path (prev path: " + getIntendedPath() + " )");  // PRINT
             chooseNewPath(now);
         }
 
@@ -274,8 +271,6 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
         // MOVING AND HANDLE
 
         while (hasDestination() && timeLapse.hasTimeLeft()) {
-
-            //System.out.println("[AGV " + String.valueOf(getID()) + "] timeLapse.hasTimeLeft() = " + String.valueOf(timeLapse.hasTimeLeft()));
 
             // move towards destination
             move(timeLapse);

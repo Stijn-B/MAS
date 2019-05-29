@@ -29,8 +29,6 @@ public class IntentionAnt extends Ant {
      */
     public boolean declareIntention(PlannedPath path, long now) {
 
-        System.out.println("[INTENTION ANT] ");  // PRINT
-
         if (path == null || path.isEmpty()) return true;
 
         double totalDist = 0;
@@ -40,13 +38,9 @@ public class IntentionAnt extends Ant {
         while (iter.hasNext()) {
             RoadSign curr = iter.next();
 
-            System.out.println(curr.getDestination());  // PRINT
-
             // if the current RoadSign is not valid, return false
-            if (!curr.isValid()) {
-                System.out.println(" NOT VALID");  // PRINT
+            if (!curr.isValid())
                 return false;
-            }
 
             totalDist += curr.getDistance();
 
@@ -54,15 +48,12 @@ public class IntentionAnt extends Ant {
             curr.revitalize(5000);
 
             // Calculate and check ETA
-            long ETA = now + agv.distanceToDuration(totalDist);
-            if (!curr.getDestination().wouldAgvArriveInTime(agv, ETA)) {
-                System.out.println(" NOT FIRST");  // PRINT
+            long ETA = now + agv.distanceToDurationMS(totalDist);
+            if (!curr.getDestination().wouldAgvArriveInTime(agv, ETA))
                 return false;
-            }
 
             curr.getDestination().addIntention(agv, ETA);
         }
-        System.out.println(" -> OK");
         return true;
     }
 
