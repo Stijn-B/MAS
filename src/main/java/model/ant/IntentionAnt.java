@@ -58,10 +58,10 @@ public class IntentionAnt extends Ant {
                 return false;
             }
 
-            curr.getDestination().addIntention(agv, ETA);
-            System.out.print(" (" + curr.getDestination() + " ETA:" + ETA + " dist:" + Math.round(totalDist) + ")");  // 192 - 2
+            curr.getDestination().addIntention(agv, Math.round(totalDist)); // ETA vervangen door totaldist ///
+            //System.out.print(" (" + curr.getDestination() + " ETA:" + ETA + " dist:" + Math.round(totalDist) + ")");  // 192 - 2
         }
-        System.out.println();
+        //System.out.println();
         return true;
     }
 

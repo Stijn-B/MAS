@@ -31,9 +31,9 @@ import java.io.IOException;
 
 public class Simulation {
 
-	private static final int AGV_COUNT = 1;
+	private static final int AGV_COUNT = 2;
 
-	private static final double PARCEL_SPAWN_CHANCE = 0.02;
+	private static final double PARCEL_SPAWN_CHANCE = 0.03;
 
 
 	static final double VEHICLE_SPEED_KMH = 50000d;
