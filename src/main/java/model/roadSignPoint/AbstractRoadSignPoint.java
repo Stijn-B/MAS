@@ -95,23 +95,6 @@ public abstract class AbstractRoadSignPoint implements RoadSignPoint, RoadUser, 
         roadSigns.add(rs);
     }
 
-
-    /**
-     * Adds the given RoadSign to this DeprecatedRoadSignPoint
-     * @param newSign the RoadSign to add
-     */
-    /*
-    public void addRoadSign(RoadSign newSign) {
-
-        // if a RoadSign equal to the given one is already contained, remove it (so it gets replaced)
-        if (roadSigns.contains(newSign)) {
-            roadSigns.remove(newSign);
-        }
-
-        roadSigns.add(newSign);
-    }
-    */
-
     /**
      * Get an Iterator of all the RoadSigns this DeprecatedRoadSignPoint contains.
      * @return an Iterator of all the RoadSigns this DeprecatedRoadSignPoint contains
@@ -163,15 +146,23 @@ public abstract class AbstractRoadSignPoint implements RoadSignPoint, RoadUser, 
         return intentions;
     }
 
-    /**
-     * Registers an intention for the given AGV who will arrive at the given time.
-     */
-    public void addIntention(IntentionData intention) {
-        intentions.add(intention);
-    }
 
     public void addIntention(AGV agv, long ETA) {
-        addIntention(new IntentionData(agv, ETA));
+        IntentionData in = new IntentionData(agv, ETA);
+
+        if (intentions.contains(in)) {
+            for (IntentionData intention : intentions) {
+                if (in.equals(intention)) {
+                    in = intention;
+                }
+            }
+            intentions.remove(in);
+            in.updateETA(ETA);
+        }
+
+        // add the new RoadSign
+        intentions.add(in);
+
     }
 
     public Iterator<IntentionData> getIntentionIterator() {

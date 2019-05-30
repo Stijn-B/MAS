@@ -1,5 +1,6 @@
 import com.github.rinde.rinsim.core.Simulator;
 import com.github.rinde.rinsim.core.model.pdp.*;
+import com.github.rinde.rinsim.core.model.road.GraphRoadModelImpl;
 import com.github.rinde.rinsim.core.model.road.RoadModel;
 import com.github.rinde.rinsim.core.model.road.RoadModelBuilders;
 import com.github.rinde.rinsim.core.model.road.RoadUser;
@@ -7,10 +8,12 @@ import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Graph;
 import com.github.rinde.rinsim.geom.MultiAttributeData;
+import com.github.rinde.rinsim.geom.Point;
 import com.github.rinde.rinsim.geom.io.DotGraphIO;
 import com.github.rinde.rinsim.geom.io.Filters;
 import com.github.rinde.rinsim.ui.View;
 import com.github.rinde.rinsim.ui.renderers.GraphRoadModelRenderer;
+import com.github.rinde.rinsim.ui.renderers.PlaneRoadModelRenderer;
 import com.github.rinde.rinsim.ui.renderers.RoadUserRenderer;
 import heuristic.DeliveredPerDistanceHeuristic;
 import model.roadSignPoint.Base;
@@ -32,6 +35,11 @@ public class Simulation {
 
 	private static final double PARCEL_SPAWN_CHANCE = 0.02;
 
+
+	static final double VEHICLE_SPEED_KMH = 50000d;
+	static final Point MIN_POINT = new Point(0, 0);
+	static final Point MAX_POINT = new Point(500, 500);
+
 	public static void main(String[] args) {
 		run();
 	}
@@ -49,8 +57,8 @@ public class Simulation {
 
 		// create simulator and add models
 		final Simulator simulator = Simulator.builder()
-			.addModel(RoadModelBuilders.staticGraph(loadGraph(MAP_FILE))) // add map of Leuven
-			//.addModel(DefaultPDPModel.builder()) // doet niets ?
+			.addModel(RoadModelBuilders.plane().withMinPoint(MIN_POINT).withMaxPoint(MAX_POINT).withMaxSpeed(VEHICLE_SPEED_KMH)) // vierkant
+			//.addModel(RoadModelBuilders.staticGraph(loadGraph(MAP_FILE))) // map of Leuven
 			.addModel(RoadSignPointModel.builder())
 			.addModel(view)
 			.build();
@@ -61,6 +69,7 @@ public class Simulation {
 		// get Models
 		final RoadModel roadModel = simulator.getModelProvider().getModel(RoadModel.class);
 		// -> is of type GraphRoadModelImpl
+
 
 		final RoadSignPointModel rspModel = simulator.getModelProvider().getModel(RoadSignPointModel.class);
 		rspModel.setSimulator(simulator);
@@ -106,7 +115,8 @@ public class Simulation {
 	static View.Builder createGui() {
 
 		View.Builder view = View.builder()
-			.with(GraphRoadModelRenderer.builder())
+			.with(PlaneRoadModelRenderer.builder()) // vierkant
+			//.with(GraphRoadModelRenderer.builder()) // map of leuven
 			.with(RoadUserRenderer.builder()
 					.withImageAssociation(
 							Base.class, "/images/saturnus.png")

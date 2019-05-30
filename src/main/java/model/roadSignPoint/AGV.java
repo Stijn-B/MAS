@@ -55,7 +55,7 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
      * @return The travel time in ms.
      */
     public long calculateTravelTime(double distance) {
-        RoadUnits roadUnits = new RoadUnits(SI.METER, getRoadModel().getSpeedUnit());
+        RoadUnits roadUnits = new RoadUnits(getRoadModel().getDistanceUnit(), getRoadModel().getSpeedUnit());
         double inTime = roadUnits.toInDist(distance) / getSpeed();
         double ms = roadUnits.toExTime(inTime, SI.MILLI(SI.SECOND));
         return Math.round(ms);
@@ -120,15 +120,13 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
      * Returns whether the AGV should explore
      */
     private boolean reconsiderCondition(long now) {
-        return !hasDestination();
-        /*
         // reconsider if: RECONSIDER_DELAY ms have passed since last reconsider OR agv has no destination
         if (now - lastReconsiderTime >= RECONSIDER_DELAY || !hasDestination()) {
             lastReconsiderTime = now;
             return true;
         } else {
             return false;
-        }*/
+        }
     }
 
     /**
@@ -279,7 +277,7 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
 
         if (hasDestination()) {
 
-            System.out.print("[" + this + "] Signal Intended Path");  // PRINT
+            System.out.println("[" + this + "] Signal Intended Path");  // PRINT
 
             // signal intention
             boolean viable = signalIntention(getIntendedPath(), now);
@@ -296,8 +294,8 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
         // CONSIDER EXPLORING NEW PATH
 
         if (reconsiderCondition(now)) {
+            System.out.println("[" + this + "] Explore new path");  // PRINT
             chooseNewPath(now);
-            System.out.println("[" + this + "] Explore new path, result: " + getIntendedPath());  // PRINT
         }
 
 

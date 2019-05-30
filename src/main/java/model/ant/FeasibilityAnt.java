@@ -79,9 +79,9 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 		// if one of the points is not registered, do nothing
 		if (!from.isRegistered() || !to.isRegistered()) return;
 
+
 		List<Point> shortestPath = getRoadModel().getShortestPathTo(from.getPosition(), to.getPosition()); // shortest path
-		double distance = getPathLength(shortestPath);
-		from.addRoadSign(to, distance);
+		from.addRoadSign(to, getPathLength(shortestPath));
 	}
 
 	/* PATH LENGTH */

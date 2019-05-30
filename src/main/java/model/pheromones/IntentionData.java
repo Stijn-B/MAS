@@ -20,7 +20,7 @@ public class IntentionData extends AgingPheromone implements Comparable<Intentio
     }
 
     private final AGV agv;
-    private final long ETA;
+    private long ETA;
 
     public AGV getAgv() {
         return agv;
@@ -30,7 +30,10 @@ public class IntentionData extends AgingPheromone implements Comparable<Intentio
         return ETA;
     }
 
-
+    public void updateETA(long ETA) {
+        this.ETA = ETA;
+        revitalize();
+    }
 
 
     @Override
