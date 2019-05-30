@@ -59,7 +59,7 @@ public class IntentionAnt extends Ant {
             }
 
             curr.getDestination().addIntention(agv, ETA);
-            //System.out.println("[" + agv + "] registered intention " + curr.getDestination() + " now:" + now + ", ETA:" + ETA + " distance:" + totalDist);  // 192 - 2
+            System.out.print(" (" + curr.getDestination() + " ETA:" + ETA + " distance:" + totalDist + ")");  // 192 - 2
         }
         return true;
     }

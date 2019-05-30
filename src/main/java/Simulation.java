@@ -28,7 +28,7 @@ import java.io.IOException;
 
 public class Simulation {
 
-	private static final int AGV_COUNT = 2;
+	private static final int AGV_COUNT = 1;
 
 	private static final double PARCEL_SPAWN_CHANCE = 0.02;
 
@@ -43,7 +43,6 @@ public class Simulation {
 	public static Simulator run() {
 
 		/* * MODELS ETC. * */
-		System.out.println("/* * MODELS ETC. * */");
 
 		// build view
 		View.Builder view = createGui();
@@ -92,19 +91,6 @@ public class Simulation {
 
 		// register 1 parcel
 		AbstractParcelPoint.ParcelCreator.registerNewParcel(simulator);
-
-
-		System.out.println();
-		System.out.println("INFO");
-        System.out.print("RoadUser Count ");
-		System.out.println(roadModel.getObjectsOfType(RoadUser.class).size());
-        System.out.print("  AGV Count ");
-		System.out.println(roadModel.getObjectsOfType(AGV.class).size());
-        System.out.print("  AbstractParcelPoint Count ");
-        System.out.println(roadModel.getObjectsOfType(AbstractParcelPoint.class).size());
-        System.out.print("    Base Count ");
-        System.out.println(roadModel.getObjectsOfType(Base.class).size());
-		System.out.println();
 
 
 		/* * START * */

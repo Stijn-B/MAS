@@ -120,13 +120,15 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
      * Returns whether the AGV should explore
      */
     private boolean reconsiderCondition(long now) {
+        return !hasDestination();
+        /*
         // reconsider if: RECONSIDER_DELAY ms have passed since last reconsider OR agv has no destination
         if (now - lastReconsiderTime >= RECONSIDER_DELAY || !hasDestination()) {
             lastReconsiderTime = now;
             return true;
         } else {
             return false;
-        }
+        }*/
     }
 
     /**
@@ -277,7 +279,7 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
 
         if (hasDestination()) {
 
-            System.out.print("[" + this + "] Signal Intended Path " + getIntendedPath());  // PRINT
+            System.out.print("[" + this + "] Signal Intended Path");  // PRINT
 
             // signal intention
             boolean viable = signalIntention(getIntendedPath(), now);
