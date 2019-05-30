@@ -12,7 +12,7 @@ public class ExplorationAnt extends Ant {
 
 	// aantal explored paden =  branch amount ** hop count(4 ** 4 = 256)
 	public final static int DEFAULT_BRANCH_AMOUNT = 4; // breedte
-	public final static int DEFAULT_HOP_COUNT_LIMIT = 10; // diepte
+	public final static int DEFAULT_HOP_COUNT_LIMIT = 6; // diepte
 
 
 	/* CONSTRUCTOR */

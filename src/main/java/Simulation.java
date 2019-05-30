@@ -35,7 +35,7 @@ public class Simulation {
 
 	////   SETTINGS   ////  ////  ////  ////  ////
 
-	private static Map MAP = Map.VIERKANT;
+	private static Map MAP = Map.LEUVEN;
 
 	private static final int AGV_COUNT = 2;
 	private static final double PARCEL_SPAWN_CHANCE = 0.03;
@@ -120,9 +120,9 @@ public class Simulation {
 
 
 		/* * START * */
-		System.out.println("/* * START * */");
 
 		simulator.start();
+		System.out.println("Simulation started.");
 
 		return simulator;
 	}

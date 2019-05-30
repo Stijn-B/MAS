@@ -37,6 +37,8 @@ public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 	public void parcelIsDelivered(int parcelID) {
 		deliveredParcelIDs.add(parcelID);
 		System.out.println("! ! ! ! ! Parcel " + parcelID + " is delivered ! ! ! ! !");
+		System.out.println("Parcels delivered: " + deliveredParcelIDs.size());
+
 	}
 
 

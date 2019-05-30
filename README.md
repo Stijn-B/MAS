@@ -48,10 +48,9 @@ RinSim Docu https://rinsim.rinde.nl/design/core/
      Worden uitgezonden door een model.user.owner.NewAGV. Gaan mogelijke paden af en bepalen hoe lang de model.user.owner.NewAGV hier over zou doen.
      Heuristiek vd paden bepalen en de beste kiezen, mogelijke parameters:
          - efficientie (som vd leverafstanden / totale afstand die effectief afgelegd zal worden)
-         - een andere model.user.owner.NewAGV die maar een klein beetje minder snel zou zijn heeft mss al gecommit om een vd parcels te leveren
-             want kan inefficientie veroorzaken bij deze andere model.user.owner.NewAGV
-         - een andere model.user.owner.NewAGV heeft gecommit en zal er eerder zijn -> heuristiek = 0
-         - model.user.owner.NewAGV moet mss herladen in de uitvalsbasis (?)
+         - een andere AGV die maar een klein beetje minder snel zou zijn heeft mss al gecommit om een vd parcels te leveren
+             want kan inefficientie veroorzaken bij deze andere AGV
+         - AGV moet mss herladen in de uitvalsbasis (?)
              bezoek uitvalsbasis heeft positief effect op heuristiek, evenredig (of expontentieel) met hoeveel bijgeladen zou worden
          - ...
      Limiet opleggen voor de paden: aantal parcels of lengte/duratie vh pad anders mss oneindige exploratie

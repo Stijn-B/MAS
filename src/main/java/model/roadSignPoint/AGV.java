@@ -228,9 +228,9 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
         // move
         try {
             MoveProgress progress = getRoadModel().moveTo(this, getIntendedPath().getFirstDest().getPosition(), tm);
-            System.out.println("[" + this + "] Moved " + progress.distance().toString() + " in " + tm.getTimeConsumed() + " " + tm.getTimeUnit().toString());  // PRINT
+            //System.out.println("[" + this + "] Moved " + progress.distance().toString() + " in " + tm.getTimeConsumed() + " " + tm.getTimeUnit().toString());  // PRINT
         } catch (Exception E) {
-            System.out.println("[" + this + "] Couldn't move");  // PRINT
+            //System.out.println("[" + this + "] Couldn't move");  // PRINT
             tm.consumeAll();
         }
     }
@@ -240,7 +240,7 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
      */
     public void tryToAct(TimeLapse tm) {
         if (isAtDestination() && getDestination().act(this)) {
-            System.out.println("[" + this + "] Acted on " + getDestination());  // PRINT
+            //System.out.println("[" + this + "] Acted on " + getDestination());  // PRINT
             getIntendedPath().popFirst();
         }
     }
@@ -256,7 +256,7 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
         NOW = now;
 
 
-        System.out.println("_ _ _ _ " + this + " tick() _ _ _ _");  // PRINT
+        //System.out.println("_ _ _ _ " + this + " tick() _ _ _ _");  // PRINT
 
         /*
         System.out.print("RoadSigns: ");
@@ -266,13 +266,6 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
         System.out.println();
         */
 
-        if (!parcelIDs.isEmpty()) {
-            System.out.print("[" + this + "] Carries parcels with ID " );
-            for (int ID : parcelIDs) {
-                System.out.print(ID + " ");
-            }
-            System.out.println();
-        }
 
         // INTENTION
 
@@ -290,7 +283,7 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
         // CONSIDER EXPLORING NEW PATH
 
         if (reconsiderCondition(now)) {
-            System.out.println("[" + this + "] Explore new path");  // PRINT
+            //System.out.println("[" + this + "] Explore new path");  // PRINT
             chooseNewPath(now);
         }
 

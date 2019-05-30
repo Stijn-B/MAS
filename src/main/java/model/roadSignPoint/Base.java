@@ -141,7 +141,7 @@ public class Base extends AbstractRoadSignPoint implements TickListener {
     @Override
     public void afterTick(TimeLapse timeLapse) {
         super.afterTick(timeLapse);
-        System.out.println();
+        //System.out.println();
         int n = balanceFeasibilityAntCount(0.3);
         //System.out.println("[Base.afterTick()] getMaxEdgeCount(): " + String.valueOf(getMaxEdgeCount()));
         //System.out.println("[Base.afterTick()] feasibility ant count: " + String.valueOf(n));
