@@ -3,11 +3,13 @@ package model.roadSignPoint.parcel;
 import com.github.rinde.rinsim.core.Simulator;
 import com.github.rinde.rinsim.core.model.road.RoadModel;
 import com.github.rinde.rinsim.geom.Point;
+import model.ant.FeasibilityAnt;
 import model.roadSignPoint.AGV;
 import model.roadSignPoint.AbstractRoadSignPoint;
 import model.pheromones.IntentionData;
 
 import java.util.Iterator;
+import java.util.List;
 
 public abstract class AbstractParcelPoint extends AbstractRoadSignPoint {
 
@@ -29,6 +31,12 @@ public abstract class AbstractParcelPoint extends AbstractRoadSignPoint {
 
     public long getCreationTime() {
         return creationTime;
+    }
+
+    public double distanceToPartner = 0;
+
+    public double getDistanceToPartner() {
+        return distanceToPartner;
     }
 
     /* PROPERTIES */
@@ -97,10 +105,24 @@ public abstract class AbstractParcelPoint extends AbstractRoadSignPoint {
         }
 
         public static void registerNewParcel(Simulator sim) {
+
+            // create pickup and delivery points
             long now = sim.getCurrentTime();
             int id = getNewParcelID();
-            sim.register(new ParcelPickup(getRandomPosition(sim), id, now));
-            sim.register(new ParcelDelivery(getRandomPosition(sim), id, now));
+            ParcelPickup pickup = new ParcelPickup(getRandomPosition(sim), id, now);
+            ParcelDelivery delivery = new ParcelDelivery(getRandomPosition(sim), id, now);
+
+            // register points
+            sim.register(pickup);
+            sim.register(delivery);
+
+            // calculate and set distance between points
+            RoadModel roadModel = sim.getModelProvider().getModel(RoadModel.class);
+            double p = FeasibilityAnt.getPathLength(roadModel.getShortestPathTo(pickup.getPosition(), delivery.getPosition()));
+            double d = FeasibilityAnt.getPathLength(roadModel.getShortestPathTo(delivery.getPosition(), pickup.getPosition()));
+
+            pickup.distanceToPartner = p;
+            delivery.distanceToPartner = d;
         }
 
         public static Point getRandomPosition(Simulator sim) {

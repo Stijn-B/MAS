@@ -86,7 +86,7 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 
 	/* PATH LENGTH */
 
-	public double getPathLength(List<Point> path) {
+	public static double getPathLength(List<Point> path) {
 		// if the path contains less than 2 points, there is no distance
 		if (path.size() < 2) return 0;
 

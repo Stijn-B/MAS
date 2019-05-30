@@ -12,6 +12,10 @@ import java.util.Iterator;
 
 public interface RoadSignPoint extends RoadSignPointUser, RoadUser {
 
+    default double getDistanceToPartner() {
+        return 0;
+    }
+
     // Act
 
     boolean act(AGV agv);

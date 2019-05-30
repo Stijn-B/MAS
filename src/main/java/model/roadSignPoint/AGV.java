@@ -23,7 +23,7 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
     static final double AGV_SPEED = 20400;
 
     // default time between reconsidering the committed path
-    static final long RECONSIDER_DELAY = 5000;
+    static final long RECONSIDER_DELAY = 3000;
 
     static long NOW = 0; // current time, updated every tick()
 

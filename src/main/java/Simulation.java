@@ -37,8 +37,9 @@ public class Simulation {
 
 	private static Map MAP = Map.VIERKANT;
 
-	private static final int AGV_COUNT = 2;
-	private static final double PARCEL_SPAWN_CHANCE = 0.03;
+	private static final int AGV_COUNT = 3;
+	private static final int INIT_PARCEL_COUNT = 5;
+	private static final double PARCEL_SPAWN_CHANCE = 0.04;
 
 	private static final String MAP_FILE = "leuven.dot"; // Vector map of Leuven
 
@@ -70,7 +71,7 @@ public class Simulation {
 				break;
 			case VIERKANT:
 				simulator = Simulator.builder()
-						.addModel(RoadModelBuilders.plane().withMinPoint(new Point(0, 0)).withMaxPoint(new Point(500, 500)).withMaxSpeed(50000d)) // vierkant
+						.addModel(RoadModelBuilders.plane().withMinPoint(new Point(0, 0)).withMaxPoint(new Point(1000, 1000)).withMaxSpeed(50000d)) // vierkant
 						.addModel(RoadSignPointModel.builder())
 						.addModel(view)
 						.build();
@@ -101,6 +102,11 @@ public class Simulation {
 			simulator.register(new AGV(roadModel.getRandomPosition(rng), new DeliveredPerDistanceHeuristic()));
 		}
 
+		// register parcels
+		for (int i = 0; i < INIT_PARCEL_COUNT; i++) {
+			AbstractParcelPoint.ParcelCreator.registerNewParcel(simulator);
+		}
+
 		// register RoadSignParcel random generation
 		simulator.addTickListener(new TickListener() {
 			@Override
@@ -115,8 +121,6 @@ public class Simulation {
 			public void afterTick(TimeLapse timeLapse) {}
 		});
 
-		// register 1 parcel
-		AbstractParcelPoint.ParcelCreator.registerNewParcel(simulator);
 
 
 		/* * START * */
