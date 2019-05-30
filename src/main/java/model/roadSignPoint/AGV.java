@@ -256,7 +256,7 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
         NOW = now;
 
 
-        System.out.println("_ _ _ _" + this + " tick()_ _ _ _");  // PRINT
+        System.out.println("_ _ _ _ " + this + " tick() _ _ _ _");  // PRINT
 
         /*
         System.out.print("RoadSigns: ");
@@ -278,18 +278,13 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
 
         if (hasDestination()) {
 
-            System.out.println("[" + this + "] Signal Intended Path");  // PRINT
-
             // signal intention
             boolean viable = signalIntention(getIntendedPath(), now);
 
             // if intention not viable, reset
-            if (! viable) {
-                System.out.println("NOT OK -> reset");  // PRINT
+            if (! viable)
                 resetIntention();
-            } else {
-                System.out.println("OK");  // PRINT
-            }
+
         }
 
         // CONSIDER EXPLORING NEW PATH

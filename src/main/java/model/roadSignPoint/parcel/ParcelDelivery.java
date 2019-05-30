@@ -5,8 +5,8 @@ import model.roadSignPoint.AGV;
 
 public class ParcelDelivery extends AbstractParcelPoint {
 
-    ParcelDelivery(Point position, int ID) {
-        super(position, ID);
+    ParcelDelivery(Point position, int ID, long now) {
+        super(position, ID, now);
     }
 
     public boolean canAct(AGV agv) {

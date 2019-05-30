@@ -11,12 +11,13 @@ import java.util.Iterator;
 
 public abstract class AbstractParcelPoint extends AbstractRoadSignPoint {
 
-    AbstractParcelPoint(Point position, int parcelID) {
+    AbstractParcelPoint(Point position, int parcelID, long creationTime) {
         super(position);
         this.parcelID = parcelID;
+        this.creationTime = creationTime;
     }
 
-
+    /* DATA */
 
     public final int parcelID;
 
@@ -24,23 +25,23 @@ public abstract class AbstractParcelPoint extends AbstractRoadSignPoint {
         return parcelID;
     }
 
-    public boolean belongToSameParcel(AbstractParcelPoint point) {
-        return point.getParcelID() == this.getParcelID();
+    public final long creationTime;
+
+    public long getCreationTime() {
+        return creationTime;
     }
 
+    /* PROPERTIES */
 
-    public abstract boolean canAct(AGV agv);
-
-    @Override
-    public boolean act(AGV agv) {
-        if (canAct(agv)) {
-            unregister();
-            return true;
-        } else {
-            return false;
-        }
+    /**
+     * Returns a value between 0 and 1 indicating the urgency of this parcel given the current time.
+     * Urgency is maximum 5 minutes after creation time.
+     */
+    public double getUrgency(long now) {
+        long waitingTime = now - getCreationTime();
+        int fiveMinutes = 5 * 60 * 1000; // 5 minutes * 60 seconds * 1000 ms
+        return Math.min((double) waitingTime / fiveMinutes, 1);
     }
-
 
     @Override
     public boolean wouldAgvArriveInTime(AGV agv, long ETA) {
@@ -61,7 +62,22 @@ public abstract class AbstractParcelPoint extends AbstractRoadSignPoint {
     }
 
 
+    /* ACTING */
 
+    public abstract boolean canAct(AGV agv);
+
+    @Override
+    public boolean act(AGV agv) {
+        if (canAct(agv)) {
+            unregister();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    /* CREATOR */
 
     public static class ParcelCreator {
 
@@ -81,9 +97,10 @@ public abstract class AbstractParcelPoint extends AbstractRoadSignPoint {
         }
 
         public static void registerNewParcel(Simulator sim) {
+            long now = sim.getCurrentTime();
             int id = getNewParcelID();
-            sim.register(new ParcelPickup(getRandomPosition(sim), id));
-            sim.register(new ParcelDelivery(getRandomPosition(sim), id));
+            sim.register(new ParcelPickup(getRandomPosition(sim), id, now));
+            sim.register(new ParcelDelivery(getRandomPosition(sim), id, now));
         }
 
         public static Point getRandomPosition(Simulator sim) {

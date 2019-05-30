@@ -5,8 +5,8 @@ import model.roadSignPoint.AGV;
 
 public class ParcelPickup extends AbstractParcelPoint {
 
-    ParcelPickup(Point position, int ID) {
-        super(position, ID);
+    ParcelPickup(Point position, int ID, long now) {
+        super(position, ID, now);
     }
 
     public boolean canAct(AGV agv) {
