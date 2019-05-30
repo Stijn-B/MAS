@@ -34,10 +34,19 @@ public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 
 	private HashSet<Integer> deliveredParcelIDs = new HashSet<>();
 
+	public int parcelsDelivered() {
+		return deliveredParcelIDs.size();
+	}
+
 	public void parcelIsDelivered(int parcelID) {
 		deliveredParcelIDs.add(parcelID);
+
+		double seconds = (double) simulator.getCurrentTime() / 1000;
+		double minutes = seconds / 60;
+		double agv = parcelsDelivered() / minutes;
+
 		System.out.println("! ! ! ! ! Parcel " + parcelID + " is delivered ! ! ! ! !");
-		System.out.println("Parcels delivered: " + deliveredParcelIDs.size());
+		System.out.println("Parcels delivered: " + parcelsDelivered() + " parcels/minute: " + agv);
 
 	}
 

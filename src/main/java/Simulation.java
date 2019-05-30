@@ -35,7 +35,7 @@ public class Simulation {
 
 	////   SETTINGS   ////  ////  ////  ////  ////
 
-	private static Map MAP = Map.LEUVEN;
+	private static Map MAP = Map.VIERKANT;
 
 	private static final int AGV_COUNT = 2;
 	private static final double PARCEL_SPAWN_CHANCE = 0.03;
