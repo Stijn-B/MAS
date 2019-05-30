@@ -13,7 +13,7 @@ import com.github.rinde.rinsim.ui.View;
 import com.github.rinde.rinsim.ui.renderers.GraphRoadModelRenderer;
 import com.github.rinde.rinsim.ui.renderers.PlaneRoadModelRenderer;
 import com.github.rinde.rinsim.ui.renderers.RoadUserRenderer;
-import heuristic.DeliveredPerDistanceHeuristic;
+import heuristic.*;
 import model.roadSignPoint.Base;
 import model.roadSignPoint.AGV;
 import model.roadSignPoint.parcel.ParcelDelivery;
@@ -41,7 +41,7 @@ public class Simulation {
 	private static final int AGV_COUNT = 3;
 	private static final int INIT_PARCEL_COUNT = 5;
 	private static final double PARCEL_SPAWN_CHANCE = 0.04;
-	private static final double EXPERIMENT_TIME_SPAN = 20 * 60 * 1000d;
+	private static final double EXPERIMENT_TIME_SPAN = 30 * 60 * 1000d;
 
 	private static final String MAP_FILE = "leuven.dot"; // Vector map of Leuven
 
