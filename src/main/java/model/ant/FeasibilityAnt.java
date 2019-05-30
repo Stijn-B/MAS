@@ -96,15 +96,11 @@ public class FeasibilityAnt extends Ant implements TickListener, RoadUser {
 		double distance = 0d;
 		while (iter.hasNext()) {
 			cur = iter.next();
-			distance += distance(prev, cur);
+			distance += Point.distance(prev, cur);
 			prev = cur;
 		}
 
 		return distance;
-	}
-
-	public double distance(Point a, Point b) {
-		return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 	}
 
 
