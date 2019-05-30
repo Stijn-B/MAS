@@ -55,7 +55,7 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
      * @return The travel time in ms.
      */
     public long calculateTravelTime(double distance) {
-        RoadUnits roadUnits = new RoadUnits(getRoadModel().getDistanceUnit(), getRoadModel().getSpeedUnit());
+        RoadUnits roadUnits = new RoadUnits(SI.METER, getRoadModel().getSpeedUnit());
         double inTime = roadUnits.toInDist(distance) / getSpeed();
         double ms = roadUnits.toExTime(inTime, SI.MILLI(SI.SECOND));
         return Math.round(ms);
