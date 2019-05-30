@@ -25,7 +25,8 @@ import model.RoadSignPointModel;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
+import java.util.function.Function;
+import java.util.Arrays;
 
 public class Simulation {
 
@@ -40,6 +41,7 @@ public class Simulation {
 	private static final int AGV_COUNT = 3;
 	private static final int INIT_PARCEL_COUNT = 5;
 	private static final double PARCEL_SPAWN_CHANCE = 0.04;
+	private static final double EXPERIMENT_TIME_SPAN = 20 * 60 * 1000d;
 
 	private static final String MAP_FILE = "leuven.dot"; // Vector map of Leuven
 
@@ -114,6 +116,37 @@ public class Simulation {
 				// if chance hit, register new RoadSignParcel
 				if (rng.nextDouble() < PARCEL_SPAWN_CHANCE) {
 					AbstractParcelPoint.ParcelCreator.registerNewParcel(simulator);
+				}
+			}
+
+			@Override
+			public void afterTick(TimeLapse timeLapse) {}
+		});
+
+		// register experiment tick listener
+		simulator.addTickListener(new TickListener() {
+			private boolean triggered = false;
+
+			@Override
+			public void tick(TimeLapse time) {
+				if (! triggered && time.getTime() > EXPERIMENT_TIME_SPAN) {
+					String deliveredString =
+						"Delivered " + rspModel.parcelsDelivered() + " parcels in " +
+						((int) Math.round(EXPERIMENT_TIME_SPAN / 1000)) + " seconds.";
+					int txtWidth = deliveredString.length();
+					char frameChar = '=';
+					Function<String,String> frame = (msg) -> String.format(frameChar + " %-" + txtWidth + "s " + frameChar, msg);
+					char[] frameLineChars = new char[txtWidth + 4];
+					Arrays.fill(frameLineChars, frameChar);
+					String frameLine = new String(frameLineChars);
+
+					System.out.println(frameLine);
+					System.out.println(frame.apply("EXPERIMENT RESULTS:"));
+					System.out.println(frame.apply(deliveredString));
+					System.out.println(frame.apply("Delivery rate: " + ((double) rspModel.parcelsDelivered() / time.getTime() * 1000 * 60) + " parcels/min"));
+					System.out.println(frameLine);
+
+					triggered = true;
 				}
 			}
 
