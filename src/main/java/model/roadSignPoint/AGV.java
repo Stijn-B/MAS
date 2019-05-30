@@ -1,9 +1,12 @@
 package model.roadSignPoint;
 
 import com.github.rinde.rinsim.core.model.road.MovingRoadUser;
+import com.github.rinde.rinsim.core.model.road.MoveProgress;
+import com.github.rinde.rinsim.core.model.road.RoadUnits;
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Point;
+import javax.measure.unit.SI;
 import heuristic.Heuristic;
 import model.ant.ExplorationAnt;
 import model.ant.IntentionAnt;
@@ -16,7 +19,8 @@ import java.util.List;
 
 public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRoadUser {
 
-    static final double AGV_SPEED = 20400d;
+    // speed in m/s
+    static final double AGV_SPEED = 20400;
 
     // default time between reconsidering the committed path
     static final long RECONSIDER_DELAY = 5000;
@@ -47,12 +51,14 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
 
     /**
      * Returns how long it would take this AGV to travel the given distance
-     * @param distance // TODO: welke units zijn dit?
-     * @return // TODO: welke units zijn dit?
+     * @param distance Distance in the models distance unit.
+     * @return The travel time in ms.
      */
     public long calculateTravelTime(double distance) {
-        // TODO
-        return Math.round(1000*distance/speed);
+        RoadUnits roadUnits = new RoadUnits(getRoadModel().getDistanceUnit(), getRoadModel().getSpeedUnit());
+        double inTime = roadUnits.toInDist(distance) / getSpeed();
+        double ms = roadUnits.toExTime(inTime, SI.MILLI(SI.SECOND));
+        return Math.round(ms);
     }
 
     public long distanceToETA(double distance) {
@@ -220,8 +226,8 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
 
         // move
         try {
-            getRoadModel().moveTo(this, getIntendedPath().getFirstDest().getPosition(), tm);
-            System.out.println("[" + this + "] Moved");  // PRINT
+            MoveProgress progress = getRoadModel().moveTo(this, getIntendedPath().getFirstDest().getPosition(), tm);
+            System.out.println("[" + this + "] Moved " + progress.distance().toString() + " in " + tm.getTimeConsumed() + " " + tm.getTimeUnit().toString());  // PRINT
         } catch (Exception E) {
             System.out.println("[" + this + "] Couldn't move");  // PRINT
             tm.consumeAll();
