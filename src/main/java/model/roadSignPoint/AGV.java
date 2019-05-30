@@ -135,6 +135,7 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
     private void chooseNewPath(long now) {
         // explore possible paths
         List<PlannedPath> paths = explorePaths();
+        if (hasDestination()) paths.add(getIntendedPath());
 
         // commit to best path
         commit(getHeuristic().getBest(paths), now);

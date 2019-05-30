@@ -41,6 +41,14 @@ public abstract class Heuristic {
     public PlannedPath getBest(List<PlannedPath> paths) {
         sortPlannedPathList(paths);
         if (paths.isEmpty()) return null;
-        else return paths.get(0);
+
+
+        else {
+
+            for (PlannedPath p : paths) {
+                System.out.println(p.getHeuristicScore() + " " + p);
+            }
+            return paths.get(0);
+        }
     }
 }

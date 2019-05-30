@@ -245,11 +245,11 @@ public class PlannedPath implements Comparable<PlannedPath> {
     @Override
     public int compareTo(@NotNull PlannedPath o) {
         if (this.getHeuristicScore() > o.getHeuristicScore()) { // Highest heuristic should be first in list -> other object is seen as bigger number and thus placed later in list
-            return 1;
+            return -1;
         } else if (this.getHeuristicScore() == o.getHeuristicScore()) {
             return 0;
         } else {
-            return -1;
+            return 1;
         }
     }
 
@@ -265,7 +265,7 @@ public class PlannedPath implements Comparable<PlannedPath> {
         outputBuffer.append("[");
         while (iterator.hasNext()) {
             RoadSign rs = iterator.next();
-            outputBuffer.append(rs.getDestination());
+            outputBuffer.append(rs);
             if (iterator.hasNext()) outputBuffer.append(", ");
         }
         outputBuffer.append("]");
