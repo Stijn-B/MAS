@@ -1,9 +1,7 @@
 import com.github.rinde.rinsim.core.Simulator;
 import com.github.rinde.rinsim.core.model.pdp.*;
-import com.github.rinde.rinsim.core.model.road.GraphRoadModelImpl;
 import com.github.rinde.rinsim.core.model.road.RoadModel;
 import com.github.rinde.rinsim.core.model.road.RoadModelBuilders;
-import com.github.rinde.rinsim.core.model.road.RoadUser;
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
 import com.github.rinde.rinsim.geom.Graph;
@@ -31,22 +29,27 @@ import java.io.IOException;
 
 public class Simulation {
 
-	private static final int AGV_COUNT = 2;
+	public enum Map {
+		VIERKANT, LEUVEN
+	}
 
+	////   SETTINGS   ////  ////  ////  ////  ////
+
+	private static Map MAP = Map.VIERKANT;
+
+	private static final int AGV_COUNT = 2;
 	private static final double PARCEL_SPAWN_CHANCE = 0.03;
 
+	private static final String MAP_FILE = "leuven.dot"; // Vector map of Leuven
 
-	static final double VEHICLE_SPEED_KMH = 50000d;
-	static final Point MIN_POINT = new Point(0, 0);
-	static final Point MAX_POINT = new Point(500, 500);
+	////  ////  ////  ////  ////  ////  ////  ////
 
+	
 	public static void main(String[] args) {
 		run();
 	}
 
-	// in intelliJ doe: rechtermuisknop > Copy relative path (Crtl + Alt + Shift + c)
-	private static final String MAP_FILE = "leuven.dot";
-
+	/* RUN */
 
 	public static Simulator run() {
 
@@ -56,12 +59,26 @@ public class Simulation {
 		View.Builder view = createGui();
 
 		// create simulator and add models
-		final Simulator simulator = Simulator.builder()
-			.addModel(RoadModelBuilders.plane().withMinPoint(MIN_POINT).withMaxPoint(MAX_POINT).withMaxSpeed(VEHICLE_SPEED_KMH)) // vierkant
-			//.addModel(RoadModelBuilders.staticGraph(loadGraph(MAP_FILE))) // map of Leuven
-			.addModel(RoadSignPointModel.builder())
-			.addModel(view)
-			.build();
+		final Simulator simulator;
+		switch (MAP) {
+			case LEUVEN:
+				simulator = Simulator.builder()
+						.addModel(RoadModelBuilders.staticGraph(loadGraph(MAP_FILE))) // MAP of Leuven
+						.addModel(RoadSignPointModel.builder())
+						.addModel(view)
+						.build();
+				break;
+			case VIERKANT:
+				simulator = Simulator.builder()
+						.addModel(RoadModelBuilders.plane().withMinPoint(new Point(0, 0)).withMaxPoint(new Point(500, 500)).withMaxSpeed(50000d)) // vierkant
+						.addModel(RoadSignPointModel.builder())
+						.addModel(view)
+						.build();
+				break;
+			default:
+				throw new IllegalArgumentException("have to choose one of the maps");
+		}
+
 
 		// get rng object
 		final RandomGenerator rng = simulator.getRandomGenerator();
@@ -111,22 +128,43 @@ public class Simulation {
 	}
 
 
+	/* GUI */
 
 	static View.Builder createGui() {
+		View.Builder view;
 
-		View.Builder view = View.builder()
-			.with(PlaneRoadModelRenderer.builder()) // vierkant
-			//.with(GraphRoadModelRenderer.builder()) // map of leuven
-			.with(RoadUserRenderer.builder()
-					.withImageAssociation(
-							Base.class, "/images/saturnus.png")
-					.withImageAssociation(
-							AGV.class, "/images/ufo.png")
-					.withImageAssociation(
-							ParcelPickup.class, "/images/mannetje.png")
-					.withImageAssociation(
-							ParcelDelivery.class, "/images/paarse_vlag.png"))
-			.withTitleAppendix("MAS");
+		switch(MAP) {
+			case LEUVEN:
+				view = View.builder()
+						.with(GraphRoadModelRenderer.builder()) // MAP of leuven
+						.with(RoadUserRenderer.builder()
+								.withImageAssociation(
+										Base.class, "/images/saturnus.png")
+								.withImageAssociation(
+										AGV.class, "/images/ufo.png")
+								.withImageAssociation(
+										ParcelPickup.class, "/images/mannetje.png")
+								.withImageAssociation(
+										ParcelDelivery.class, "/images/paarse_vlag.png"))
+						.withTitleAppendix("MAS");
+				break;
+			case VIERKANT:
+				view = View.builder()
+						.with(PlaneRoadModelRenderer.builder()) // vierkant
+						.with(RoadUserRenderer.builder()
+								.withImageAssociation(
+										Base.class, "/images/saturnus.png")
+								.withImageAssociation(
+										AGV.class, "/images/ufo.png")
+								.withImageAssociation(
+										ParcelPickup.class, "/images/mannetje.png")
+								.withImageAssociation(
+										ParcelDelivery.class, "/images/paarse_vlag.png"))
+						.withTitleAppendix("MAS");
+				break;
+			default:
+				throw new IllegalArgumentException("have to choose one of the maps");
+		}
 
 		return view;
 	}
@@ -146,19 +184,6 @@ public class Simulation {
 			throw new IllegalStateException(e);
 		}
 	}
-
-
-
-	// TODO: time windows
-	static class Package extends Parcel {
-		Package(ParcelDTO dto) {
-			super(dto);
-		}
-
-		@Override
-		public void initRoadPDP(RoadModel pRoadModel, PDPModel pPdpModel) {}
-	}
-
 }
 
 // vim: noexpandtab:
