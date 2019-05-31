@@ -36,7 +36,7 @@ public class AGV extends AbstractRoadSignPoint implements TickListener, MovingRo
     }
 
     public boolean plansPassingBase() {
-        return false; // TODO: mogelijks gebruiken
+        return false;
     }
 
 

@@ -96,7 +96,7 @@ public class PlannedPath implements Comparable<PlannedPath> {
 
         Iterator<RoadSign> iter = getIterator();
         while (iter.hasNext()) {
-            result.add(iter.next().getDestination()); // TODO: opmerking: hier wordt getDestination gebruikt en niet getLocation
+            result.add(iter.next().getDestination());
         }
 
         return result;
