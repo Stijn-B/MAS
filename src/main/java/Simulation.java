@@ -36,7 +36,7 @@ public class Simulation {
 
 	////   SETTINGS   ////  ////  ////  ////  ////
 
-	private static Map MAP = Map.VIERKANT;
+	private static Map MAP = Map.LEUVEN;
 
 	private static final int AGV_COUNT = 3;
 	private static final int INIT_PARCEL_COUNT = 5;
