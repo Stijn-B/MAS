@@ -45,8 +45,8 @@ public class RoadSignPointModel extends Model.AbstractModel<RoadSignPointUser> {
 		double minutes = seconds / 60;
 		double agv = parcelsDelivered() / minutes;
 
-		System.out.println("! ! ! ! ! Parcel " + parcelID + " is delivered ! ! ! ! !");
-		System.out.println("Parcels delivered: " + parcelsDelivered() + " parcels/minute: " + agv);
+		//System.out.println("! ! ! ! ! Parcel " + parcelID + " is delivered ! ! ! ! !");
+		//System.out.println("Parcels delivered: " + parcelsDelivered() + " parcels/minute: " + agv);
 
 	}
 

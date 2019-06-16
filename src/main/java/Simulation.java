@@ -4,6 +4,7 @@ import com.github.rinde.rinsim.core.model.road.RoadModel;
 import com.github.rinde.rinsim.core.model.road.RoadModelBuilders;
 import com.github.rinde.rinsim.core.model.time.TickListener;
 import com.github.rinde.rinsim.core.model.time.TimeLapse;
+import com.github.rinde.rinsim.core.model.time.TimeModel;
 import com.github.rinde.rinsim.geom.Graph;
 import com.github.rinde.rinsim.geom.MultiAttributeData;
 import com.github.rinde.rinsim.geom.Point;
@@ -41,7 +42,7 @@ public class Simulation {
 	private static final int AGV_COUNT = 3;
 	private static final int INIT_PARCEL_COUNT = 5;
 	private static final double PARCEL_SPAWN_CHANCE = 0.04;
-	private static final double EXPERIMENT_TIME_SPAN = 30 * 60 * 1000d;
+	private static final double EXPERIMENT_TIME_SPAN = 120 * 60 * 1000d;
 
 	private static final String MAP_FILE = "leuven.dot"; // Vector map of Leuven
 
@@ -146,6 +147,8 @@ public class Simulation {
 					System.out.println(frame.apply("Delivery rate: " + ((double) rspModel.parcelsDelivered() / time.getTime() * 1000 * 60) + " parcels/min"));
 					System.out.println(frameLine);
 
+					System.out.println(AGV.RECONSIDER_DELAY + "ms - " + ((double) rspModel.parcelsDelivered() / time.getTime() * 1000 * 60) + "\\\\");
+
 					triggered = true;
 				}
 			}
@@ -157,9 +160,11 @@ public class Simulation {
 
 
 		/* * START * */
+		TimeModel tm = simulator.getModelProvider().getModel(TimeModel.class);
 
+		System.out.println(tm.getTickLength());
 		simulator.start();
-		System.out.println("Simulation started.");
+
 
 		return simulator;
 	}
